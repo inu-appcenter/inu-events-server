@@ -1,10 +1,12 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import Event from './Event';
+import Comment from './Comment';
 
 /**
  * 사용자!
  */
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number;
 
@@ -20,6 +22,12 @@ export class User {
   @Column({comment: 'OAuth로 로그인한 경우, provider가 제공한 식별자.'})
   oauthId: string;
 
-  @Column({comment: '가입일.'})
-  createdAt: Date = new Date();
+  @CreateDateColumn({comment: '생성 일시.'})
+  createdAt: Date;
+
+  @OneToMany(() => Event, (e) => e.user)
+  events: Event[];
+
+  @OneToMany(() => Comment, (c) => c.user)
+  comments: Comment[];
 }
