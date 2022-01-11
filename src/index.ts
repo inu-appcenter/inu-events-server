@@ -1,23 +1,21 @@
 import 'reflect-metadata';
 import 'dotenv/config';
 import * as Koa from 'koa';
-import * as Router from '@koa/router';
+
+import helloRoutes from './routes/hello';
+import byeRoutes from './routes/bye';
+// 여기에 추가
 
 async function run() {
   // const connection = await createConnection();
   // await connection.synchronize(true);
 
   const app = new Koa();
-  const router = new Router();
-
-  router.get('/hello', async (ctx) => {
-    console.log('요청옴!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    ctx.body = 'ㅎㅇㅎㅇ';
-  });
 
   app
-    .use(router.routes())
-    .use(router.allowedMethods())
+    .use(helloRoutes.routes()).use(helloRoutes.allowedMethods())
+    .use(byeRoutes.routes()).use(byeRoutes.allowedMethods())
+    // 여기에 추가
     .listen(process.env.PORT || 3000);
 
   console.log('서버시작!!!!!!!!!!');
