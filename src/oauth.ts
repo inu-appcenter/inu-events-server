@@ -5,6 +5,7 @@ import {OAuth2Client} from 'google-auth-library';
  * OpenID Connect는 https://www.ibm.com/docs/ko/sva/9.0.7?topic=concepts-openid-connect 참조!
  *
  * @param accessToken 클라이언트가 들고 온 액세스 토큰.
+ * @return object 성공하면 사용자 정보, 망하면 TypeError 던져요~
  */
 export async function getGoogleOAuthInfo(accessToken: string) {
   const info = await new OAuth2Client().getTokenInfo(accessToken);
