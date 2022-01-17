@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import {registerRoutes} from '../utils/express';
+import {registerRoutes} from '../common/utils/express';
+import {errorHandler} from './middleware/errorHandler';
 
 export async function startServer() {
   const app = express();
@@ -12,6 +13,8 @@ export async function startServer() {
   // app.use(auth());
 
   await registerRoutes(app, __dirname + '/routes');
+
+  app.use(errorHandler());
 
   app.listen(process.env.PORT || 3000);
 

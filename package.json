@@ -6,6 +6,8 @@
    "scripts": {
       "test": "jest",
       "start": "ts-node src/index.ts",
+      "build": "tsc",
+      "preview": "tsc && node build/src/index.js",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
    },
    "author": "",
@@ -17,6 +19,7 @@
       "google-auth-library": "^7.11.0",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
+      "serialize-error": "^8.1.0",
       "typeorm": "0.2.41",
       "typeorm-naming-strategies": "^2.0.0",
       "typescript": "^4.5.4",
