@@ -3,6 +3,8 @@ import 'dotenv/config';
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import bye from './routes/bye';
+import hello from './routes/hello';
 
 async function run() {
   // const connection = await createConnection();
@@ -16,11 +18,8 @@ async function run() {
 
   // app.use(auth());
 
-  app.get('/', (req, res, next) => {
-   // 본 로직
-    res.send();
-  });
-
+  app.use(hello);
+  app.use(bye);
 
   app.listen(process.env.PORT || 3000);
 

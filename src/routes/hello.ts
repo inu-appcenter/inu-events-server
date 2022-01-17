@@ -1,10 +1,10 @@
-import * as Router from '@koa/router';
+import express from 'express';
 
-const router = new Router();
+const router = express.Router();
 
-router.get('/hello', async (ctx) => {
+router.get('/hello', async (req, res) => {
   console.log('요청옴!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-  ctx.body = 'ㅎㅇㅎㅇ';
+  res.send('ㅎㅇㅎㅇ');
 });
 
 export default router;
