@@ -1,10 +1,11 @@
-import express from 'express';
+import {defineRoute} from '../libs/route';
+import {defineSchema} from '../libs/schema';
 
-const router = express.Router();
-
-router.get('/hello', async (req, res) => {
-  console.log('요청옴!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-  res.send('ㅎㅇㅎㅇ');
+const schema = defineSchema({
 });
 
-export default router;
+export default defineRoute('get', '/hello', schema, async (req, res) => {
+  console.log('요청옴!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
+  return res.send('ㅎㅇㅎㅇ');
+});

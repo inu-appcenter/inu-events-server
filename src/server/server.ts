@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import {registerRoutes} from '../util/express';
+import {registerRoutes} from '../utils/express';
 
 export async function startServer() {
   const app = express();
