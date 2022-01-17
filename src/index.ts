@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import 'dotenv/config';
 import {startTypeORM} from './infrastructure/db';
-import {startServer} from './infrastructure/server';
+import {startServer} from './server/server';
 
 async function run() {
   await startTypeORM();

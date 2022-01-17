@@ -11,7 +11,7 @@ export async function startServer() {
 
   // app.use(auth());
 
-  await registerRoutes(app, __dirname + '/../routes');
+  await registerRoutes(app, __dirname + '/routes');
 
   app.listen(process.env.PORT || 3000);
 
