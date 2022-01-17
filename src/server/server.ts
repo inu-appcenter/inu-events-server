@@ -1,7 +1,16 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import {registerRoutes} from '../common/utils/express';
+import {authorizer} from './middleware/authorizer';
 import {errorHandler} from './middleware/errorHandler';
+import {registerRoutes} from '../common/utils/express';
+
+/**
+ * 인증을 건너뛰는 endpoint 목록입니다.
+ */
+const allowList = [
+  '/',
+  '/hello'
+];
 
 export async function startServer() {
   const app = express();
@@ -10,7 +19,7 @@ export async function startServer() {
   app.use(express.json());
   app.use(express.urlencoded({extended: true}));
 
-  // app.use(auth());
+  app.use(authorizer({exclude: allowList}));
 
   await registerRoutes(app, __dirname + '/routes');
 

@@ -12,6 +12,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./src/types", // 얘가 먼저!
+      "./node_modules/@types"
+    ]
   }
 }
