@@ -9,7 +9,9 @@ import {registerRoutes} from '../common/utils/express';
  */
 const allowList = [
   '/',
-  '/hello'
+  '/hello',
+  '/login',
+  '/zod'
 ];
 
 export async function startServer() {
