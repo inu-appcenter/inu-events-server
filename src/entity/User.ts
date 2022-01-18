@@ -30,4 +30,6 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Comment, (c) => c.user)
   comments: Comment[];
+  
 }
+export default User;
