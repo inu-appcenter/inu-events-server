@@ -5,6 +5,6 @@ import p from '../../../package.json';
 const schema = defineSchema({
 });
 
-export default defineRoute('get', '/hello', schema, async (req, res) => {
+export default defineRoute('get', '/', schema, async (req, res) => {
   return res.send(`ㅎㅇㅎㅇ v${p.version}`);
 });
