@@ -3,10 +3,10 @@ import {ConnectionOptions} from 'typeorm';
 
 export default <ConnectionOptions>{
     type: 'mysql',
-    host: 'localhost',
+    host: process.env.DB_HOST,
     port: 3306,
-    username: 'root',
-    password: process.env.DB_PW,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     database: 'inu_events',
     synchronize: true,
     logging: false,
