@@ -5,8 +5,10 @@
    "main": "index.js",
    "scripts": {
       "test": "jest",
-      "start": "ts-node src/index.ts",
       "build": "tsc",
+      "dev": "ts-node src/index.ts",
+      "start": "node build/src/index.js",
+      "postinstall": "npm run build",
       "preview": "tsc && node build/src/index.js",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
    },
