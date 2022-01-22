@@ -17,9 +17,17 @@ class UserRepository extends Repository<User> {
         const user = await User.createQueryBuilder().
                                 delete().from(User).
                                 where("oauthId = :oauthId", {oauthId:oauthId}).execute();
-
-        return ;
+        return user.raw;
     }
+
+    async patchUser(oauthId:string, nickname:string): Promise<string> {
+        const user = await User.createQueryBuilder().
+                                update(User).
+                                set({nickname: nickname}).
+                                where("oauthId = :oauthId", {oauthId:oauthId}).execute();
+        return user.raw;
+    }
+
 
   }
   
