@@ -12,7 +12,14 @@ class UserRepository extends Repository<User> {
       const user = await User.createQueryBuilder().insert().into(User).values({ email,nickname,oauthProvider,oauthId}).execute();
       return user.identifiers[0].id;
     }
-  
+
+    async deleteUser(oauthId:string): Promise<string> {
+        const user = await User.createQueryBuilder().
+                                delete().from(User).
+                                where("oauthId = :oauthId", {oauthId:oauthId}).execute();
+
+        return ;
+    }
 
   }
   
