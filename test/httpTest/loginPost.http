@@ -1,0 +1,6 @@
+POST http://uniletter.inuappcenter.kr/login
+Content-Type: application/json
+
+{
+  "accessToken": ""
+}
