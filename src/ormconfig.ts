@@ -11,18 +11,14 @@ export default <ConnectionOptions>{
     synchronize: true,
     logging: false,
     entities: [
-        "/src/entity/**/*.ts"
+        __dirname + "/entity/**/*"
     ],
     migrations: [
-        "/src/migration/**/*.ts"
-    ],
-    subscribers: [
-        "/src/subscriber/**/*.ts"
+        __dirname + "/migration/**/*"
     ],
     cli: {
-        "entitiesDir": "/src/entity",
-        "migrationsDir": "/src/migrations",
-        "subscribersDir": "/src/subscriber"
+        "entitiesDir": "entity",
+        "migrationsDir": "migrations",
     },
     namingStrategy: new SnakeNamingStrategy()
 };
