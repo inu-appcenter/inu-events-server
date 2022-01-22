@@ -1,9 +1,9 @@
-import {defineSchema} from '../libs/schema';
+import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
-import UserRepository from '../libs/application/user/user-repository';
-import {defineRoute} from '../libs/route';
-import {getGoogleOAuthInfo} from '../../oauth';
-import Unauthorized from '../../common/errors/http/Unauthorized';
+import UserRepository from '../../libs/application/user/user-repository';
+import {defineRoute} from '../../libs/route';
+import {getGoogleOAuthInfo} from '../../../oauth';
+import Unauthorized from '../../../common/errors/http/Unauthorized';
 import { getCustomRepository } from 'typeorm';
 const schema = defineSchema({
   body: {
