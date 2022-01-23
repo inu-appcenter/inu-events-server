@@ -16,10 +16,6 @@ const WrongAuth = Unauthorized.of(
   '인증 이상함!!!!!!!!!!'
 );
 
-const Wrongemail = Unauthorized.of(
-  'Wrongemail',
-  '이메일있어요'
-);
 
 export default defineRoute('post', '/login', schema, async (req, res) => {
   const {accessToken} = req.body;
@@ -28,7 +24,7 @@ export default defineRoute('post', '/login', schema, async (req, res) => {
     const userInfo = await getGoogleOAuthInfo(accessToken);
     const existEmail = await getCustomRepository(UserRepository).checkEmail(userInfo.email);
     if (existEmail) {
-      throw Wrongemail();
+      return res.send(`이미 화원가입된 사용자 입니다. 이메일: ${userInfo.email}`);
     }
     else {
       await getCustomRepository(UserRepository).createUser(userInfo.email,"test","google",userInfo.oauthId);
