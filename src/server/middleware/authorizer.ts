@@ -2,14 +2,17 @@ import express, {RequestHandler} from 'express';
 import {InvalidJwt, NotLoggedIn} from '../../common/errors/general';
 import config from '../../config';
 import {decodeJwt} from '../../common/utils/token';
+import PathMatcher from '../libs/PathMatcher';
 
 export type AuthorizerConfig = {
   exclude?: string[];
 };
 
 export function authorizer({exclude}: AuthorizerConfig): RequestHandler {
+  const exclududPathMatcher = new PathMatcher(exclude);
+
   return (req, res, next) => {
-    if (exclude?.includes(req.path)) {
+    if (exclududPathMatcher.anyMatch(req.path)) {
       assignGetter(req);
 
       return next();
