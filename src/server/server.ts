@@ -11,7 +11,8 @@ const allowList = [
   '/',
   '/hello',
   '/login',
-  '/zod'
+  '/zod',
+  '/user',
 ];
 
 export async function startServer() {
@@ -21,7 +22,7 @@ export async function startServer() {
   app.use(express.json());
   app.use(express.urlencoded({extended: true}));
 
-  app.use(authorizer({exclude: allowList}));
+  //app.use(authorizer({exclude: allowList}));
 
   await registerRoutes(app, __dirname + '/routes');
 

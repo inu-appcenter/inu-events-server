@@ -20,6 +20,6 @@ export default defineRoute('patch', '/user/:oauthId?', schema, async (req, res) 
     const {nickname} = req.query;
 
     await getCustomRepository(UserRepository).patchUser(oauthId, nickname);
-
-    res.send();
+    return res.send(`유저 ${oauthId}의 닉네임을 ${nickname}으로 변경하였습니다.`);
+    //res.send();
 });
