@@ -17,9 +17,8 @@ const schema = defineSchema({
 export default defineRoute('patch', '/user/:oauthId?', schema, async (req, res) => {
 
     const {oauthId} = req.params;
-    const {nickname} = req.query;
 
-    await getCustomRepository(UserRepository).patchUser(oauthId, nickname);
-    return res.send(`유저 ${oauthId}의 닉네임을 ${nickname}으로 변경하였습니다.`);
-    //res.send();
+    await getCustomRepository(UserRepository).patchUser(oauthId, req.query);
+    return res.send(`유저 ${oauthId}의 정보를 ${JSON.stringify(req.query)}으로 변경하였습니다.`);
+
 });

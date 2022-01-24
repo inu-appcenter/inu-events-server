@@ -1,6 +1,6 @@
 import {defineSchema} from '../../libs/schema';
 import {string, z} from 'zod';
-import EventRepository from '../../libs/application/user/event-repository';
+import EventRepository from '../../libs/application/events/event-repository';
 import {defineRoute} from '../../libs/route';
 import {getGoogleOAuthInfo} from '../../../oauth';
 import { getCustomRepository } from 'typeorm';

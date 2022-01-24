@@ -1,8 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import User from '../../../../entity/User';
 import Event from '../../../../entity/Event';
-import {date, ZodDate, ZodNumber, ZodString} from "zod";
-import {userInfo} from "os";
+
 
 @EntityRepository(Event)
 class EventRepository extends Repository<Event> {

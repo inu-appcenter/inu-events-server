@@ -2,7 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import {getCustomRepository} from "typeorm";
-import EventRepository from "../../libs/application/user/event-repository";
+import EventRepository from "../../libs/application/events/event-repository";
 
 
 const schema = defineSchema({

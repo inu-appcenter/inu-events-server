@@ -21,10 +21,10 @@ class UserRepository extends Repository<User> {
         return user.raw;
     }
 
-    async patchUser(oauthId:string, nickname:string): Promise<string> {
+    async patchUser(oauthId:string, req_query:Object): Promise<string> {
         const user = await User.createQueryBuilder().
                                 update(User).
-                                set({nickname: nickname}).
+                                set(req_query).
                                 where("oauthId = :oauthId", {oauthId:oauthId}).execute();
         return user.raw;
     }
