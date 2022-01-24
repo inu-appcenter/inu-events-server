@@ -5,6 +5,8 @@ import {defineRoute} from '../../libs/route';
 import {getGoogleOAuthInfo} from '../../../oauth';
 import Unauthorized from '../../../common/errors/http/Unauthorized';
 import { getCustomRepository } from 'typeorm';
+
+
 const schema = defineSchema({
   body: {
     accessToken: z.string(),
@@ -15,7 +17,6 @@ const WrongAuth = Unauthorized.of(
   'wrong_auth',
   '인증 이상함!!!!!!!!!!'
 );
-
 
 export default defineRoute('post', '/login', schema, async (req, res) => {
   const {accessToken} = req.body;

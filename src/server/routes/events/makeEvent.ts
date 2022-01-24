@@ -5,9 +5,6 @@ import {defineRoute} from '../../libs/route';
 import {getGoogleOAuthInfo} from '../../../oauth';
 import { getCustomRepository } from 'typeorm';
 
-
-
-
 const schema = defineSchema({
     body: {
         //일단 accessToken으로 받아옴
@@ -21,7 +18,6 @@ const schema = defineSchema({
         endAt:z.date().optional(),
     }
 });
-
 
 export default defineRoute('post', '/event', schema, async (req, res) => {
     console.log('make Event!');

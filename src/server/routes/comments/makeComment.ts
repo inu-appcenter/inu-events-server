@@ -6,8 +6,6 @@ import {getGoogleOAuthInfo} from '../../../oauth';
 import { getCustomRepository } from 'typeorm';
 
 
-
-
 const schema = defineSchema({
     body: {
         //일단 accessToken으로 받아옴
@@ -17,7 +15,6 @@ const schema = defineSchema({
         content: z.string(),
     }
 });
-
 
 export default defineRoute('post', '/comment', schema, async (req, res) => {
     console.log('make coomet!');

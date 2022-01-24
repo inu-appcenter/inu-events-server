@@ -13,18 +13,19 @@ class CommentRepository extends Repository<Comment> {
         console.log(user);
         return user;
     }
+
     async returnEvent (id: string): Promise<Event> {
         const event = await Event.createQueryBuilder('event').where('event.id = :id', { id }).getOne();
         console.log(event);
         return event;
     }
+
     async createComment(user: User,event:Event, content: string) {
 
         const comment = await Comment.createQueryBuilder().
                                     insert().into(Comment).
                                     values({ user, event,content}).execute();
         return comment.identifiers[0].id;
-
     }
 
     async deleteComment(commentId:string): Promise<string> {
