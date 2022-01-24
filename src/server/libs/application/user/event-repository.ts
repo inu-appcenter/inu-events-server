@@ -28,10 +28,11 @@ class EventRepository extends Repository<Event> {
         return event.raw;
     }
 
-    async patchEvent(eventId:string,host:string,category:string,title:string,body:string,imageUuid:string,startAt:Date,endAt:Date): Promise<string> {
+
+    async patchEvent(eventId:string, req_query:Object) {
         const user = await Event.createQueryBuilder().
                                 update(Event).
-                                set({host:host,category:category,title:title,body:body,imageUuid:imageUuid,startAt:startAt,endAt:endAt}).
+                                set(req_query).
                                 where("id = :id", {id:eventId}).execute();
         return user.raw;
     }

@@ -3,6 +3,7 @@ import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import {getCustomRepository} from "typeorm";
 import EventRepository from "../../libs/application/user/event-repository";
+import * as console from "console";
 
 
 const schema = defineSchema({
@@ -10,7 +11,6 @@ const schema = defineSchema({
         eventId: z.string(),
     },
     query: {
-        //업데이트 도와줘요~.~. 잘안됨
         host:z.string().optional(),
         category: z.string().optional(),
         title: z.string().optional(),
@@ -24,8 +24,7 @@ const schema = defineSchema({
 export default defineRoute('patch', '/event/:eventId?', schema, async (req, res) => {
 
     const {eventId} = req.params;
-    const {host,category,title,body,imageUuid,startAt,endAt} = req.query;
-    await getCustomRepository(EventRepository).patchEvent(eventId, host,category,title,body,imageUuid,startAt,endAt);
-    return res.send(`event ${eventId}를 업데이트 하였습니다.`);
-    //res.send();
+    await getCustomRepository(EventRepository).patchEvent(eventId,req.query);
+    return res.send(`event ${eventId}를 업데이트: ${JSON.stringify(req.query)}`);
+
 });
