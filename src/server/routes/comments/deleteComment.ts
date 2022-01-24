@@ -2,7 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import {getCustomRepository} from "typeorm";
-import CommentRepository from "../../libs/application/user/comment-repository";
+import CommentRepository from "../../libs/application/comments/comment-repository";
 
 
 const schema = defineSchema({

@@ -1,6 +1,6 @@
 import {defineSchema} from '../../libs/schema';
 import {string, z} from 'zod';
-import CommentRepository from '../../libs/application/user/comment-repository';
+import CommentRepository from "../../libs/application/comments/comment-repository";
 import {defineRoute} from '../../libs/route';
 import {getGoogleOAuthInfo} from '../../../oauth';
 import { getCustomRepository } from 'typeorm';
