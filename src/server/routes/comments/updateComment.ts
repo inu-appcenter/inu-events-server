@@ -19,6 +19,6 @@ export default defineRoute('patch', '/comment/:commentId?', schema, async (req, 
     const {commentId} = req.params;
     const {content} = req.query;
     await getCustomRepository(CommentRepository).patchComment(commentId,content);
-    return res.send(`comment ${commentId}를 업데이트 하였습니다.`);
+    return res.send(`comment ${commentId}를 업데이트 : ${JSON.stringify(req.query)}`);
     //res.send();
 });
