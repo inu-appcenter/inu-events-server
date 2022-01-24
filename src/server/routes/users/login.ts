@@ -24,12 +24,12 @@ export default defineRoute('post', '/login', schema, async (req, res) => {
     const userInfo = await getGoogleOAuthInfo(accessToken);
     const existEmail = await getCustomRepository(UserRepository).checkEmail(userInfo.email);
     if (existEmail) {
-      return res.send(`이미 화원가입된 사용자 입니다. 이메일: ${userInfo.email}`);
+      return res.json({"email": `${userInfo.email}`, "oauthId":  `${userInfo.oauthId}`, "msg" : "이미 가입된 사용자입니다."});
     }
     else {
       await getCustomRepository(UserRepository).createUser(userInfo.email,"test","google",userInfo.oauthId);
     }
-    return res.send(`당신 정보는 ${userInfo.email}`);
+    return res.json({"email": `${userInfo.email}`, "oauthId":  `${userInfo.oauthId}`,  "msg" : "회원가입이 완료되었습니다."});
 
   } catch (e) {
     throw WrongAuth();
