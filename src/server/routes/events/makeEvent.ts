@@ -2,22 +2,16 @@ import {defineSchema} from '../../libs/schema';
 import {string, z} from 'zod';
 import EventRepository from '../../libs/application/user/event-repository';
 import {defineRoute} from '../../libs/route';
+import {getGoogleOAuthInfo} from '../../../oauth';
 import { getCustomRepository } from 'typeorm';
-import User from '../../../entity/User';
+
 
 
 
 const schema = defineSchema({
     body: {
-        //user를 우찌해야하나.........
-        user: z.object({
-            id:z.number(),
-            email:z.string(),
-            nickname:z.string(),
-            oauthProvider: z.string(),
-            oauthId:z.string(),
-            createdAt:z.date()
-        }),
+        //일단 accessToken으로 받아옴
+        user: z.string(),
         host:z.string(),
         category: z.string(),
         title: z.string(),
@@ -32,8 +26,10 @@ const schema = defineSchema({
 export default defineRoute('post', '/event', schema, async (req, res) => {
     console.log('make Event!');
     const {user,host,category,title, body, imageUuid, startAt, endAt } = req.body;
-
-    await getCustomRepository(EventRepository).createEvent(user,host,category,title, body, imageUuid, startAt, endAt);
+    const userInfo = await getGoogleOAuthInfo(user);
+    const Userstatus = await getCustomRepository(EventRepository).returnUser(userInfo.email);
+    console.log(Userstatus);
+    await getCustomRepository(EventRepository).createEvent(Userstatus,host,category,title, body, imageUuid, startAt, endAt);
 
     res.sendStatus(201); //success
 });

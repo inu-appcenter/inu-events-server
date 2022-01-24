@@ -6,9 +6,13 @@ import {userInfo} from "os";
 
 @EntityRepository(Event)
 class EventRepository extends Repository<Event> {
-    // 아악 몰라악!!!!!!!! 임시저장임
-    async createEvent(user: { createdAt?: ZodDate["_output"]; oauthId?: ZodString["_output"]; nickname?: ZodString["_output"]; id?: ZodNumber["_output"]; email?: ZodString["_output"]; oauthProvider?: ZodString["_output"] },
-                      host: string, category: string, title: string, body: string, imageUuid: string, startAt: Date, endAt: Date) {
+    // 일단 accessToken으로 email 받아옴
+    async returnUser(email: string): Promise<User> {
+        const user = await User.createQueryBuilder('user').where('user.email = :email', { email }).getOne();
+        console.log(user);
+        return user;
+    }
+    async createEvent(user: User,host: string, category: string, title: string, body: string, imageUuid: string, startAt: Date, endAt: Date) {
 
         const event = await Event.createQueryBuilder().
                                     insert().into(Event).
@@ -17,7 +21,20 @@ class EventRepository extends Repository<Event> {
 
     }
 
+    async deleteEvent(EventId:string): Promise<string> {
+        const event = await Event.createQueryBuilder().
+                                delete().from(Event).
+                                where("id = :id", {id:EventId}).execute();
+        return event.raw;
+    }
 
+    async patchEvent(eventId:string,host:string,category:string,title:string,body:string,imageUuid:string,startAt:Date,endAt:Date): Promise<string> {
+        const user = await Event.createQueryBuilder().
+                                update(Event).
+                                set({host:host,category:category,title:title,body:body,imageUuid:imageUuid,startAt:startAt,endAt:endAt}).
+                                where("id = :id", {id:eventId}).execute();
+        return user.raw;
+    }
 }
 
 export default EventRepository;
