@@ -18,13 +18,13 @@ export function authorizer({exclude}: AuthorizerConfig): RequestHandler {
       return next();
     }
 
-    const tokenFromCookie = req.cookies[config.server.jwt.cookieName];
-    if (tokenFromCookie == null) {
+    const jwtInRequest = req.header('token') ?? req.cookies[config.server.jwt.cookieName];
+    if (jwtInRequest == null) {
       return next(NotLoggedIn());
     }
 
     try {
-      const {userId} = decodeJwt(tokenFromCookie);
+      const {userId} = decodeJwt(jwtInRequest);
 
       assignGetter(req, userId);
 
