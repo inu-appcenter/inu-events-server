@@ -13,12 +13,12 @@ export function authorizer({exclude}: AuthorizerConfig): RequestHandler {
 
   return (req, res, next) => {
     if (exclududPathMatcher.anyMatch(req.path)) {
-      assignGetter(req);
+      assignGetter(req, extractUserIdIfJwtExists(req));
 
       return next();
     }
 
-    const jwtInRequest = req.header('token') ?? req.cookies[config.server.jwt.cookieName];
+    const jwtInRequest = extractJwt(req);
     if (jwtInRequest == null) {
       return next(NotLoggedIn());
     }
@@ -45,4 +45,21 @@ function assignGetter(req: express.Request, initial?: number) {
       }
     },
   });
+}
+
+function extractJwt(req: express.Request): string | undefined {
+  return req.header('token') ?? req.cookies[config.server.jwt.cookieName];
+}
+
+function extractUserIdIfJwtExists(req: express.Request): number | undefined {
+  const jwt = extractJwt(req);
+  if (jwt == null) {
+    return undefined;
+  }
+
+  try {
+    return decodeJwt(jwt).userId;
+  } catch (e) {
+    return undefined;
+  }
 }
