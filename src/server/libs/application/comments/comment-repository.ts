@@ -18,6 +18,18 @@ class CommentRepository extends Repository<Comment> {
         return event;
     }
     
+    async getComment(id: string): Promise<Comment> {
+        const comment = await Comment.createQueryBuilder('test')
+                                     .leftJoinAndSelect('test.user','user')
+                                     .where('test.id = :id', { id })
+                                     .leftJoinAndSelect('test.event','event')
+                                     .where('test.id = :id', { id })
+                                     .getOne()
+                        
+        console.log(comment);
+        return comment;
+    }
+
     async createComment(user: User,event:Event, content: string) {
 
         const comment = await Comment.createQueryBuilder().

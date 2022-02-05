@@ -11,6 +11,16 @@ class EventRepository extends Repository<Event> {
         console.log(user);
         return user;
     }
+
+    async getEvent(id: string): Promise<Event> {
+        const event = await Event.createQueryBuilder('test')
+                                 .innerJoinAndSelect('test.user', 'user')  
+                                 .where('test.id = :id', { id })
+                                 .getOne();
+        console.log(event);
+        return event;
+    }
+
     async createEvent(user: User,host: string, category: string, title: string, body: string, imageUuid: string, startAt: Date, endAt: Date) {
 
         const event = await Event.createQueryBuilder().
