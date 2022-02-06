@@ -17,6 +17,7 @@ class MakeEvent {
 
      return newEvent;
     }
+    
 }
 
 export default new MakeEvent();
