@@ -16,5 +16,5 @@ export default defineRoute('delete', '/user/:oauthId?', schema, async (req, res)
     const {oauthId} = req.params;
     await DeleteUser.deleteUser(oauthId);
     return res.send(`유저 ${oauthId}를 삭제했습니다.`);
-    //res.send();
+
 });
