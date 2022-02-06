@@ -8,7 +8,7 @@ import UpdateEvent from '../../../service/event/UpdateEvent';
 
 const schema = defineSchema({
     params: {
-        eventId: z.number(),
+        eventId: z.string(),
     },
     query: {
         host:z.string().optional(),
