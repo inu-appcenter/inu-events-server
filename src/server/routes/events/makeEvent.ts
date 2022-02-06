@@ -1,9 +1,10 @@
 import {defineSchema} from '../../libs/schema';
 import {string, z} from 'zod';
-import EventRepository from '../../libs/application/events/event-repository';
+import MakeEvent from '../../../service/event/MakeEvent';
 import {defineRoute} from '../../libs/route';
 import {getGoogleOAuthInfo} from '../../../oauth';
 import { getCustomRepository } from 'typeorm';
+import ReturnUserInformation from '../../../service/ReturnUserInformation';
 
 const schema = defineSchema({
     body: {
@@ -22,11 +23,8 @@ const schema = defineSchema({
 export default defineRoute('post', '/event', schema, async (req, res) => {
     console.log('make Event!');
     const {user,host,category,title, body, imageUuid, startAt, endAt } = req.body;
-    const userInfo = await getGoogleOAuthInfo(user);
-    const Userstatus = await getCustomRepository(EventRepository).returnUser(userInfo.email);
-    console.log(Userstatus);
-    await getCustomRepository(EventRepository).createEvent(Userstatus,host,category,title, body, imageUuid, startAt, endAt);
-
+    const Userstatus = await ReturnUserInformation.returnUser(user);
+    await MakeEvent.makeEvent(Userstatus,host,category,title, body, imageUuid, startAt, endAt);
     res.sendStatus(201); //success
 });
 
