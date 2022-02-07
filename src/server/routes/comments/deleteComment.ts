@@ -9,7 +9,7 @@ const schema = defineSchema({
   },
 });
 
-export default defineRoute('delete', '/comment/:commentId', schema, async (req, res) => {
+export default defineRoute('delete', '/comments/:commentId', schema, async (req, res) => {
   const {commentId} = req.params;
 
   await CommentService.deleteComment(commentId);

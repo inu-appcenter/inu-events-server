@@ -13,7 +13,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('post', '/comment', schema, async (req, res) => {
+export default defineRoute('post', '/comments', schema, async (req, res) => {
   console.log('make coomet!');
 
   const {userId} = req;

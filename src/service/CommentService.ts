@@ -21,6 +21,12 @@ class CommentService {
     return await Comment.findOne(commentId);
   }
 
+  async getComments(eventId: number): Promise<Comment[]> {
+    const event = await Event.findOne(eventId);
+    
+    return await Comment.find({where: {event}});
+  }
+
   async patchComment(commentId: number, body: Partial<ModifyCommentParams>): Promise<string> {
     const patchevent = await Comment.update(
       {id: commentId},

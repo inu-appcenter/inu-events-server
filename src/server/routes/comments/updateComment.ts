@@ -13,7 +13,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('patch', '/comment/:commentId', schema, async (req, res) => {
+export default defineRoute('patch', '/comments/:commentId', schema, async (req, res) => {
   const {commentId} = req.params;
 
   await CommentService.patchComment(commentId, req.body);
