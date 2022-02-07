@@ -17,10 +17,10 @@ const schema = defineSchema({
 
 export default defineRoute('post', '/comment', schema, async (req, res) => {
   console.log('make coomet!');
-  
+
   const {user, event, content} = req.body;
 
-  const Userstatus = await ReturnUserInformation.returnUser(user);
+  const Userstatus = await ReturnUserInformation.findUserByAccessToken(user);
   const Eventstatus = await ReturnEventInformation.returnEvent(event);
   await CommentService.makeComment(Userstatus, Eventstatus, content);
 

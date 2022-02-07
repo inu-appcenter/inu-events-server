@@ -1,8 +1,8 @@
-import {getGoogleOAuthInfo} from '../../oauth';
-import Unauthorized from '../../common/errors/http/Unauthorized';
-import User from '../../entity/User';
-import {createJwt} from '../../common/utils/token';
-import {printError, stringifyError} from '../../common/utils/error';
+import {getGoogleOAuthInfo} from '../oauth';
+import Unauthorized from '../common/errors/http/Unauthorized';
+import User from '../entity/User';
+import {createJwt} from '../common/utils/token';
+import {printError, stringifyError} from '../common/utils/error';
 
 const WrongAuth = Unauthorized.of(
   'wrong_auth',

@@ -1,7 +1,7 @@
 import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
-import LoginService from '../../../service/user/LoginService';
+import LoginService from '../../../service/LoginService';
 import config from '../../../config';
 
 const schema = defineSchema({

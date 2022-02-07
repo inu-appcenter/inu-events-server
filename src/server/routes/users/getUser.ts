@@ -1,19 +1,19 @@
 import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
-import GetUser from '../../../service/user/getUser';
-
+import UserService from '../../../service/UserService';
 
 const schema = defineSchema({
-    params: {
-        oauthId: z.string(),
-    },
+  params: {
+    id: z.string(),
+  },
 });
 
-export default defineRoute('get', '/user/:oauthId?', schema, async (req, res) => {
+export default defineRoute('get', '/user/:id', schema, async (req, res) => {
+  const {id} = req.params;
 
-    const {oauthId} = req.params;
-    const User_Information = await GetUser.getUser(oauthId);
-    return res.json(User_Information)
+  const userInformation = await UserService.getUser(id);
+
+  return res.json(userInformation)
 });
 

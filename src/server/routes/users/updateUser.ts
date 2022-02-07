@@ -1,23 +1,22 @@
 import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
-import {getCustomRepository} from "typeorm";
-import UpdateUser from '../../../service/user/UpdateUser';
+import UserService from '../../../service/UserService';
 
 
 const schema = defineSchema({
-    params: {
-        oauthId: z.string(),
-    },
-    query: {
-        nickname: z.string(),
-    }
+  params: {
+    id: z.string(),
+  },
+  query: {
+    nickname: z.string(),
+  }
 });
 
-export default defineRoute('patch', '/user/:oauthId?', schema, async (req, res) => {
+export default defineRoute('patch', '/user/:id', schema, async (req, res) => {
+  const {id} = req.params;
 
-    const {oauthId} = req.params;
-    await UpdateUser.patchUser(oauthId, req.query);
-    return res.send(`유저 ${oauthId}의 정보를 ${JSON.stringify(req.query)}으로 변경하였습니다.`);
+  await UserService.patchUser(id, req.query);
 
+  return res.send(`유저 ${id}의 정보를 ${JSON.stringify(req.query)}으로 변경하였습니다.`);
 });
