@@ -2,10 +2,11 @@ import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
+import {stringAsDate, stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
   params: {
-    eventId: z.string(),
+    eventId: stringAsInt,
   },
   query: {
     host: z.string().optional(),
@@ -13,8 +14,8 @@ const schema = defineSchema({
     title: z.string().optional(),
     body: z.string().optional(),
     imageUuid: z.string().optional(),
-    startAt: z.date().optional(),
-    endAt: z.date().optional(),
+    startAt: stringAsDate.optional(),
+    endAt: stringAsDate.optional(),
   }
 });
 

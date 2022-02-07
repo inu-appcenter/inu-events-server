@@ -4,10 +4,11 @@ import {defineRoute} from '../../libs/route';
 import CommentService from '../../../service/CommentService';
 import UserService from '../../../service/UserService';
 import EventService from '../../../service/EventService';
+import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
   body: {
-    eventId: z.string(),
+    eventId: stringAsInt,
     content: z.string(),
   }
 });

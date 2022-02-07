@@ -2,10 +2,11 @@ import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import CommentService from '../../../service/CommentService';
+import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
   params: {
-    commentId: z.string(),
+    commentId: stringAsInt,
   },
   query: {
     content: z.string()

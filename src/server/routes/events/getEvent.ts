@@ -1,11 +1,11 @@
 import {defineSchema} from '../../libs/schema';
-import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
+import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
   params: {
-    eventId: z.string(),
+    eventId: stringAsInt,
   },
 });
 

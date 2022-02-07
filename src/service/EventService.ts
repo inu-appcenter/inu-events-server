@@ -15,27 +15,20 @@ class EventService {
     }).save();
   }
 
-  async getEvent(eventId: string): Promise<Event> {
-    const eventIdStr2Num = parseInt(eventId)
-    return await Event.findOne({where: {id: eventIdStr2Num}});
+  async getEvent(eventId: number): Promise<Event> {
+    return await Event.findOne({where: {id: eventId}});
   }
 
-  async patchEvent(eventId: string, req_query: Object): Promise<string> {
-    const eventIdStr2Num = parseInt(eventId)
+  async patchEvent(eventId: number, req_query: Object): Promise<string> {
     const patchevent = await Event.update(
-      {
-        id: eventIdStr2Num
-      },
+      {id: eventId},
       req_query
     );
     return patchevent.raw;
   }
 
-  async deleteEvent(eventId: string): Promise<string> {
-    const eventIdStr2Num = parseInt(eventId)
-    await Event.delete({
-      id: eventIdStr2Num
-    });
+  async deleteEvent(id: number): Promise<string> {
+    await Event.delete({id});
     return;
   }
 }

@@ -11,19 +11,21 @@ class CommentService {
     }).save();
   }
 
-  async patchComment(commentId: string, req_query: Object): Promise<string> {
-    const commentIdStr2Num = parseInt(commentId)
+  async getComment(commentId: number): Promise<Comment | undefined> {
+    return await Comment.findOne(commentId);
+  }
+
+  async patchComment(commentId: number, req_query: Object): Promise<string> {
     const patchevent = await Comment.update(
-      {id: commentIdStr2Num},
+      {id: commentId},
       req_query
     );
     return patchevent.raw;
   }
 
-  async deleteComment(commentId: string): Promise<string> {
-    const coomentIdStr2Num = parseInt(commentId)
+  async deleteComment(commentId: number): Promise<string> {
     await Comment.delete({
-      id: coomentIdStr2Num
+      id: commentId
     });
     return;
   }
