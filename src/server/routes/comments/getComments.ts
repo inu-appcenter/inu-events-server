@@ -10,9 +10,9 @@ const schema = defineSchema({
 });
 
 export default defineRoute('get', '/comments', schema, async (req, res) => {
-  const {commentId} = req.params;
+  const {eventId} = req.query;
 
-  const commentInformation = await CommentService.getComment(commentId);
+  const commentInformation = await CommentService.getComments(eventId);
 
   return res.json(commentInformation)
 });
