@@ -9,7 +9,7 @@ const schema = defineSchema({
   },
 });
 
-export default defineRoute('delete', '/event/:eventId', schema, async (req, res) => {
+export default defineRoute('delete', '/events/:eventId', schema, async (req, res) => {
   const {eventId} = req.params;
 
   await EventService.deleteEvent(eventId);

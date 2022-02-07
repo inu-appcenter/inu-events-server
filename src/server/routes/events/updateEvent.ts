@@ -19,7 +19,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('patch', '/event/:eventId?', schema, async (req, res) => {
+export default defineRoute('patch', '/events/:eventId?', schema, async (req, res) => {
   const {eventId} = req.params;
 
   await EventService.patchEvent(eventId, req.body);

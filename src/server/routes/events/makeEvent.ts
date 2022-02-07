@@ -17,7 +17,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('post', '/event', schema, async (req, res) => {
+export default defineRoute('post', '/events', schema, async (req, res) => {
   console.log('make Event!');
 
   const {userId} = req;
