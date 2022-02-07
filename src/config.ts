@@ -14,7 +14,7 @@ export default {
     },
     storage: {
       image: {
-        path: '/Users/potados/Desktop',
+        path: process.env.IMAGE_STORAGE_PATH || '/Users/potados/Desktop',
       }
     }
   }
