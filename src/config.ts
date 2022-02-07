@@ -11,6 +11,11 @@ export default {
       },
       key: process.env.JWT_KEY || 'hahahahahahahahaha',
       expiresIn: '24h',
+    },
+    storage: {
+      image: {
+        path: '/Users/potados/Desktop',
+      }
     }
   }
 };
