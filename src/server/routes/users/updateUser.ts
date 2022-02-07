@@ -3,6 +3,7 @@ import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import UserService from '../../../service/UserService';
 import {stringAsInt} from '../../libs/zodTypes';
+import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
   params: {
@@ -13,7 +14,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('patch', '/users/:id', schema, async (req, res) => {
+export default defineRoute('patch', '/users/:id', schema, authorizer(), async (req, res) => {
   const {id} = req.params;
 
   await UserService.patchUser(id, req.body);

@@ -3,6 +3,7 @@ import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import CommentService from '../../../service/CommentService';
 import {stringAsInt} from '../../libs/zodTypes';
+import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
   params: {
@@ -13,7 +14,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('patch', '/comments/:commentId', schema, async (req, res) => {
+export default defineRoute('patch', '/comments/:commentId', schema, authorizer(), async (req, res) => {
   const {commentId} = req.params;
 
   await CommentService.patchComment(commentId, req.body);

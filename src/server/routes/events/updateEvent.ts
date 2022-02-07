@@ -3,6 +3,7 @@ import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
 import {stringAsDate, stringAsInt} from '../../libs/zodTypes';
+import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
   params: {
@@ -19,7 +20,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('patch', '/events/:eventId?', schema, async (req, res) => {
+export default defineRoute('patch', '/events/:eventId?', schema, authorizer(), async (req, res) => {
   const {eventId} = req.params;
 
   await EventService.patchEvent(eventId, req.body);

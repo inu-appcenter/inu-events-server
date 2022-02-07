@@ -5,6 +5,7 @@ import CommentService from '../../../service/CommentService';
 import UserService from '../../../service/UserService';
 import EventService from '../../../service/EventService';
 import {stringAsInt} from '../../libs/zodTypes';
+import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
   body: {
@@ -13,7 +14,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('post', '/comments', schema, async (req, res) => {
+export default defineRoute('post', '/comments', schema, authorizer(), async (req, res) => {
   console.log('make coomet!');
 
   const {userId} = req;

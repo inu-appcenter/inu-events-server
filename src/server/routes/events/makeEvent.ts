@@ -4,6 +4,7 @@ import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
 import UserService from '../../../service/UserService';
 import {stringAsDate} from '../../libs/zodTypes';
+import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
   body: {
@@ -17,7 +18,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('post', '/events', schema, async (req, res) => {
+export default defineRoute('post', '/events', schema, authorizer(), async (req, res) => {
   console.log('make Event!');
 
   const {userId} = req;

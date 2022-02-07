@@ -1,7 +1,7 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import Event from './Event';
 import Comment from './Comment';
-import {UserReponse} from '../server/routes/users/types';
+import {UserReponse} from '../service/types';
 
 /**
  * 사용자!
