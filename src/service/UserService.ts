@@ -1,14 +1,18 @@
 import User from '../entity/User';
 
+type ModifyUserParams = {
+  nickname: string;
+};
+
 class UserService {
   async getUser(id: number): Promise<User> {
     return await User.findOne({where: {id}});
   }
 
-  async patchUser(id: number, req_query: Object): Promise<string> {
+  async patchUser(id: number, body: Partial<ModifyUserParams>): Promise<string> {
     const patchuser = await User.update(
       {id},
-      req_query
+      body
     );
     return patchuser.raw;
   }

@@ -8,15 +8,15 @@ const schema = defineSchema({
   params: {
     id: stringAsInt,
   },
-  query: {
-    nickname: z.string(),
+  body: {
+    nickname: z.string().optional(),
   }
 });
 
 export default defineRoute('patch', '/users/:id', schema, async (req, res) => {
   const {id} = req.params;
 
-  await UserService.patchUser(id, req.query);
+  await UserService.patchUser(id, req.body);
 
   return res.send(`유저 ${id}의 정보를 ${JSON.stringify(req.query)}으로 변경하였습니다.`);
 });

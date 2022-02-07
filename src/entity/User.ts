@@ -1,6 +1,7 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import Event from './Event';
 import Comment from './Comment';
+import {UserReponse} from '../server/routes/users/types';
 
 /**
  * 사용자!
@@ -33,6 +34,14 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Comment, (c) => c.user)
   comments: Comment[];
+
+  toResponse(): UserReponse {
+    return {
+      id: this.id,
+      email: this.email,
+      nickname: this.nickname,
+    }
+  }
 }
 
 export default User;

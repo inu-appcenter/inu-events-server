@@ -6,7 +6,7 @@ import config from '../../../config';
 
 const schema = defineSchema({
   body: {
-    accessToken: z.string().optional(),
+    accessToken: z.string(),
   }
 });
 

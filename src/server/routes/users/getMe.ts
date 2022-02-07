@@ -4,15 +4,12 @@ import UserService from '../../../service/UserService';
 import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
-  params: {
-    id: stringAsInt,
-  },
 });
 
-export default defineRoute('get', '/users/:id', schema, async (req, res) => {
-  const {id} = req.params;
+export default defineRoute('get', '/me', schema, async (req, res) => {
+  const {userId} = req;
 
-  const user = await UserService.getUser(id);
+  const user = await UserService.getUser(userId);
 
   return res.json(user.toResponse());
 });
