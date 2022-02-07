@@ -9,7 +9,7 @@ const schema = defineSchema({
   },
 });
 
-export default defineRoute('get', '/event/:eventId?', schema, async (req, res) => {
+export default defineRoute('get', '/event/:eventId', schema, async (req, res) => {
   const {eventId} = req.params;
 
   const eventInformation = await EventService.getEvent(eventId);

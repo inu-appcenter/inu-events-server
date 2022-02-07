@@ -23,8 +23,8 @@ export default defineRoute('post', '/event', schema, async (req, res) => {
   const {userId} = req;
   const {host, category, title, body, imageUuid, startAt, endAt} = req.body;
 
-  const Userstatus = await UserService.getUser(userId)
-  await EventService.makeEvent(Userstatus, host, category, title, body, imageUuid, startAt, endAt);
+  const user = await UserService.getUser(userId)
+  await EventService.makeEvent({user, host, category, title, body, imageUuid, startAt, endAt});
 
   res.sendStatus(201); //success
 });

@@ -8,7 +8,7 @@ const schema = defineSchema({
   params: {
     eventId: stringAsInt,
   },
-  query: {
+  body: {
     host: z.string().optional(),
     category: z.string().optional(),
     title: z.string().optional(),
@@ -22,7 +22,7 @@ const schema = defineSchema({
 export default defineRoute('patch', '/event/:eventId?', schema, async (req, res) => {
   const {eventId} = req.params;
 
-  await EventService.patchEvent(eventId, req.query);
+  await EventService.patchEvent(eventId, req.body);
 
   return res.send(`event ${eventId}를 업데이트: ${JSON.stringify(req.query)}`);
 });
