@@ -1,16 +1,13 @@
 import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
-import ReturnUserInformation from '../../../service/ReturnUserInformation';
-import ReturnEventInformation from '../../../service/ReturnEventInformation';
 import CommentService from '../../../service/CommentService';
+import UserService from '../../../service/UserService';
+import EventService from '../../../service/EventService';
 
 const schema = defineSchema({
   body: {
-    //일단 accessToken으로 받아옴
-    user: z.string(),
-    //일단 event id로 받아옴.
-    event: z.string(),
+    eventId: z.string(),
     content: z.string(),
   }
 });
@@ -18,11 +15,13 @@ const schema = defineSchema({
 export default defineRoute('post', '/comment', schema, async (req, res) => {
   console.log('make coomet!');
 
-  const {user, event, content} = req.body;
+  const {userId} = req;
+  const {eventId, content} = req.body;
 
-  const Userstatus = await ReturnUserInformation.findUserByAccessToken(user);
-  const Eventstatus = await ReturnEventInformation.returnEvent(event);
-  await CommentService.makeComment(Userstatus, Eventstatus, content);
+  const user = await UserService.getUser(userId);
+  const event = await EventService.getEvent(eventId);
+
+  await CommentService.makeComment(user, event, content);
 
   res.sendStatus(201); //success
 });
