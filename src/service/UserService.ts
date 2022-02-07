@@ -13,9 +13,8 @@ class UserService {
     return patchuser.raw;
   }
 
-  async deleteUser(id: number): Promise<string> {
+  async deleteUser(id: number): Promise<void> {
     await User.delete({id});
-    return;
   }
 }
 

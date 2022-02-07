@@ -2,56 +2,97 @@ import {getGoogleOAuthInfo} from '../oauth';
 import Unauthorized from '../common/errors/http/Unauthorized';
 import User from '../entity/User';
 import {createJwt} from '../common/utils/token';
-import {printError, stringifyError} from '../common/utils/error';
+import {printError} from '../common/utils/error';
+import {generateUUID} from '../common/utils/uuid';
 
 const WrongAuth = Unauthorized.of(
   'wrong_auth',
   '인증 이상함!!!!!!!!!!'
 );
 
-type LoginResult = {
-  jwt: string;
+const NoSuchUser = Unauthorized.of(
+  'no_such_user',
+  '그런 사람 또 없습니다~'
+);
 
-  email: string;
-  oauthId: string;
-  msg: string;
+const InvalidToken = Unauthorized.of(
+  'invalid_remember_me_token',
+  '유효하지 않은 자동로그인 토큰입니다.'
+);
+
+type LoginResult = {
+  user: User;
+
+  jwt: string;
+  rememberMeToken: string;
 }
 
 class LoginService {
-  async login(accessToken: string): Promise<LoginResult> {
+  /**
+   * 구글 로그인 해서 액세스 토큰으로 로그인.
+   * @param accessToken
+   */
+  async oauthLogin(accessToken: string): Promise<LoginResult> {
+    const {email, oauthId} = await this.resolveUserInfoFromGoogle(accessToken);
+
+    const user = await this.getOrCreateUser(email, oauthId);
+
+    return this.onSuccess(user);
+  }
+
+  private async resolveUserInfoFromGoogle(accessToken: string) {
     try {
-      const userInfo = await getGoogleOAuthInfo(accessToken);
-      const existingUser = await User.findOne({where: {email: userInfo.email}});
-
-      if (existingUser == null) {
-        const newUser = await User.create({
-          email: userInfo.email,
-          nickname: 'test',
-          oauthProvider: 'google',
-          oauthId: userInfo.oauthId
-        }).save();
-
-        return {
-          jwt: createJwt({userId: newUser.id}),
-
-          email: `${userInfo.email}`,
-          oauthId: `${userInfo.oauthId}`,
-          msg: '회원가입이 완료되었습니다.'
-        };
-      } else {
-        return {
-          jwt: createJwt({userId: existingUser.id}),
-
-          email: `${userInfo.email}`,
-          oauthId: `${userInfo.oauthId}`,
-          msg: '이미 가입된 사용자입니다.'
-        };
-      }
+      return await getGoogleOAuthInfo(accessToken);
     } catch (e) {
       printError(e);
 
       throw WrongAuth();
     }
+  }
+
+  private async getOrCreateUser(email: string, oauthId: string): Promise<User> {
+    const found = await User.findOne({where: {oauthId}});
+    if (found != null) {
+      return found;
+    }
+
+    return await User.create({
+      email: email,
+      nickname: `haha-${new Date().getTime()}`,
+      oauthProvider: 'google',
+      oauthId: oauthId,
+      rememberMeToken: generateUUID(),
+    }).save();
+  }
+
+  /**
+   * 자동 로그인.
+   * @param id
+   * @param rememberMeToken
+   */
+  async rememberedLogin(id: number, rememberMeToken: string): Promise<LoginResult> {
+    const user = await User.findOne(id);
+    if (user == null) {
+      throw NoSuchUser();
+    }
+
+    const tokenMatches = user.rememberMeToken == rememberMeToken;
+
+    if (!tokenMatches) {
+      throw InvalidToken();
+    }
+
+    return this.onSuccess(user);
+  }
+
+  private async onSuccess(user: User) {
+    const jwt = createJwt({userId: user.id});
+    const rememberMeToken = generateUUID();
+
+    user.rememberMeToken = rememberMeToken;
+    await user.save();
+
+    return {user, jwt, rememberMeToken};
   }
 }
 

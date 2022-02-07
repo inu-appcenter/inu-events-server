@@ -6,23 +6,23 @@ import config from '../../../config';
 
 const schema = defineSchema({
   body: {
-    accessToken: z.string(),
+    accessToken: z.string().optional(),
   }
 });
 
-export default defineRoute('post', '/login', schema, async (req, res) => {
+export default defineRoute('post', '/login/oauth', schema, async (req, res) => {
   const {accessToken} = req.body;
 
-  const {jwt, email, oauthId, msg} = await LoginService.login(accessToken);
+  const {user, jwt, rememberMeToken} = await LoginService.oauthLogin(accessToken);
 
   return res
     .header('token', jwt)
     .cookie(config.server.jwt.cookieName, jwt, config.server.jwt.cookieOptions)
     .json({
       jwt,
-      email,
-      oauthId,
-      msg
+
+      userId: user.id,
+      rememberMeToken,
     });
 });
 

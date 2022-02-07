@@ -13,7 +13,7 @@ const schema = defineSchema({
   }
 });
 
-export default defineRoute('patch', '/user/:id', schema, async (req, res) => {
+export default defineRoute('patch', '/users/:id', schema, async (req, res) => {
   const {id} = req.params;
 
   await UserService.patchUser(id, req.query);

@@ -1,5 +1,4 @@
 import {defineSchema} from '../../libs/schema';
-import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import UserService from '../../../service/UserService';
 import {stringAsInt} from '../../libs/zodTypes';
@@ -10,7 +9,7 @@ const schema = defineSchema({
   },
 });
 
-export default defineRoute('delete', '/user/:id', schema, async (req, res) => {
+export default defineRoute('delete', '/users/:id', schema, async (req, res) => {
   const {id} = req.params;
 
   await UserService.deleteUser(id);

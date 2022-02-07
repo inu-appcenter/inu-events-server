@@ -22,6 +22,9 @@ export class User extends BaseEntity {
   @Column({comment: 'OAuth로 로그인한 경우, provider가 제공한 식별자.'})
   oauthId: string;
 
+  @Column({comment: '자동로그인용 토큰.'})
+  rememberMeToken: string;
+
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
