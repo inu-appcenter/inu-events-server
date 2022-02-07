@@ -2,7 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import {getCustomRepository} from "typeorm";
-import CommentRepository from "../../libs/application/comments/comment-repository";
+import  UpdateComment from '../../../service/comment/UpdateComment';
 
 
 const schema = defineSchema({
@@ -17,8 +17,7 @@ const schema = defineSchema({
 export default defineRoute('patch', '/comment/:commentId?', schema, async (req, res) => {
 
     const {commentId} = req.params;
-    const {content} = req.query;
-    await getCustomRepository(CommentRepository).patchComment(commentId,req.query);
+    await UpdateComment.patchComment(commentId, req.query);
     return res.send(`comment ${commentId}를 업데이트 : ${JSON.stringify(req.query)}`);
     //res.send();
 });
