@@ -22,7 +22,7 @@ export default defineRoute('post', '/comment', schema, async (req, res) => {
   const user = await UserService.getUser(userId);
   const event = await EventService.getEvent(eventId);
 
-  await CommentService.makeComment(user, event, content);
+  await CommentService.makeComment({user, event, content});
 
   res.sendStatus(201); //success
 });

@@ -3,7 +3,6 @@ import {defineRoute} from '../../libs/route';
 import CommentService from '../../../service/CommentService';
 import {stringAsInt} from '../../libs/zodTypes';
 
-
 const schema = defineSchema({
   params: {
     commentId: stringAsInt

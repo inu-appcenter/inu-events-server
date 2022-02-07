@@ -2,8 +2,14 @@ import User from '../entity/User';
 import Event from '../entity/Event';
 import Comment from '../entity/Comment';
 
+type ModifyCommentParams = {
+  user: User;
+  event: Event;
+  content: string;
+};
+
 class CommentService {
-  async makeComment(user: User, event: Event, content: string): Promise<Comment> {
+  async makeComment({user, event, content}: ModifyCommentParams): Promise<Comment> {
     return await Comment.create({
       user: user,
       event: event,
@@ -15,10 +21,10 @@ class CommentService {
     return await Comment.findOne(commentId);
   }
 
-  async patchComment(commentId: number, req_query: Object): Promise<string> {
+  async patchComment(commentId: number, body: Partial<ModifyCommentParams>): Promise<string> {
     const patchevent = await Comment.update(
       {id: commentId},
-      req_query
+      body
     );
     return patchevent.raw;
   }

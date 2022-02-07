@@ -8,15 +8,15 @@ const schema = defineSchema({
   params: {
     commentId: stringAsInt,
   },
-  query: {
+  body: {
     content: z.string()
   }
 });
 
-export default defineRoute('patch', '/comment/:commentId?', schema, async (req, res) => {
+export default defineRoute('patch', '/comment/:commentId', schema, async (req, res) => {
   const {commentId} = req.params;
 
-  await CommentService.patchComment(commentId, req.query);
+  await CommentService.patchComment(commentId, req.body);
 
   return res.send(`comment ${commentId}를 업데이트 : ${JSON.stringify(req.query)}`);
 });
