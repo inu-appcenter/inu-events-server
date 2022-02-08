@@ -30,6 +30,10 @@ class EventService {
     return await Event.findOne({where: {id: eventId}});
   }
 
+  async getEvents(): Promise<Event[]> {
+    return await Event.find();
+  }
+
   async patchEvent(eventId: number, body: Partial<ModifyEventParams>): Promise<string> {
     const patchevent = await Event.update(
       {id: eventId},
