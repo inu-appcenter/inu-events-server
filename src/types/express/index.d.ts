@@ -7,9 +7,15 @@ declare module 'express-serve-static-core' {
   interface Request {
     /**
      * 요청에서 빼낸 사용자의 id를 가져옵니다.
+     * 없을 수 있어요.
+     */
+    get userId(): number | undefined;
+
+    /**
+     * 요청에서 빼낸 사용자의 id를 가져옵니다.
      * 만약 없다면, 요구하는 그 순간에 예외를 던집니다.
      */
-    get userId(): number;
+    requireUserId(): number;
   }
   interface Response {
     myField?: string;

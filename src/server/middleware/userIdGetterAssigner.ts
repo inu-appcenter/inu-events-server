@@ -28,13 +28,17 @@ export function userIdGetterAssigner(): RequestHandler {
 function assignGetter(req: express.Request, initial?: number) {
   Object.defineProperty(req, 'userId', {
     get() {
-      if (initial) {
-        return initial;
-      } else {
-        throw NotLoggedIn();
-      }
+      return initial;
     },
   });
+
+  req.requireUserId = () => {
+    if (initial) {
+      return initial;
+    } else {
+      throw NotLoggedIn();
+    }
+  }
 }
 
 function extractJwt(req: express.Request): string | undefined {
