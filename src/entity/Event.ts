@@ -2,6 +2,7 @@ import {BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, Prim
 import {User} from './User';
 import {JoinColumn} from 'typeorm';
 import Comment from './Comment';
+import {EventResponse} from '../service/types';
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -38,4 +39,20 @@ export default class Event extends BaseEntity {
 
   @OneToMany(() => Comment, (c) => c.event)
   comments: Comment[];
+
+  toEventResponse(userId?: number): EventResponse {
+    return {
+      id: this.id,
+      userId: this.user.id,
+      host: this.host,
+      category: this.category,
+      title: this.title,
+      body: this.body,
+      imageUuid: this.imageUuid,
+      startAt: this.startAt,
+      endAt: this.endAt,
+      createdAt: this.createdAt,
+      wroteByMe: userId ? this.user.id == userId : null
+    }
+  }
 }
