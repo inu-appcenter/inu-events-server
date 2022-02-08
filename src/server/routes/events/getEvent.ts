@@ -11,8 +11,9 @@ const schema = defineSchema({
 
 export default defineRoute('get', '/events/:eventId', schema, async (req, res) => {
   const {eventId} = req.params;
+  const {userId} = req;
 
   const eventInformation = await EventService.getEvent(eventId);
 
-  return res.json(eventInformation)
+  return res.json(eventInformation.toEventResponse(userId));
 });

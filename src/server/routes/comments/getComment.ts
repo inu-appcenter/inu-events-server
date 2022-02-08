@@ -9,10 +9,11 @@ const schema = defineSchema({
   },
 });
 
-export default defineRoute('get', '/comment/:commentId', schema, async (req, res) => {
+export default defineRoute('get', '/comments/:commentId', schema, async (req, res) => {
   const {commentId} = req.params;
+  const {userId} = req;
 
   const commentInformation = await CommentService.getComment(commentId);
 
-  return res.json(commentInformation)
+  return res.json(commentInformation.toCommentResponse(userId))
 });
