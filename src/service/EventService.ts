@@ -27,11 +27,11 @@ class EventService {
   }
 
   async getEvent(eventId: number): Promise<Event> {
-    return await Event.findOne({where: {id: eventId}});
+    return await Event.findOne(eventId, {relations: ['user']});
   }
 
   async getEvents(): Promise<Event[]> {
-    return await Event.find();
+    return await Event.find({relations: ['user']});
   }
 
   async patchEvent(eventId: number, body: Partial<ModifyEventParams>): Promise<string> {

@@ -18,12 +18,12 @@ class CommentService {
   }
 
   async getComment(commentId: number): Promise<Comment | undefined> {
-    return await Comment.findOne(commentId);
+    return await Comment.findOne(commentId, {relations: ['user']});
   }
 
   async getComments(eventId: number): Promise<Comment[]> {
     const event = await Event.findOne(eventId);
-    
+
     return await Comment.find({where: {event}});
   }
 
