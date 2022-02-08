@@ -7,7 +7,7 @@ import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
   body: {
-    id: stringAsInt,
+    id: z.number(),
     token: z.string()
   }
 });
