@@ -29,6 +29,9 @@ export class User extends BaseEntity {
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
+  @Column({nullable: true, comment: '삭제 일시.'})
+  deletedAt?: Date;
+
   @OneToMany(() => Event, (e) => e.user)
   events: Event[];
 
