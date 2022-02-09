@@ -6,7 +6,7 @@ type ModifyUserParams = {
 
 class UserService {
   async getUser(id: number): Promise<User> {
-    return await User.findOne({where: {id}});
+    return await User.findOneOrFail({where: {id}});
   }
 
   async patchUser(id: number, body: Partial<ModifyUserParams>): Promise<string> {

@@ -17,12 +17,12 @@ class CommentService {
     }).save();
   }
 
-  async getComment(commentId: number): Promise<Comment | undefined> {
-    return await Comment.findOne(commentId, {relations: ['user']});
+  async getComment(commentId: number): Promise<Comment> {
+    return await Comment.findOneOrFail(commentId, {relations: ['user']});
   }
 
   async getComments(eventId: number): Promise<Comment[]> {
-    const event = await Event.findOne(eventId);
+    const event = await Event.findOneOrFail(eventId);
 
     return await Comment.find({where: {event}});
   }
@@ -35,11 +35,10 @@ class CommentService {
     return patchevent.raw;
   }
 
-  async deleteComment(commentId: number): Promise<string> {
+  async deleteComment(commentId: number): Promise<void> {
     await Comment.delete({
       id: commentId
     });
-    return;
   }
 }
 

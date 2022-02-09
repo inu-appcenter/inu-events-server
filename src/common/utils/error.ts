@@ -1,6 +1,6 @@
 import {serializeError} from 'serialize-error';
 
-export function stringifyError(error: Error, includeStackTrace: boolean = true): string {
+export function stringifyError(error: any, includeStackTrace: boolean = true): string {
   const {name, message, stack} = serializeError(error);
 
   const stringified = includeStackTrace ? {name, message, stack} : {name, message};
@@ -8,6 +8,6 @@ export function stringifyError(error: Error, includeStackTrace: boolean = true):
   return JSON.stringify(stringified);
 }
 
-export function printError(error: Error, includeStackTrace: boolean = true) {
+export function printError(error: any, includeStackTrace: boolean = true) {
   console.error(stringifyError(error, includeStackTrace));
 }

@@ -16,7 +16,7 @@ const schema = defineSchema({
 export default defineRoute('post', '/comments', schema, authorizer(), async (req, res) => {
   console.log('make coomet!');
 
-  const {userId} = req;
+  const userId = req.requireUserId();
   const {eventId, content} = req.body;
 
   const user = await UserService.getUser(userId);

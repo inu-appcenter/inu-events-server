@@ -3,9 +3,12 @@ import cookieParser from 'cookie-parser';
 import {errorHandler} from './middleware/errorHandler';
 import {registerRoutes} from '../common/utils/express';
 import {userIdGetterAssigner} from './middleware/userIdGetterAssigner';
+import jsonReplacer from './middleware/jsonReplacer';
 
 export async function startServer() {
   const app = express();
+
+  app.set('json replacer', jsonReplacer);
 
   app.use(cookieParser());
   app.use(express.json());

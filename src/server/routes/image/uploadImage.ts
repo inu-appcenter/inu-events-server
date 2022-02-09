@@ -4,6 +4,7 @@ import multer from 'multer';
 import {generateUUID} from '../../../common/utils/uuid';
 import e from 'express';
 import config from '../../../config';
+import {ThisWillNeverHappen} from '../../../common/errors/general';
 
 const schema = defineSchema({});
 
@@ -20,6 +21,10 @@ const fileProcessor = multerFactory.single('file');
 
 export default defineRoute('post', '/images', schema, fileProcessor, async (req, res) => {
   const theFile = req.file;
+
+  if (theFile == null) {
+    throw ThisWillNeverHappen();
+  }
 
   console.log(JSON.stringify(theFile));
 

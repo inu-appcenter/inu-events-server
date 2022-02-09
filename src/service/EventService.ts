@@ -7,27 +7,19 @@ type ModifyEventParams = {
   category: string;
   title: string;
   body: string;
-  imageUuid: string;
-  startAt: Date;
-  endAt: Date
+  imageUuid?: string;
+  submissionUrl?: string;
+  startAt?: Date;
+  endAt?: Date
 }
 
 class EventService {
-  async makeEvent({user, host, category, title, body, imageUuid, startAt, endAt}: ModifyEventParams): Promise<Event> {
-    return await Event.create({
-      user: user,
-      host: host,
-      category: category,
-      title: title,
-      body: body,
-      imageUuid: imageUuid,
-      startAt: startAt,
-      endAt: endAt
-    }).save();
+  async makeEvent(body: ModifyEventParams): Promise<Event> {
+    return await Event.create(body).save();
   }
 
   async getEvent(eventId: number): Promise<Event> {
-    return await Event.findOne(eventId, {relations: ['user']});
+    return await Event.findOneOrFail(eventId, {relations: ['user']})
   }
 
   async getEvents(): Promise<Event[]> {
@@ -42,9 +34,8 @@ class EventService {
     return patchevent.raw;
   }
 
-  async deleteEvent(eventId: number): Promise<string> {
+  async deleteEvent(eventId: number): Promise<void> {
     await Event.delete({id: eventId});
-    return;
   }
 }
 

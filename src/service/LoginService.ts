@@ -43,7 +43,7 @@ class LoginService {
   private async resolveUserInfoFromGoogle(accessToken: string) {
     try {
       return await getGoogleOAuthInfo(accessToken);
-    } catch (e) {
+    } catch (e: any) {
       printError(e);
 
       throw WrongAuth();

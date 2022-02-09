@@ -1,3 +1,4 @@
+// @ts-ignore
 import AntPathMatcher from 'ant-path-matcher';
 
 /**

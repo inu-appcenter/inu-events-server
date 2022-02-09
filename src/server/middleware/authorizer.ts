@@ -2,9 +2,8 @@ import express, {RequestHandler} from 'express';
 import {InvalidJwt, NotLoggedIn} from '../../common/errors/general';
 import config from '../../config';
 import {decodeJwt} from '../../common/utils/token';
-import PathMatcher from '../libs/PathMatcher';
 
-export function authorizer(): RequestHandler {
+export function authorizer<TParams = any, TQuery = any, TBody = any>(): RequestHandler<TParams, any, TBody, TQuery> {
   return (req, res, next) => {
     const jwtInRequest = extractJwt(req);
     if (jwtInRequest == null) {
@@ -20,6 +19,6 @@ export function authorizer(): RequestHandler {
   };
 }
 
-function extractJwt(req: express.Request): string | undefined {
+function extractJwt(req: express.Request<any, any, any, any>): string | undefined {
   return req.header('token') ?? req.cookies[config.server.jwt.cookieName];
 }

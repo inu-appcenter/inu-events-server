@@ -8,7 +8,7 @@ const schema = defineSchema({
 });
 
 export default defineRoute('get', '/me', schema, authorizer(), async (req, res) => {
-  const {userId} = req;
+  const userId = req.requireUserId();
 
   const user = await UserService.getUser(userId);
 

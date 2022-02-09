@@ -29,7 +29,7 @@ export default class Comment extends BaseEntity {
       eventId: this.event.id,
       content: this.content,
       createdAt: this.createdAt,
-      wroteByMe: userId ? this.user.id == userId : null
+      wroteByMe: userId ? this.user.id == userId : undefined
     }
   }
 }
