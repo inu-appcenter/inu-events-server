@@ -25,11 +25,11 @@ export default class Event extends BaseEntity {
   @Column({comment: '본문.'})
   body: string;
 
-  @Column({comment: '이미지 식별자.'})
-  imageUuid: string;
+  @Column({nullable: true, comment: '이미지 식별자.'})
+  imageUuid?: string;
 
-  @Column({comment: '신청 URL.'})
-  submissionUrl: string;
+  @Column({nullable: true, comment: '신청 URL.'})
+  submissionUrl?: string;
 
   @Column({nullable: true, comment: '행사 시작 일시.'})
   startAt?: Date;
