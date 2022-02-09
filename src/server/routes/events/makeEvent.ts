@@ -13,6 +13,7 @@ const schema = defineSchema({
     title: z.string(),
     body: z.string(),
     imageUuid: z.string().optional(),
+    submissionUrl: z.string().optional(),
     startAt: stringAsDate.optional(),
     endAt: stringAsDate.optional(),
   }
@@ -21,11 +22,10 @@ const schema = defineSchema({
 export default defineRoute('post', '/events', schema, authorizer(), async (req, res) => {
   console.log('make Event!');
 
-  const {userId} = req;
-  const {host, category, title, body, imageUuid, startAt, endAt} = req.body;
+  const userId = req.requireUserId();
 
   const user = await UserService.getUser(userId)
-  await EventService.makeEvent({user, host, category, title, body, imageUuid, startAt, endAt});
+  await EventService.makeEvent({user, ...req.body});
 
   res.sendStatus(201); //success
 });

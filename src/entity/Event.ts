@@ -28,6 +28,9 @@ export default class Event extends BaseEntity {
   @Column({comment: '이미지 식별자.'})
   imageUuid: string;
 
+  @Column({comment: '신청 URL.'})
+  submissionUrl: string;
+
   @Column({nullable: true, comment: '행사 시작 일시.'})
   startAt?: Date;
 
@@ -49,10 +52,11 @@ export default class Event extends BaseEntity {
       title: this.title,
       body: this.body,
       imageUuid: this.imageUuid,
+      submissionUrl: this.submissionUrl,
       startAt: this.startAt,
       endAt: this.endAt,
       createdAt: this.createdAt,
-      wroteByMe: userId ? this.user.id == userId : null
+      wroteByMe: userId ? this.user.id == userId : undefined
     }
   }
 }

@@ -11,7 +11,8 @@ export type EventResponse = {
   category: string;
   title: string;
   body: string;
-  imageUuid: string;
+  imageUuid?: string;
+  submissionUrl?: string;
   startAt?: Date;
   endAt?: Date;
   createdAt: Date;

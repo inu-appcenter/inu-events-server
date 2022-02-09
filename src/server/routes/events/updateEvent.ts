@@ -15,6 +15,7 @@ const schema = defineSchema({
     title: z.string().optional(),
     body: z.string().optional(),
     imageUuid: z.string().optional(),
+    submissionUrl: z.string().optional(),
     startAt: stringAsDate.optional(),
     endAt: stringAsDate.optional(),
   }
