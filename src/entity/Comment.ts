@@ -12,7 +12,7 @@ export default class Comment extends BaseEntity {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Event, (e) => e.comments)
+  @ManyToOne(() => Event, (e) => e.comments, {onDelete:'CASCADE'})
   @JoinColumn()
   event: Event;
 
