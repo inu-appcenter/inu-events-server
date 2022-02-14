@@ -12,6 +12,9 @@ export default defineRoute('get', '/me', schema, authorizer(), async (req, res) 
 
   const user = await UserService.getUser(userId);
 
-  return res.json(user.toResponse());
+  return res.json({
+    ...user.toResponse(),
+    subscribing: user.subscribing,
+  });
 });
 
