@@ -4,7 +4,6 @@ type ModifyUserParams = {
   nickname: string;
 };
 
-
 class UserService {
   async getUser(id: number): Promise<User> {
     return await User.findOneOrFail({where: {id}});
@@ -21,8 +20,8 @@ class UserService {
   async deleteUser(id: number): Promise<void> {
     const deleteDate = new Date();
     const deleteUser = await User.update(
-        {id},
-        {deletedAt: deleteDate}
+      {id},
+      {deletedAt: deleteDate}
     )
     return deleteUser.raw;
   }
