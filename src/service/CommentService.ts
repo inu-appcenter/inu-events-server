@@ -22,7 +22,10 @@ class CommentService {
   }
 
   async getComments(eventId: number): Promise<Comment[]> {
-    const event = await Event.findOneOrFail(eventId);
+    const event = await Event.findOne(eventId);
+    if (event == null) {
+      return [];
+    }
 
     return await Comment.find({where: {event}, relations: ['user', 'event']});
   }
