@@ -26,7 +26,9 @@ export default defineRoute('post', '/images', schema, fileProcessor, async (req,
     throw ThisWillNeverHappen();
   }
 
-  console.log(JSON.stringify(theFile));
+  const {path, originalname, mimetype} = theFile;
+
+  console.log(`"${path}" 경로에 ${mimetype} 타입의 이미지(원본 이름: "${originalname}") 생성됨.`);
 
   return res.json({
     uuid: theFile.filename
