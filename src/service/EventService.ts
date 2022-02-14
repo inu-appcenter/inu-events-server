@@ -15,7 +15,14 @@ type ModifyEventParams = {
 
 class EventService {
   async makeEvent(body: ModifyEventParams): Promise<Event> {
-    return await Event.create(body).save();
+    const {user} = body;
+    const event = await Event.create(body).save();
+
+    if (user.shallThisUserBeNotifiedWithThisEvent(event)) {
+      // TODO 알림서비스 호출
+    }
+
+    return event;
   }
 
   async getEvent(eventId: number): Promise<Event> {
