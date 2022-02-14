@@ -6,4 +6,5 @@ tmp/
 temp/
 .env
 /test/httpTest/
-/migration/
+.*.sql
+sync-db.sh
