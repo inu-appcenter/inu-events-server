@@ -47,14 +47,14 @@ export class User extends BaseEntity {
   @OneToMany(() => Comment, (c) => c.user)
   comments: Comment[];
 
-  subscribeOn(keywords?: string) {
-    if (keywords != null) {
-      this.subscribingOn = keywords;
+  subscribeOn(subscribingCategories?: string) {
+    if (subscribingCategories != null) {
+      this.subscribingOn = subscribingCategories;
     }
 
     this.subscribing = true;
 
-    console.log(`이제 이 사용자(id: ${this.id})는 다음 키워드에 대해 알림을 받습니다: ${keywords}`);
+    console.log(`이제 이 사용자(id: ${this.id})는 다음 카테고리의 새 글 알림을 받습니다: ${subscribingCategories}`);
   }
 
   unsubscribe() {
@@ -76,12 +76,13 @@ export class User extends BaseEntity {
       return true;
     }
 
-    const keywords = this.subscribingOn.split(',').map(k => k.trim());
-    const text = event.title // TODO 잘 선택하자
+    // 구독 중인 카테고리별 알림
+    const subscribingCategories = this.subscribingOn.split(',').map(k => k.trim());
+    const thisCategory = event.category //카테고리로 변경함
 
-    for (const keyword of keywords) {
-      if (text.includes(keyword)) {
-        // 구독 하고, 해당 이벤트에 구독중인 키워드가 들어가 있음.
+    for (const subscribingCategory of subscribingCategories) {
+      if (thisCategory.includes(subscribingCategory)) {
+        // 구독 하고, 해당 이벤트에 구독중인 카테고리가 들어가 있음.
         return true;
       }
     }
