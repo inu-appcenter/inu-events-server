@@ -4,6 +4,7 @@ import {errorHandler} from './middleware/errorHandler';
 import {registerRoutes} from '../common/utils/express';
 import {userIdGetterAssigner} from './middleware/userIdGetterAssigner';
 import jsonReplacer from './middleware/jsonReplacer';
+import {recorder} from './middleware/recorder';
 
 export async function startServer() {
   const app = express();
@@ -15,6 +16,8 @@ export async function startServer() {
   app.use(express.urlencoded({extended: true}));
 
   app.use(userIdGetterAssigner());
+
+  app.use(recorder());
 
   await registerRoutes(app, __dirname + '/routes');
 
