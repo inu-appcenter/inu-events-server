@@ -92,6 +92,8 @@ class LoginService {
     user.rememberMeToken = rememberMeToken;
     await user.save();
 
+    console.log(`사용자 ${user.id} 로그인 완료! jwt는 ${jwt}`);
+
     return {user, jwt, rememberMeToken};
   }
 }

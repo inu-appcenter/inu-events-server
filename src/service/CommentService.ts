@@ -39,6 +39,8 @@ class CommentService {
   }
 
   async deleteComment(commentId: number): Promise<void> {
+    console.log(`댓글 ${commentId} 삭제!`);
+
     await Comment.delete({
       id: commentId
     });
