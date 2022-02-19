@@ -27,7 +27,7 @@ class CommentService {
       return [];
     }
 
-    return await Comment.find({where: {event}, relations: ['user', 'event']});
+    return await Comment.find({where: {event}, order: {id: 'ASC'}, relations: ['user', 'event']});
   }
 
   async patchComment(commentId: number, body: Partial<ModifyCommentParams>): Promise<string> {
