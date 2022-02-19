@@ -17,6 +17,9 @@ export class User extends BaseEntity {
   @Column({comment: '사용자 닉네임.'})
   nickname: string;
 
+  @Column({nullable: true, comment: '사용자 프로필 사진 UUID.'})
+  imageUuid?: string;
+
   @Column({comment: '로그인한 방법(카카오, 구글 등).'})
   oauthProvider: string;
 

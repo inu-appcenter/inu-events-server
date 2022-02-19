@@ -48,6 +48,7 @@ export default class Event extends BaseEntity {
       id: this.id,
       userId: this.user.id,
       nickname: this.user.nickname,
+      profileImage: this.user.imageUuid ? `http://uniletter.inuappcenter.kr/images/${this.user.imageUuid}` : undefined,
       host: this.host,
       category: this.category,
       title: this.title,

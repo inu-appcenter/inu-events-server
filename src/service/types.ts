@@ -8,6 +8,7 @@ export type EventResponse = {
   id: number;
   userId: number;
   nickname: string;
+  profileImage?: string;
   host: string;
   category: string;
   title: string;
@@ -24,6 +25,7 @@ export type CommentResponse = {
   id: number;
   userId: number;
   nickname: string;
+  profileImage?: string;
   eventId: number;
   content: string,
   createdAt: Date,

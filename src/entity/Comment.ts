@@ -27,6 +27,7 @@ export default class Comment extends BaseEntity {
       id: this.id,
       userId: this.user.id,
       nickname: this.user.nickname,
+      profileImage: this.user.imageUuid ? `http://uniletter.inuappcenter.kr/images/${this.user.imageUuid}` : undefined,
       eventId: this.event.id,
       content: this.content,
       createdAt: this.createdAt,
