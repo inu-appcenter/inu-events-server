@@ -47,6 +47,7 @@ export default class Event extends BaseEntity {
     return {
       id: this.id,
       userId: this.user.id,
+      nickname: this.user.nickname,
       host: this.host,
       category: this.category,
       title: this.title,

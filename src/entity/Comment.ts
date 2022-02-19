@@ -26,6 +26,7 @@ export default class Comment extends BaseEntity {
     return {
       id: this.id,
       userId: this.user.id,
+      nickname: this.user.nickname,
       eventId: this.event.id,
       content: this.content,
       createdAt: this.createdAt,

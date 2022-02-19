@@ -7,6 +7,7 @@ export type UserReponse = {
 export type EventResponse = {
   id: number;
   userId: number;
+  nickname: string;
   host: string;
   category: string;
   title: string;
@@ -22,6 +23,7 @@ export type EventResponse = {
 export type CommentResponse = {
   id: number;
   userId: number;
+  nickname: string;
   eventId: number;
   content: string,
   createdAt: Date,
