@@ -6,7 +6,7 @@ export function recorder(): RequestHandler {
     const {path, params, query, body} = req;
 
     const info = {
-      cookie: req.headers['cookie'],
+      cookies: req.cookies,
       remoteAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
       userAgent: req.headers['user-agent'],
       path: path,
