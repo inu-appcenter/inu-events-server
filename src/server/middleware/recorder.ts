@@ -3,13 +3,13 @@ import {redacted} from '../../common/utils/redacted';
 
 export function recorder(): RequestHandler {
   return async (req, res, next) => {
-    const {path, params, query, body} = req;
+    const {method, path, params, query, body} = req;
 
     const info = {
-      cookies: req.cookies,
-      remoteAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-      userAgent: req.headers['user-agent'],
+      method: method,
       path: path,
+      cookies: req.cookies,
+      userAgent: req.headers['user-agent'],
       params: redacted(params),
       query: redacted(query),
       body: redacted(body),
