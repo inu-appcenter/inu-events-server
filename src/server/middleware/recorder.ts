@@ -8,10 +8,10 @@ export function recorder(): RequestHandler {
     const info = {
       method: method,
       path: path,
-      cookies: req.cookies,
-      userAgent: req.headers['user-agent'],
       params: redacted(params),
       query: redacted(query),
+      cookies: req.cookies,
+      userAgent: req.headers['user-agent'],
       body: redacted(body),
     };
 
