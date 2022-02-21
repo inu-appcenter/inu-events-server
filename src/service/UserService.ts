@@ -2,6 +2,7 @@ import User from '../entity/User';
 
 type ModifyUserParams = {
   nickname: string;
+  imageUuid: string
 };
 
 class UserService {
