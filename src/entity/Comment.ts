@@ -16,7 +16,7 @@ export default class Comment extends BaseEntity {
   @JoinColumn()
   event: Event;
 
-  @Column()
+  @Column({comment: '본문.', length: 1000})
   content: string;
 
   @CreateDateColumn({comment: '생성 일시.'})
@@ -28,6 +28,7 @@ export default class Comment extends BaseEntity {
       userId: this.user.id,
       nickname: this.user.nickname,
       profileImage: this.user.imageUuid ? `http://uniletter.inuappcenter.kr/images/${this.user.imageUuid}` : undefined,
+
       eventId: this.event.id,
       content: this.content,
       createdAt: this.createdAt,

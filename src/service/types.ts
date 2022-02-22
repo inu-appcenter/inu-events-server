@@ -9,16 +9,26 @@ export type EventResponse = {
   userId: number;
   nickname: string;
   profileImage?: string;
+
+  title: string;
   host: string;
   category: string;
-  title: string;
+  target: string;
+  startAt: Date;
+  endAt?: Date;
+  contact?: string;
+  location?: string;
+
   body: string;
   imageUuid?: string;
-  submissionUrl?: string;
-  startAt?: Date;
-  endAt?: Date;
+
   createdAt: Date;
-  wroteByMe?: boolean
+  wroteByMe?: boolean;
+
+  /**
+   * 곧 사라질 운명들
+   */
+  submissionUrl?: string;
 };
 
 export type CommentResponse = {
