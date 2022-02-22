@@ -6,9 +6,12 @@ import * as path from 'path';
 import config from '../../../config';
 
 const schema = defineSchema({
+  summary: '이미지 다운로드',
+  description: '이미지를 내려받습니다.',
+
   params: {
     imageUuid: z.string()
-  }
+  },
 });
 
 export default defineRoute('get', '/images/:imageUuid', schema, async (req, res) => {

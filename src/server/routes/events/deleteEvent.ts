@@ -5,6 +5,9 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  summary: '행사 하나를 지웁니다.',
+  description: '지울게 없어도 터지진 않아요.',
+
   params: {
     eventId: stringAsInt,
   },
@@ -15,5 +18,5 @@ export default defineRoute('delete', '/events/:eventId', schema, authorizer(), a
 
   await EventService.deleteEvent(eventId);
 
-  return res.send(`이벤트 ${eventId}를 삭제했습니다.`);
+  return res.send();
 });

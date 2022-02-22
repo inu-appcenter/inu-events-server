@@ -5,12 +5,14 @@ import {registerRoutes} from '../common/utils/express';
 import {userIdGetterAssigner} from './middleware/userIdGetterAssigner';
 import jsonReplacer from './middleware/jsonReplacer';
 import {recorder} from './middleware/recorder';
+import swagger from 'swagger-ui-express';
 
 export async function startServer() {
   const app = express();
 
   app.set('json replacer', jsonReplacer);
 
+  app.use(swagger.serve);
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({extended: true}));

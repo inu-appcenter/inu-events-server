@@ -1,13 +1,14 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import Event from './Event';
 import Comment from './Comment';
-import {UserReponse} from '../service/types';
+import {z} from 'zod';
+import {Infer} from '../common/utils/zod';
 
 /**
  * 사용자!
  */
 @Entity()
-export class User extends BaseEntity {
+export default class User extends BaseEntity {
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number;
 
@@ -94,13 +95,31 @@ export class User extends BaseEntity {
     return false;
   }
 
-  toResponse(): UserReponse {
+  toResponse(): Infer<typeof UserResponseScheme> {
     return {
       id: this.id,
       email: this.email,
       nickname: this.nickname,
+      imageUuid: this.imageUuid,
+    }
+  }
+
+  toMeResponse(): Infer<typeof MeResponseScheme> {
+    return {
+      ...this.toResponse(),
+      subscribing: this.subscribing
     }
   }
 }
 
-export default User;
+export const UserResponseScheme = {
+  id: z.number(),
+  email: z.string(),
+  nickname: z.string(),
+  imageUuid: z.string().optional(),
+}
+
+export const MeResponseScheme = {
+  ...UserResponseScheme,
+  subscribing: z.boolean(),
+}

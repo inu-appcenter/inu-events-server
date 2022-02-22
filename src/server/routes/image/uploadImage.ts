@@ -5,8 +5,16 @@ import {generateUUID} from '../../../common/utils/uuid';
 import e from 'express';
 import config from '../../../config';
 import {ThisWillNeverHappen} from '../../../common/errors/general';
+import {z} from 'zod';
 
-const schema = defineSchema({});
+const schema = defineSchema({
+  summary: '이미지 업로드',
+  description: '이미지를 올립니다. multipart/form-data 형식으로 file 필드에 끼워서 보내주세요.',
+
+  response: {
+    uuid: z.string()
+  }
+});
 
 const diskStorage = multer.diskStorage({
   destination: config.server.storage.image.path,

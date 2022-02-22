@@ -2,11 +2,17 @@ import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {stringAsInt} from '../../libs/zodTypes';
 import CommentService from '../../../service/CommentService';
+import {CommentResponseScheme} from '../../../entity/Comment';
 
 const schema = defineSchema({
+  summary: '댓글 가져오기.',
+  description: '댓글을 하나 가져옵니다.',
+
   params: {
     commentId: stringAsInt,
   },
+
+  response: CommentResponseScheme
 });
 
 export default defineRoute('get', '/comments/:commentId', schema, async (req, res) => {

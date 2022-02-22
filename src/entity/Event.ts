@@ -1,16 +1,18 @@
 import {
   BaseEntity,
   Column,
-  Entity,
-  OneToMany,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
-import {User} from './User'
+import User from './User'
 import Comment from './Comment'
-import {EventResponse} from '../service/types'
+import {z} from 'zod';
+import {Infer} from '../common/utils/zod';
+import {extendApi} from '@anatine/zod-openapi';
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -66,7 +68,7 @@ export default class Event extends BaseEntity {
   @OneToMany(() => Comment, (c) => c.event)
   comments: Comment[];
 
-  toEventResponse(userId?: number): EventResponse {
+  toEventResponse(userId?: number): Infer<typeof EventResponseScheme> {
     return {
       id: this.id,
       userId: this.user.id,
@@ -95,4 +97,38 @@ export default class Event extends BaseEntity {
       submissionUrl: this.location, // TODO 하위호환 필드
     }
   }
+}
+
+export const EventResponseScheme = {
+  id: z.number(),
+  userId: z.number(),
+  nickname: z.string(),
+  profileImage: z.string().optional(),
+
+  title: z.string(),
+  host: z.string(),
+  category: z.string(),
+  target: z.string(),
+  startAt: z.date(),
+  endAt: z.date().optional(),
+  contact: z.string().optional(),
+  location: z.string().optional(),
+
+  body: z.string(),
+  imageUuid: z.string().optional(),
+
+  createdAt: z.date(),
+
+  /**
+   * 추가 속성.
+   */
+  wroteByMe: z.boolean().optional(),
+  likedByMe: z.boolean().optional(),
+  likes: z.number(),
+  views: z.number(),
+
+  /**
+   * 곧 사라질 운명들
+   */
+  submissionUrl: extendApi(z.string().optional(), {description: '곧 사라져요~'})
 }

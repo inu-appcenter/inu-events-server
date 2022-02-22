@@ -5,10 +5,13 @@ import {defineRoute} from '../../libs/route';
 import {defineSchema} from '../../libs/schema';
 
 const schema = defineSchema({
+  summary: '내 정보 업데이트하기',
+  description: '내 정보를 업데이트합니다.',
+
   body: {
     nickname: z.string().optional(),
     imageUuid: z.string().optional()
-  }
+  },
 });
 
 export default defineRoute('patch', '/me', schema, authorizer(), async (req, res) => {
@@ -16,5 +19,5 @@ export default defineRoute('patch', '/me', schema, authorizer(), async (req, res
 
   await UserService.patchUser(userId, req.body);
 
-  return res.send(`유저 ${userId}의 정보를 ${JSON.stringify(req.query)}으로 변경하였습니다.`);
+  return res.send();
 });

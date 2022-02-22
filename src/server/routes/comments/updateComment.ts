@@ -6,12 +6,15 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  summary: '댓글 하나를 업데이트합니다.',
+  description: '업데이트 할 게 없어도 터지진 않아요.',
+
   params: {
     commentId: stringAsInt,
   },
   body: {
     content: z.string()
-  }
+  },
 });
 
 export default defineRoute('patch', '/comments/:commentId', schema, authorizer(), async (req, res) => {
@@ -19,5 +22,5 @@ export default defineRoute('patch', '/comments/:commentId', schema, authorizer()
 
   await CommentService.patchComment(commentId, req.body);
 
-  return res.send(`comment ${commentId}를 업데이트 : ${JSON.stringify(req.query)}`);
+  return res.send();
 });

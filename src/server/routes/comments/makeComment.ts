@@ -7,6 +7,9 @@ import EventService from '../../../service/EventService';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  summary: '댓글을 씁니다.',
+  description: '네.',
+
   body: {
     eventId: z.number(),
     content: z.string(),
@@ -22,5 +25,5 @@ export default defineRoute('post', '/comments', schema, authorizer(), async (req
 
   await CommentService.makeComment({user, event, content});
 
-  res.sendStatus(201); //success
+  res.send();
 });

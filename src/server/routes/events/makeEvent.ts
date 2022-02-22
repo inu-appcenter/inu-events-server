@@ -7,6 +7,9 @@ import {stringAsDate} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  summary: '행사를 생성합니다.',
+  description: '네.',
+
   body: {
     host: z.string(),
     category: z.string(),
@@ -20,14 +23,12 @@ const schema = defineSchema({
 });
 
 export default defineRoute('post', '/events', schema, authorizer(), async (req, res) => {
-  console.log('make Event!');
-
   const userId = req.requireUserId();
 
   const user = await UserService.getUser(userId)
   await EventService.makeEvent({user, ...req.body});
 
-  res.sendStatus(201); //success
+  res.send();
 });
 
 

@@ -1,10 +1,14 @@
 import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import UserService from '../../../service/UserService';
-import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
+import {MeResponseScheme} from '../../../entity/User';
 
 const schema = defineSchema({
+  summary: '내 정보 가져오기',
+  description: '내 정보를 가져옵니다.',
+
+  response: MeResponseScheme
 });
 
 export default defineRoute('get', '/me', schema, authorizer(), async (req, res) => {
@@ -12,9 +16,6 @@ export default defineRoute('get', '/me', schema, authorizer(), async (req, res) 
 
   const user = await UserService.getUser(userId);
 
-  return res.json({
-    ...user.toResponse(),
-    subscribing: user.subscribing,
-  });
+  return res.json(user.toMeResponse());
 });
 

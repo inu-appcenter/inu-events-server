@@ -5,6 +5,9 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  summary: '댓글 삭제하기.',
+  description: '없어도 뻗진 않아요.',
+
   params: {
     commentId: stringAsInt
   },
@@ -15,5 +18,5 @@ export default defineRoute('delete', '/comments/:commentId', schema, authorizer(
 
   await CommentService.deleteComment(commentId);
 
-  return res.send(`comment ${commentId}를 삭제했습니다.`);
+  return res.send();
 });

@@ -1,7 +1,8 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {z} from 'zod';
+import User from './User';
 import Event from './Event';
-import {User} from './User';
-import {CommentResponse} from '../service/types';
+import {Infer} from '../common/utils/zod';
+import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
 export default class Comment extends BaseEntity {
@@ -22,7 +23,7 @@ export default class Comment extends BaseEntity {
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
-  toCommentResponse(userId?: number): CommentResponse {
+  toCommentResponse(userId?: number): Infer<typeof CommentResponseScheme> {
     return {
       id: this.id,
       userId: this.user.id,
@@ -36,3 +37,14 @@ export default class Comment extends BaseEntity {
     }
   }
 }
+
+export const CommentResponseScheme = {
+  id: z.number(),
+  userId: z.number(),
+  nickname: z.string(),
+  profileImage: z.string().optional(),
+  eventId: z.number(),
+  content: z.string(),
+  createdAt: z.date(),
+  wroteByMe: z.boolean().optional()
+};

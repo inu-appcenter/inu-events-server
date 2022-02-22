@@ -6,9 +6,18 @@ import config from '../../../config';
 import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
+  summary: 'OAuth 로그인',
+  description: '내 정보를 가져옵니다.',
+
   body: {
     id: z.number(),
     token: z.string()
+  },
+
+  response: {
+    jwt: z.string(),
+    userId: z.number(),
+    rememberMeToken: z.string()
   }
 });
 

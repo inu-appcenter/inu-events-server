@@ -5,8 +5,17 @@ import LoginService from '../../../service/LoginService';
 import config from '../../../config';
 
 const schema = defineSchema({
+  summary: 'OAuth 로그인',
+  description: '내 정보를 가져옵니다.',
+
   body: {
     accessToken: z.string(),
+  },
+
+  response: {
+    jwt: z.string(),
+    userId: z.number(),
+    rememberMeToken: z.string()
   }
 });
 

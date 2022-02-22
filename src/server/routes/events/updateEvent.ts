@@ -6,6 +6,9 @@ import {stringAsDate, stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  summary: '행사를 업데이트합니다.',
+  description: '없어도 뻗진 않아요. 필요한 필드만 보내주세요.',
+
   params: {
     eventId: stringAsInt,
   },
@@ -26,5 +29,5 @@ export default defineRoute('patch', '/events/:eventId?', schema, authorizer(), a
 
   await EventService.patchEvent(eventId, req.body);
 
-  return res.send(`event ${eventId}를 업데이트: ${JSON.stringify(req.query)}`);
+  return res.send();
 });
