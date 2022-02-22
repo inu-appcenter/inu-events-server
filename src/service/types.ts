@@ -23,7 +23,14 @@ export type EventResponse = {
   imageUuid?: string;
 
   createdAt: Date;
+
+  /**
+   * 추가 속성.
+   */
   wroteByMe?: boolean;
+  likedByMe?: boolean;
+  likes: number;
+  views: number;
 
   /**
    * 곧 사라질 운명들

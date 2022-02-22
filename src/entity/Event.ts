@@ -86,7 +86,11 @@ export default class Event extends BaseEntity {
       imageUuid: this.imageUuid,
 
       createdAt: this.createdAt,
+
       wroteByMe: userId ? this.user.id == userId : undefined,
+      likedByMe: undefined,
+      likes: 0, // TODO 구현하자
+      views: 0, // TODO 구현하자
 
       submissionUrl: this.location, // TODO 하위호환 필드
     }
