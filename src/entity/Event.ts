@@ -87,7 +87,7 @@ export default class Event extends BaseEntity {
 
       createdAt: this.createdAt,
 
-      wroteByMe: userId ? this.user.id == userId : undefined,
+      wroteByMe: userId ? this.user.id === userId : undefined,
       likedByMe: undefined,
       likes: 0, // TODO 구현하자
       views: 0, // TODO 구현하자
