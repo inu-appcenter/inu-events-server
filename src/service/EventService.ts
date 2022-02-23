@@ -1,5 +1,6 @@
 import User from '../entity/User';
 import Event from '../entity/Event';
+import FcmService from './FcmService';
 
 type ModifyEventParams = {
   user: User;
@@ -19,7 +20,7 @@ class EventService {
     const event = await Event.create(body).save();
 
     if (user.shallThisUserBeNotifiedWithThisEvent(event)) {
-      // TODO 알림서비스 호출
+      await FcmService.send(user, `${event.category}에 새 글이 올라왔어요`, '');
     }
 
     return event;
