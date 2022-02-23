@@ -25,7 +25,7 @@ class LikeService {
     log(`${theUser.toString()}가 ${theEvent.toString()}를 좋아하는 EventLike를 생성했습니다.`);
   }
 
-  async performUnlike(userId: number, eventId: number) {
+  async cancelLike(userId: number, eventId: number) {
     const theUser = await User.findOne(userId);
     const theEvent = await Event.findOne(eventId);
 
