@@ -5,6 +5,7 @@ import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
 import EventNotification from './EventNotification';
 import EventLike from './EventLike';
+import {log} from '../common/utils/log';
 
 /**
  * 사용자!
@@ -71,20 +72,28 @@ export default class User extends BaseEntity {
   @OneToMany(() => EventNotification, (n) => n.event)
   notifications: EventNotification[];
 
-  subscribeOn(subscribingCategories?: string) {
-    if (subscribingCategories != null) {
-      this.subscribingOn = subscribingCategories;
-    }
-
-    this.subscribing = true;
-
-    console.log(`이제 이 사용자(id: ${this.id})는 다음 카테고리의 새 글 알림을 받습니다: ${subscribingCategories}`);
+  getSubscription() {
+    return this.subscribing;
   }
 
-  unsubscribe() {
-    console.log(`이제 이 사용자(id: ${this.id})는 알림을 받지 않습니다.`);
+  setSubscription(subscribing: boolean) {
+    if (subscribing) {
+      log(`이제 ${this.toString()}는 새 글 알림을 받습니다.`);
+    } else {
+      log(`이제 ${this.toString()}는 새 글 알림을 받지 않습니다.`);
+    }
 
-    this.subscribing = false;
+    this.subscribing = subscribing;
+  }
+
+  getTopics() {
+    return this.subscribingOn?.split(',')?.map(t => t.trim()) ?? [];
+  }
+
+  setTopics(topics: string[]) {
+    log(`이제 ${this.toString()}는 다음 주제에 대해 관심을 가집니다: ${topics}`);
+
+    this.subscribingOn = topics.join(', ');
   }
 
   shallThisUserBeNotifiedWithThisEvent(event: Event): boolean {

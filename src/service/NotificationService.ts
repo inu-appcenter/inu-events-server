@@ -5,7 +5,7 @@ import EventNotification from '../entity/EventNotification';
 import Event from '../entity/Event';
 import {log} from '../common/utils/log';
 
-class EventNotificationService {
+class NotificationService {
   async setNotification(userId: number, eventId: number, setFor: string) {
     const user = await User.findOne(userId);
     const event = await Event.findOne(eventId);
@@ -58,4 +58,4 @@ class EventNotificationService {
   }
 }
 
-export default new EventNotificationService();
+export default new NotificationService();
