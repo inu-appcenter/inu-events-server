@@ -1,5 +1,6 @@
 import fs from 'fs';
 import express from 'express';
+import {log} from './log';
 
 export async function registerRoutes(app: express.Application, dir: string = '/routes') {
   const files = fs.readdirSync(dir);
@@ -16,7 +17,7 @@ export async function registerRoutes(app: express.Application, dir: string = '/r
     const isSourceFile = path.endsWith('.ts') || path.endsWith('.js');
 
     if (isFile && isSourceFile) {
-      console.info(`라우터를 등록합니다: ${path}`);
+      log(`라우터를 등록합니다: ${path}`);
 
       const router = (await import(filePath)).default as express.Router;
 

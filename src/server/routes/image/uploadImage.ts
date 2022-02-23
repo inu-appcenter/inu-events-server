@@ -6,6 +6,7 @@ import e from 'express';
 import config from '../../../config';
 import {ThisWillNeverHappen} from '../../../common/errors/general';
 import {z} from 'zod';
+import {log} from '../../../common/utils/log';
 
 const schema = defineSchema({
   summary: '이미지 업로드',
@@ -36,7 +37,7 @@ export default defineRoute('post', '/images', schema, fileProcessor, async (req,
 
   const {path, originalname, mimetype} = theFile;
 
-  console.log(`"${path}" 경로에 ${mimetype} 타입의 이미지(원본 이름: "${originalname}") 생성됨.`);
+  log(`"${path}" 경로에 ${mimetype} 타입의 이미지(원본 이름: "${originalname}") 생성됨.`);
 
   return res.json({
     uuid: theFile.filename

@@ -1,6 +1,7 @@
 import User from '../entity/User';
 import Event from '../entity/Event';
 import Comment from '../entity/Comment';
+import {log} from '../common/utils/log';
 
 type ModifyCommentParams = {
   user: User;
@@ -39,7 +40,7 @@ class CommentService {
   }
 
   async deleteComment(commentId: number): Promise<void> {
-    console.log(`댓글 ${commentId} 삭제!`);
+    log(`댓글 ${commentId} 삭제!`);
 
     await Comment.delete({
       id: commentId

@@ -9,9 +9,11 @@ class ScheduledPushService {
    * 1분짜리 틱!
    */
   async tick(tickIntervalMinutes: number) {
-    log(`틱!`);
+    log(`드르륵...탁!`);
 
     const allNotificationsToHandle = await NotificationService.getAllUnSentNotifications();
+
+    log(`처리해야 할 일 ${allNotificationsToHandle.length}개!`);
 
     for (const notification of allNotificationsToHandle) {
       if (!['start', 'end'].includes(notification.setFor)) {

@@ -26,6 +26,4 @@ export async function startServer() {
   app.use(errorHandler());
 
   app.listen(process.env.PORT || 3000);
-
-  console.log('서버시작!!!!!!!!!!');
 }

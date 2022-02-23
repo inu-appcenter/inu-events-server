@@ -10,7 +10,7 @@ const schema = defineSchema({
   body: SubscriptionSchema
 });
 
-export default defineRoute('post', '/subscription/subscribing', schema, authorizer(), async (req, res) => {
+export default defineRoute('put', '/subscription/subscribing', schema, authorizer(), async (req, res) => {
   const userId = req.requireUserId();
   const {subscribing} = req.body;
 

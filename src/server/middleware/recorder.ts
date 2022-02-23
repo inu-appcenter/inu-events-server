@@ -1,5 +1,6 @@
 import {RequestHandler} from 'express';
 import {redacted} from '../../common/utils/redacted';
+import {log} from '../../common/utils/log';
 
 export function recorder(): RequestHandler {
   return async (req, res, next) => {
@@ -15,7 +16,7 @@ export function recorder(): RequestHandler {
       body: redacted(body),
     };
 
-    console.log(`요청을 받았습니다: ${JSON.stringify(info)}`);
+    log(`요청을 받았습니다: ${JSON.stringify(info)}`);
 
     next();
   };

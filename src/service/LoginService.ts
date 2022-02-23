@@ -4,6 +4,7 @@ import User from '../entity/User';
 import {createJwt} from '../common/utils/token';
 import {printError} from '../common/utils/error';
 import {generateUUID} from '../common/utils/uuid';
+import {log} from '../common/utils/log';
 
 const WrongAuth = Unauthorized.of(
   'wrong_auth',
@@ -92,7 +93,7 @@ class LoginService {
     user.rememberMeToken = rememberMeToken;
     await user.save();
 
-    console.log(`사용자 ${user.id} 로그인 완료! jwt는 ${jwt}`);
+    log(`사용자 ${user.id} 로그인 완료! jwt는 ${jwt}`);
 
     return {user, jwt, rememberMeToken};
   }

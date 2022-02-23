@@ -6,6 +6,4 @@ export async function startScheduler() {
   schedule.scheduleJob('* * * * *', async () => {
     await ScheduledPushService.tick(1);
   });
-
-  log(`스케줄러 시작~~`);
 }
