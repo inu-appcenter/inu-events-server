@@ -1,5 +1,6 @@
 import {z, ZodArray, ZodObject} from 'zod';
 import {generateSchema} from '@anatine/zod-openapi';
+import p from '../../../package.json';
 
 type Spec = {
   summary?: string;
@@ -23,7 +24,7 @@ class SpecStorage {
     return {
       openapi: '3.0.0',
       info: {
-        version: '1.0.0',
+        version: p.version,
         title: '유니레터!',
         description: '유니레터 서버 API 문서입니다.',
         contact: {
