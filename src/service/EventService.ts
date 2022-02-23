@@ -27,7 +27,7 @@ class EventService {
   }
 
   async getEvent(eventId: number): Promise<Event> {
-    const event = await Event.findOneOrFail(eventId, {relations: ['user', 'likes', 'notifications']});
+    const event = await Event.findOneOrFail(eventId, {relations: ['user', 'likes', 'notifications', 'comments']});
 
     event.hit();
     await event.save();
@@ -36,7 +36,7 @@ class EventService {
   }
 
   async getEvents(): Promise<Event[]> {
-    return await Event.find({relations: ['user', 'likes', 'notifications']});
+    return await Event.find({relations: ['user', 'likes', 'notifications', 'comments']});
   }
 
   async patchEvent(eventId: number, body: Partial<ModifyEventParams>): Promise<string> {

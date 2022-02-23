@@ -123,6 +123,7 @@ export default class Event extends BaseEntity {
       notificationSetByMe: userId ? (await NotificationService.getNotification(userId, this.id)) != null : undefined,
       notificationSetFor: userId ? (await NotificationService.getNotification(userId, this.id))?.setFor : undefined,
 
+      comments: this.comments.length,
       views: this.views,
       likes: this.likes.length,
       notifications: this.notifications.length,

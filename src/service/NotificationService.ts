@@ -56,7 +56,10 @@ class NotificationService {
     assert(user, NoSuchResource());
     assert(event, NoSuchResource());
 
-    return await EventNotification.findOne({where: {user, event}, relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications']});
+    return await EventNotification.findOne({
+      where: {user, event},
+      relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments']
+    });
   }
 
   async getNotifications(userId: number) {
@@ -64,11 +67,17 @@ class NotificationService {
 
     assert(user, NoSuchResource());
 
-    return await EventNotification.find({where: {user}, relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications']});
+    return await EventNotification.find({
+      where: {user},
+      relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments']
+    });
   }
 
   async getAllUnSentNotifications() {
-    return await EventNotification.find({where: {sent: false}, relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications']});
+    return await EventNotification.find({
+      where: {sent: false},
+      relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments']
+    });
   }
 }
 
