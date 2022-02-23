@@ -63,7 +63,7 @@ class LikeService {
 
     const allLikes = await EventLike.find({
       where: {user: theUser},
-      relations: ['event', 'event.user', 'event.like', 'event.notification']
+      relations: ['event', 'event.user', 'event.likes', 'event.notifications']
     });
 
     return allLikes.map((l) => l.event);
