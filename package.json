@@ -30,6 +30,7 @@
       "mysql": "^2.14.1",
       "node-schedule": "^2.1.0",
       "openapi3-ts": "^2.0.2",
+      "firebase-admin": "^10.0.2",
       "reflect-metadata": "^0.1.10",
       "serialize-error": "^8.1.0",
       "swagger-ui-express": "^4.3.0",

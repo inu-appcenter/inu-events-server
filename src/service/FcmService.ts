@@ -1,5 +1,6 @@
 import User from '../entity/User';
 import {log} from '../common/utils/log';
+import {sendFcm} from '../infrastructure/fcm';
 
 class FcmService {
   async send(user: User, title: string, body: string) {
@@ -12,8 +13,9 @@ class FcmService {
   }
 
   private async sendInternal(fcmToken: string, title: string, body: string) {
-    // TODO
-    log(`[${fcmToken}] 여기로 알림 대충 쏜걸로 칩시다. ㅎㅎ `);
+    await sendFcm(fcmToken, title, body);
+
+    log(`[${fcmToken}] 여기로 알림 빵야!`);
   }
 }
 
