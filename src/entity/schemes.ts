@@ -26,6 +26,8 @@ export const EventResponseScheme = {
    */
   wroteByMe: z.boolean().optional(),
   likedByMe: z.boolean().optional(),
+  notificationSetByMe: z.boolean().optional(),
+  notificationSetFor: z.string().optional(),
 
   views: z.number(),
   likes: z.number(),

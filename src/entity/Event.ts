@@ -15,6 +15,7 @@ import LikeService from '../service/LikeService';
 import EventLike from './EventLike';
 import EventNotification from './EventNotification';
 import {EventResponseScheme} from './schemes';
+import NotificationService from '../service/NotificationService';
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -119,6 +120,8 @@ export default class Event extends BaseEntity {
 
       wroteByMe: userId ? this.user.id === userId : undefined,
       likedByMe: userId ? await LikeService.getLike(userId, this.id) : undefined,
+      notificationSetByMe: userId ? (await NotificationService.getNotification(userId, this.id)) != null : undefined,
+      notificationSetFor: userId ? (await NotificationService.getNotification(userId, this.id))?.setFor : undefined,
 
       views: this.views,
       likes: this.likes.length,
