@@ -1,6 +1,8 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import User from './User';
 import Event from './Event';
+import {z} from 'zod';
+import {Infer} from '../common/utils/zod';
 
 /**
  * 행사 오픈/마감 알림(이하 "알림")을 나타내는 엔티티입니다.
@@ -30,4 +32,16 @@ export default class EventNotification extends BaseEntity {
 
   @Column({comment: '이 알림이 전송되었는가?'})
   sent: boolean;
+
+  toResponse(): Infer<typeof EventNotificationScheme> {
+    return {
+      eventId: this.event.id,
+      setFor: this.setFor
+    }
+  }
+}
+
+export const EventNotificationScheme = {
+  eventId: z.number(),
+  setFor: z.string(),
 }
