@@ -52,3 +52,8 @@ export const EventNotificationScheme = {
   event: z.object(EventResponseScheme),
   setFor: z.string(),
 }
+
+export const EventNotificationRequestScheme = {
+  eventId: z.number(),
+  setFor: z.string(),
+}
