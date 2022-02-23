@@ -15,5 +15,5 @@ export default defineRoute('get', '/events', schema, async (req, res) => {
 
   const eventInformation = await EventService.getEvents();
 
-  return res.json(eventInformation.map(e => e.toEventResponse(userId)))
+  return res.json(await Promise.all(eventInformation.map(e => e.toEventResponse(userId))))
 });

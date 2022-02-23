@@ -21,5 +21,5 @@ export default defineRoute('get', '/events/:eventId', schema, async (req, res) =
 
   const eventInformation = await EventService.getEvent(eventId);
 
-  return res.json(eventInformation.toEventResponse(userId));
+  return res.json(await eventInformation.toEventResponse(userId));
 });
