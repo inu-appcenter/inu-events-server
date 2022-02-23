@@ -49,12 +49,16 @@ class NotificationService {
     await existingNotification.remove();
   }
 
-  async getListOfNotification(userId: number) {
+  async getNotifications(userId: number) {
     const user = await User.findOne(userId);
 
     assert(user, NoSuchResource());
 
     return await EventNotification.find({where: {user}, relations: ['user', 'event']});
+  }
+
+  async getAllUnSentNotifications() {
+    return await EventNotification.find({where: {sent: false}, relations: ['user', 'event']});
   }
 }
 

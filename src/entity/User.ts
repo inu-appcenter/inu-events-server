@@ -111,17 +111,11 @@ export default class User extends BaseEntity {
 
     // 구독 중인 카테고리별 알림
     const subscribingCategories = this.subscribingOn.split(',').map(k => k.trim());
-    const thisCategory = event.category //카테고리로 변경함
+    const thisCategory = event.category;
 
-    for (const subscribingCategory of subscribingCategories) {
-      if (thisCategory.includes(subscribingCategory)) {
-        // 구독 하고, 해당 이벤트에 구독중인 카테고리가 들어가 있음.
-        return true;
-      }
-    }
-
-    // 구독 하고, 구독중인 키워드도 있지만 이 이벤트는 아님.
-    return false;
+    // 지금 이 이벤트의 카테고리가 내래 구독중인 카테고리 중에 있능가??>??
+    // 그니께...이것이 내가 구독중인 카테고리인가 ???
+    return subscribingCategories.includes(thisCategory);
   }
 
   toString() {

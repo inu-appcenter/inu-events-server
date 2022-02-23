@@ -33,6 +33,10 @@ export default class EventNotification extends BaseEntity {
   @Column({comment: '이 알림이 전송되었는가?'})
   sent: boolean;
 
+  markSent() {
+    this.sent = true;
+  }
+
   toResponse(): Infer<typeof EventNotificationScheme> {
     return {
       eventId: this.event.id,
