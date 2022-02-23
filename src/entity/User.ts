@@ -3,6 +3,8 @@ import Event from './Event';
 import Comment from './Comment';
 import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
+import EventNotification from './EventNotification';
+import EventLike from './EventLike';
 
 /**
  * 사용자!
@@ -36,7 +38,7 @@ export default class User extends BaseEntity {
   @Column({comment: '전체 알림 수신 여부.'})
   subscribing: boolean = false;
 
-  @Column({nullable: true, comment: '전체 알림 키워드 필터(쉼표로 구분).'})
+  @Column({nullable: true, comment: '전체 알림 카테고리 필터(쉼표로 구분).'})
   subscribingOn?: string;
 
   @CreateDateColumn({comment: '생성 일시.'})
@@ -45,11 +47,29 @@ export default class User extends BaseEntity {
   @Column({nullable: true, comment: '삭제 일시.'})
   deletedAt?: Date;
 
+  /**
+   * 사용자가 등록한 행사들.
+   */
   @OneToMany(() => Event, (e) => e.user)
   events: Event[];
 
+  /**
+   * 사용자가 남긴 댓글들.
+   */
   @OneToMany(() => Comment, (c) => c.user)
   comments: Comment[];
+
+  /**
+   * 사용자가 남긴 "좋아요"들(또는 저장한 행사들).
+   */
+  @OneToMany(() => EventLike, (l) => l.user)
+  likes: EventLike[];
+
+  /**
+   * 사용자가 등록한 행사 오픈/마감 알림들.
+   */
+  @OneToMany(() => EventNotification, (n) => n.event)
+  notifications: EventNotification[];
 
   subscribeOn(subscribingCategories?: string) {
     if (subscribingCategories != null) {
