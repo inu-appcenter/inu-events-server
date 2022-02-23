@@ -21,7 +21,7 @@ export default class EventLike extends BaseEntity {
   /**
    * 사용자가 좋아요 한 행사.
    */
-  @ManyToOne(() => Event)
+  @ManyToOne(() => Event, (e) => e.likes)
   @JoinColumn()
   event: Event
 }

@@ -43,6 +43,18 @@ class LikeService {
 
     log(`${theUser.toString()}는 이제 ${theEvent.toString()}를 좋아하지 않습니다.`);
   }
+
+  async getLike(userId: number, eventId: number) {
+    const theUser = await User.findOne(userId);
+    const theEvent = await Event.findOne(eventId);
+
+    assert(theUser, NoSuchResource());
+    assert(theEvent, NoSuchResource());
+
+    const existingLike = await EventLike.findOne({where: {user: theUser, event: theEvent}});
+
+    return existingLike != null;
+  }
 }
 
 export default new LikeService();

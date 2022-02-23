@@ -13,6 +13,8 @@ import Comment from './Comment'
 import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
 import {extendApi} from '@anatine/zod-openapi';
+import LikeService from '../service/LikeService';
+import EventLike from './EventLike';
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -62,17 +64,33 @@ export default class Event extends BaseEntity {
   imageUuid?: string;
 
 
+  @Column({comment: '조회수'})
+  views: number = 0;
+
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
+  /**
+   * 이 행사에 딸린 댓글들.
+   */
   @OneToMany(() => Comment, (c) => c.event)
   comments: Comment[];
+
+  /**
+   * 이 행사에 딸린 "좋아요"들.
+   */
+  @OneToMany(() => EventLike, (l) => l.event)
+  likes: EventLike[];
+
+  hit() {
+    this.views += 1;
+  }
 
   toString() {
     return `[id가 ${this.id}인 행사]`;
   }
 
-  toEventResponse(userId?: number): Infer<typeof EventResponseScheme> {
+  async toEventResponse(userId?: number): Promise<Infer<typeof EventResponseScheme>> {
     return {
       id: this.id,
       userId: this.user.id,
@@ -94,9 +112,9 @@ export default class Event extends BaseEntity {
       createdAt: this.createdAt,
 
       wroteByMe: userId ? this.user.id === userId : undefined,
-      likedByMe: undefined,
-      likes: 0, // TODO 구현하자
-      views: 0, // TODO 구현하자
+      likedByMe: userId ? await LikeService.getLike(userId, this.id) : undefined,
+      likes: this.likes.length,
+      views: this.views,
 
       submissionUrl: this.location, // TODO 하위호환 필드
     }
