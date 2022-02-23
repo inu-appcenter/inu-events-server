@@ -1,4 +1,4 @@
-import {BaseEntity, Entity, JoinColumn, ManyToOne} from 'typeorm';
+import {BaseEntity, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import User from './User';
 import Event from './Event';
 
@@ -7,6 +7,9 @@ import Event from './Event';
  */
 @Entity()
 export default class EventLike extends BaseEntity {
+  @PrimaryGeneratedColumn({comment: '식별자.'})
+  id: number
+
   /**
    * 좋아요를 남긴 사용자.
    * 사용자는 이 필드를 foreign key로 하여 자신이 가진 EventLike에 접근 가능.

@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import User from './User';
 import Event from './Event';
 import {z} from 'zod';
@@ -12,6 +12,9 @@ import {Infer} from '../common/utils/zod';
  */
 @Entity()
 export default class EventNotification extends BaseEntity {
+  @PrimaryGeneratedColumn({comment: '식별자.'})
+  id: number
+
   /**
    * 알림을 등록한 사용자.
    * 사용자는 이 필드를 foreign key로 하여 자신이 가진 EventNotification에 접근 가능.
