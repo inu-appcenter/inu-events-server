@@ -68,6 +68,10 @@ export default class Event extends BaseEntity {
   @OneToMany(() => Comment, (c) => c.event)
   comments: Comment[];
 
+  toString() {
+    return `[id가 ${this.id}인 행사]`;
+  }
+
   toEventResponse(userId?: number): Infer<typeof EventResponseScheme> {
     return {
       id: this.id,

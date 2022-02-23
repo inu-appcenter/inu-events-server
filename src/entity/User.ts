@@ -115,6 +115,10 @@ export default class User extends BaseEntity {
     return false;
   }
 
+  toString() {
+    return `[id가 ${this.id}인 사용자]`;
+  }
+
   toResponse(): Infer<typeof UserResponseScheme> {
     return {
       id: this.id,
