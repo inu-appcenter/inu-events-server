@@ -11,14 +11,17 @@ const schema = defineSchema({
   description: '네.',
 
   body: {
+    title: z.string(),
     host: z.string(),
     category: z.string(),
-    title: z.string(),
+    target: z.string(),
+    startAt: stringAsDate,
+    endAt: stringAsDate.optional(),
+    contact: z.string().optional(),
+    location: z.string().optional(),
+
     body: z.string(),
     imageUuid: z.string().optional(),
-    submissionUrl: z.string().optional(),
-    startAt: stringAsDate.optional(),
-    endAt: stringAsDate.optional(),
   }
 });
 

@@ -13,7 +13,7 @@ class NotificationService {
     assert(user, NoSuchResource());
     assert(event, NoSuchResource());
 
-    const existingNotification = await EventNotification.find({where: {user, event, setFor, sent: false}});
+    const existingNotification = await EventNotification.findOne({where: {user, event, setFor, sent: false}});
 
     if (existingNotification) {
       log(`${user.toString()}는 이미 ${event.toString()}의 ${setFor} 알림을 등록해 놓았습니다.`);
