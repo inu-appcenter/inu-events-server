@@ -1,7 +1,8 @@
 import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {authorizer} from '../../middleware/authorizer';
-import SubscriptionService, {TopicsScheme} from '../../../service/SubscriptionService';
+import SubscriptionService from '../../../service/SubscriptionService';
+import {TopicsScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '새 행사 구독 토픽 설정하기',

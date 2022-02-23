@@ -1,7 +1,7 @@
 import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
-import {EventResponseScheme} from '../../../entity/Event';
+import {EventResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사를 다 가져옵니다.',

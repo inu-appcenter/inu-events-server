@@ -1,11 +1,11 @@
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import Event from './Event';
 import Comment from './Comment';
-import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
 import EventNotification from './EventNotification';
 import EventLike from './EventLike';
 import {log} from '../common/utils/log';
+import {UserResponseScheme} from './schemes';
 
 /**
  * 사용자!
@@ -130,11 +130,4 @@ export default class User extends BaseEntity {
       imageUuid: this.imageUuid,
     }
   }
-}
-
-export const UserResponseScheme = {
-  id: z.number(),
-  email: z.string(),
-  nickname: z.string(),
-  imageUuid: z.string().optional(),
 }

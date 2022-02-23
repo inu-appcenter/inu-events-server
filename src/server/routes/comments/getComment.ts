@@ -2,7 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {stringAsInt} from '../../libs/zodTypes';
 import CommentService from '../../../service/CommentService';
-import {CommentResponseScheme} from '../../../entity/Comment';
+import {CommentResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '댓글 가져오기.',

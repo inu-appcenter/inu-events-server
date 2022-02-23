@@ -1,9 +1,8 @@
 import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {authorizer} from '../../middleware/authorizer';
-import {z} from 'zod';
 import LikeService from '../../../service/LikeService';
-import {EventResponseScheme} from '../../../entity/Event';
+import {EventResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사 좋아요 가져오기',

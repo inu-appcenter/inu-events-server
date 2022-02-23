@@ -10,12 +10,11 @@ import {
 } from 'typeorm'
 import User from './User'
 import Comment from './Comment'
-import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
-import {extendApi} from '@anatine/zod-openapi';
 import LikeService from '../service/LikeService';
 import EventLike from './EventLike';
 import EventNotification from './EventNotification';
+import {EventResponseScheme} from './schemes';
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -128,40 +127,4 @@ export default class Event extends BaseEntity {
       submissionUrl: this.location, // TODO 하위호환 필드
     }
   }
-}
-
-export const EventResponseScheme = {
-  id: z.number(),
-  userId: z.number(),
-  nickname: z.string(),
-  profileImage: z.string().optional(),
-
-  title: z.string(),
-  host: z.string(),
-  category: z.string(),
-  target: z.string(),
-  startAt: z.date(),
-  endAt: z.date().optional(),
-  contact: z.string().optional(),
-  location: z.string().optional(),
-
-  body: z.string(),
-  imageUuid: z.string().optional(),
-
-  createdAt: z.date(),
-
-  /**
-   * 추가 속성.
-   */
-  wroteByMe: z.boolean().optional(),
-  likedByMe: z.boolean().optional(),
-
-  views: z.number(),
-  likes: z.number(),
-  notifications: z.number(),
-
-  /**
-   * 곧 사라질 운명들
-   */
-  submissionUrl: extendApi(z.string().optional(), {description: '곧 사라져요~'})
 }

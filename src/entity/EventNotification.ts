@@ -1,8 +1,8 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import User from './User';
-import Event, {EventResponseScheme} from './Event';
-import {z} from 'zod';
+import Event from './Event';
 import {Infer} from '../common/utils/zod';
+import {EventNotificationScheme} from './schemes';
 
 /**
  * 행사 오픈/마감 알림(이하 "알림")을 나타내는 엔티티입니다.
@@ -48,12 +48,3 @@ export default class EventNotification extends BaseEntity {
   }
 }
 
-export const EventNotificationScheme = {
-  event: z.object(EventResponseScheme),
-  setFor: z.string(),
-}
-
-export const EventNotificationRequestScheme = {
-  eventId: z.number(),
-  setFor: z.string(),
-}

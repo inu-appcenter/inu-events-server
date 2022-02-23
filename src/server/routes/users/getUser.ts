@@ -2,7 +2,7 @@ import UserService from '../../../service/UserService';
 import {stringAsInt} from '../../libs/zodTypes';
 import {defineRoute} from '../../libs/route';
 import {defineSchema} from '../../libs/schema';
-import {UserResponseScheme} from '../../../entity/User';
+import {UserResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '사용자 가져오기',

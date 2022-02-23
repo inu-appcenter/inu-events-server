@@ -1,8 +1,8 @@
 import {defineSchema} from '../../libs/schema';
-import {EventNotificationRequestScheme, EventNotificationScheme} from '../../../entity/EventNotification';
 import {defineRoute} from '../../libs/route';
 import {authorizer} from '../../middleware/authorizer';
 import NotificationService from '../../../service/NotificationService';
+import {EventNotificationRequestScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사 오픈/마감 알림 등록하기',

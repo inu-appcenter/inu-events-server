@@ -1,11 +1,11 @@
 import User from '../entity/User';
 import assert from 'assert';
 import {NoSuchResource} from '../common/errors/general';
-import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
+import {SubscriptionSchema, TopicsScheme} from '../entity/schemes';
 
 class SubscriptionService {
-  async getSubscription(userId: number) : Promise<Infer<typeof SubscriptionSchema>> {
+  async getSubscription(userId: number): Promise<Infer<typeof SubscriptionSchema>> {
     const user = await User.findOne(userId);
 
     assert(user, NoSuchResource());
@@ -25,7 +25,7 @@ class SubscriptionService {
     await user.save();
   }
 
-  async getTopics(userId: number) : Promise<Infer<typeof TopicsScheme>> {
+  async getTopics(userId: number): Promise<Infer<typeof TopicsScheme>> {
     const user = await User.findOne(userId);
 
     assert(user, NoSuchResource());
@@ -48,10 +48,3 @@ class SubscriptionService {
 
 export default new SubscriptionService();
 
-export const SubscriptionSchema = {
-  subscribing: z.boolean()
-}
-
-export const TopicsScheme = {
-  topics: z.array(z.string())
-}

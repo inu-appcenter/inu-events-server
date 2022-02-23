@@ -1,8 +1,8 @@
-import {z} from 'zod';
 import User from './User';
 import Event from './Event';
 import {Infer} from '../common/utils/zod';
 import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {CommentResponseScheme} from './schemes';
 
 @Entity()
 export default class Comment extends BaseEntity {
@@ -13,7 +13,7 @@ export default class Comment extends BaseEntity {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Event, (e) => e.comments, {onDelete:'CASCADE'})
+  @ManyToOne(() => Event, (e) => e.comments, {onDelete: 'CASCADE'})
   @JoinColumn()
   event: Event;
 
@@ -37,14 +37,3 @@ export default class Comment extends BaseEntity {
     }
   }
 }
-
-export const CommentResponseScheme = {
-  id: z.number(),
-  userId: z.number(),
-  nickname: z.string(),
-  profileImage: z.string().optional(),
-  eventId: z.number(),
-  content: z.string(),
-  createdAt: z.date(),
-  wroteByMe: z.boolean().optional()
-};

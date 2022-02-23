@@ -2,7 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
 import {stringAsInt} from '../../libs/zodTypes';
-import {EventResponseScheme} from '../../../entity/Event';
+import {EventResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사 하나를 가져옵니다.',
