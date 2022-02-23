@@ -15,6 +15,7 @@ import {Infer} from '../common/utils/zod';
 import {extendApi} from '@anatine/zod-openapi';
 import LikeService from '../service/LikeService';
 import EventLike from './EventLike';
+import EventNotification from './EventNotification';
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -82,6 +83,12 @@ export default class Event extends BaseEntity {
   @OneToMany(() => EventLike, (l) => l.event)
   likes: EventLike[];
 
+  /**
+   * 이 행사에 딸린 등록된 알림들.
+   */
+  @OneToMany(() => EventNotification, (n) => n.event)
+  notifications: EventNotification[];
+
   hit() {
     this.views += 1;
   }
@@ -113,8 +120,10 @@ export default class Event extends BaseEntity {
 
       wroteByMe: userId ? this.user.id === userId : undefined,
       likedByMe: userId ? await LikeService.getLike(userId, this.id) : undefined,
-      likes: this.likes.length,
+
       views: this.views,
+      likes: this.likes.length,
+      notifications: this.notifications.length,
 
       submissionUrl: this.location, // TODO 하위호환 필드
     }
@@ -146,8 +155,10 @@ export const EventResponseScheme = {
    */
   wroteByMe: z.boolean().optional(),
   likedByMe: z.boolean().optional(),
-  likes: z.number(),
+
   views: z.number(),
+  likes: z.number(),
+  notifications: z.number(),
 
   /**
    * 곧 사라질 운명들

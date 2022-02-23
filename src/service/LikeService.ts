@@ -55,6 +55,19 @@ class LikeService {
 
     return existingLike != null;
   }
+
+  async getLikedEvents(userId: number) {
+    const theUser = await User.findOne(userId);
+
+    assert(theUser, NoSuchResource());
+
+    const allLikes = await EventLike.find({
+      where: {user: theUser},
+      relations: ['event', 'event.user', 'event.like', 'event.notification']
+    });
+
+    return allLikes.map((l) => l.event);
+  }
 }
 
 export default new LikeService();

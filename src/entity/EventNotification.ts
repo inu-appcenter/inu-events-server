@@ -1,6 +1,6 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import User from './User';
-import Event from './Event';
+import Event, {EventResponseScheme} from './Event';
 import {z} from 'zod';
 import {Infer} from '../common/utils/zod';
 
@@ -26,7 +26,7 @@ export default class EventNotification extends BaseEntity {
   /**
    * 알림의 내용이 될 행사.
    */
-  @ManyToOne(() => Event)
+  @ManyToOne(() => Event, (e) => e.notifications)
   @JoinColumn()
   event: Event;
 
@@ -40,15 +40,15 @@ export default class EventNotification extends BaseEntity {
     this.sent = true;
   }
 
-  toResponse(): Infer<typeof EventNotificationScheme> {
+  async toResponse(userId?: number): Promise<Infer<typeof EventNotificationScheme>> {
     return {
-      eventId: this.event.id,
+      event: await this.event.toEventResponse(userId),
       setFor: this.setFor
     }
   }
 }
 
 export const EventNotificationScheme = {
-  eventId: z.number(),
+  event: z.object(EventResponseScheme),
   setFor: z.string(),
 }

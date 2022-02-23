@@ -16,5 +16,5 @@ export default defineRoute('get', '/notifications', schema, authorizer(), async 
 
   const notifications = await NotificationService.getNotifications(userId);
 
-  return res.json(notifications);
+  return res.json(await Promise.all(notifications.map(n => n.toResponse(userId))));
 });

@@ -130,13 +130,6 @@ export default class User extends BaseEntity {
       imageUuid: this.imageUuid,
     }
   }
-
-  toMeResponse(): Infer<typeof MeResponseScheme> {
-    return {
-      ...this.toResponse(),
-      subscribing: this.subscribing
-    }
-  }
 }
 
 export const UserResponseScheme = {
@@ -144,9 +137,4 @@ export const UserResponseScheme = {
   email: z.string(),
   nickname: z.string(),
   imageUuid: z.string().optional(),
-}
-
-export const MeResponseScheme = {
-  ...UserResponseScheme,
-  subscribing: z.boolean(),
 }
