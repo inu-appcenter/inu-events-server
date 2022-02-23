@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import User from './User';
 import Event from './Event';
 
@@ -9,7 +9,7 @@ import Event from './Event';
  * 알림들은 푸시알림 전송 후 처리 완료로 기록될 것입니다.
  */
 @Entity()
-export default class EventNotification {
+export default class EventNotification extends BaseEntity {
   /**
    * 알림을 등록한 사용자.
    * 사용자는 이 필드를 foreign key로 하여 자신이 가진 EventNotification에 접근 가능.
