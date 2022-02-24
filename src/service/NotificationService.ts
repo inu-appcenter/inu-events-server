@@ -41,11 +41,11 @@ class NotificationService {
     await existingNotification.remove();
   }
 
-  async getNotification(userId: number, eventId: number) {
+  async getUnSentNotification(userId: number, eventId: number) {
     const user = await User.findOneOrFail(userId);
     const event = await Event.findOneOrFail(eventId);
 
-    return await EventNotification.findOne({user, event});
+    return await EventNotification.findOne({user, event, sent: false});
   }
 
   async getUnsentNotifications(userId: number) {

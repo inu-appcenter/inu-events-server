@@ -110,8 +110,8 @@ export default class Event extends BaseBetterEntity {
 
       wroteByMe: userId ? this.user.id === userId : undefined,
       likedByMe: userId ? await LikeService.getLike(userId, this.id) : undefined,
-      notificationSetByMe: userId ? (await NotificationService.getNotification(userId, this.id)) != null : undefined,
-      notificationSetFor: userId ? (await NotificationService.getNotification(userId, this.id))?.setFor : undefined,
+      notificationSetByMe: userId ? (await NotificationService.getUnSentNotification(userId, this.id)) != null : undefined,
+      notificationSetFor: userId ? (await NotificationService.getUnSentNotification(userId, this.id))?.setFor : undefined,
 
       comments: this.comments.length,
       views: this.views,
