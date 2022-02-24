@@ -13,14 +13,16 @@ const schema = defineSchema({
     eventId: stringAsInt,
   },
   body: {
+    title: z.string().optional(),
     host: z.string().optional(),
     category: z.string().optional(),
-    title: z.string().optional(),
-    body: z.string().optional(),
-    imageUuid: z.string().optional(),
-    submissionUrl: z.string().optional(),
+    target: z.string().optional(),
     startAt: stringAsDate.optional(),
     endAt: stringAsDate.optional(),
+    contact:z.string().optional(),
+    location:z.string().optional(),
+    body: z.string().optional(),
+    imageUuid: z.string().optional(),
   }
 });
 
