@@ -6,7 +6,7 @@ import EventNotification from './EventNotification';
 import EventLike from './EventLike';
 import {log} from '../common/utils/log';
 import {UserResponseScheme} from './schemes';
-import ImageUrlService from '../service/imageUrlService';
+import ImageUrlService from '../service/ImageUrlService';
 import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 /**

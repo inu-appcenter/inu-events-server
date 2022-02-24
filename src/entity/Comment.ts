@@ -3,7 +3,7 @@ import Event from './Event';
 import {Infer} from '../common/utils/zod';
 import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {CommentResponseScheme} from './schemes';
-import ImageUrlService from "../service/imageUrlService";
+import ImageUrlService from "../service/ImageUrlService";
 import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()

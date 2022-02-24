@@ -7,7 +7,7 @@ import EventLike from './EventLike';
 import EventNotification from './EventNotification';
 import {EventResponseScheme} from './schemes';
 import NotificationService from '../service/NotificationService';
-import ImageUrlService from '../service/imageUrlService'
+import ImageUrlService from '../service/ImageUrlService'
 import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()
