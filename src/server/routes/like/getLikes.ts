@@ -16,5 +16,5 @@ export default defineRoute('get', '/likes', schema, authorizer(), async (req, re
 
   const likedEvents = await LikeService.getLikedEvents(userId);
 
-  return res.json(await Promise.all(likedEvents.map(e => e.toEventResponse(userId))))
+  return res.json(await Promise.all(likedEvents.map(e => e.toResponse(userId))))
 });

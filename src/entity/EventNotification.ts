@@ -45,7 +45,7 @@ export default class EventNotification extends BaseBetterEntity {
 
   async toResponse(userId?: number): Promise<Infer<typeof EventNotificationScheme>> {
     return {
-      event: await this.event.toEventResponse(userId),
+      event: await this.event.toResponse(userId),
       setFor: this.setFor
     }
   }

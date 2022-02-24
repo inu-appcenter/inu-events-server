@@ -27,7 +27,7 @@ export default class Comment extends BaseBetterEntity {
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
-  async toCommentResponse(userId?: number): Promise<Infer<typeof CommentResponseScheme>> {
+  async toResponse(userId?: number): Promise<Infer<typeof CommentResponseScheme>> {
     return {
       id: this.id,
       userId: this.user.id,

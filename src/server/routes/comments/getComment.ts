@@ -21,5 +21,5 @@ export default defineRoute('get', '/comments/:commentId', schema, async (req, re
 
   const commentInformation = await CommentService.getComment(commentId);
 
-  return res.json(await commentInformation.toCommentResponse(userId))
+  return res.json(await commentInformation.toResponse(userId))
 });

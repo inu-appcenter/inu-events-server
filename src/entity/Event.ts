@@ -88,7 +88,7 @@ export default class Event extends BaseBetterEntity {
     this.views += 1;
   }
 
-  async toEventResponse(userId?: number): Promise<Infer<typeof EventResponseScheme>> {
+  async toResponse(userId?: number): Promise<Infer<typeof EventResponseScheme>> {
     return {
       id: this.id,
       userId: this.user.id,
