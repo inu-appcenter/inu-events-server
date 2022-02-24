@@ -19,8 +19,9 @@ const schema = defineSchema({
     target: z.string().optional(),
     startAt: stringAsDate.optional(),
     endAt: stringAsDate.optional(),
-    contact:z.string().optional(),
-    location:z.string().optional(),
+    contact: z.string().optional(),
+    location: z.string().optional(),
+
     body: z.string().optional(),
     imageUuid: z.string().optional(),
   }
