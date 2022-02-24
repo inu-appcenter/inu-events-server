@@ -3,6 +3,7 @@ import Event from './Event';
 import {Infer} from '../common/utils/zod';
 import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {CommentResponseScheme} from './schemes';
+import ImageUrlService from "../service/imageUrlService";
 
 @Entity()
 export default class Comment extends BaseEntity {
@@ -23,13 +24,12 @@ export default class Comment extends BaseEntity {
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
-  toCommentResponse(userId?: number): Infer<typeof CommentResponseScheme> {
+  async toCommentResponse(userId?: number): Promise<Infer<typeof CommentResponseScheme>> {
     return {
       id: this.id,
       userId: this.user.id,
       nickname: this.user.nickname,
-      profileImage: this.user.imageUuid ? `http://uniletter.inuappcenter.kr/images/${this.user.imageUuid}` : undefined,
-
+      profileImage: this.user.imageUuid ? await ImageUrlService.makeUrl(this.user.imageUuid)  : undefined,
       eventId: this.event.id,
       content: this.content,
       createdAt: this.createdAt,

@@ -6,6 +6,7 @@ import EventNotification from './EventNotification';
 import EventLike from './EventLike';
 import {log} from '../common/utils/log';
 import {UserResponseScheme} from './schemes';
+import ImageUrlService from "../service/imageUrlService";
 
 /**
  * 사용자!
@@ -122,12 +123,13 @@ export default class User extends BaseEntity {
     return `[id가 ${this.id}인 사용자]`;
   }
 
-  toResponse(): Infer<typeof UserResponseScheme> {
+  async toResponse(): Promise<Infer<typeof UserResponseScheme>> {
     return {
       id: this.id,
       email: this.email,
       nickname: this.nickname,
       imageUuid: this.imageUuid,
+      imageUrl: this.imageUuid ? await ImageUrlService.makeUrl(this.imageUuid)  : undefined,
     }
   }
 }

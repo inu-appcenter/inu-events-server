@@ -18,7 +18,7 @@ export const EventResponseScheme = {
 
   body: z.string(),
   imageUuid: z.string().optional(),
-
+  imageUrl: z.string().optional(),
   createdAt: z.date(),
 
   /**
@@ -66,6 +66,7 @@ export const UserResponseScheme = {
   email: z.string(),
   nickname: z.string(),
   imageUuid: z.string().optional(),
+  imageUrl: z.string().optional(),
 }
 
 export const SubscriptionSchema = {

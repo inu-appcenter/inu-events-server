@@ -16,6 +16,7 @@ import EventLike from './EventLike';
 import EventNotification from './EventNotification';
 import {EventResponseScheme} from './schemes';
 import NotificationService from '../service/NotificationService';
+import ImageUrlService from '../service/imageUrlService'
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -102,8 +103,7 @@ export default class Event extends BaseEntity {
       id: this.id,
       userId: this.user.id,
       nickname: this.user.nickname,
-      profileImage: this.user.imageUuid ? `http://uniletter.inuappcenter.kr/images/${this.user.imageUuid}` : undefined,
-
+      profileImage: this.user.imageUuid ? await ImageUrlService.makeUrl(this.user.imageUuid)  : undefined,
       title: this.title,
       host: this.host,
       category: this.category,
@@ -115,7 +115,7 @@ export default class Event extends BaseEntity {
 
       body: this.body,
       imageUuid: this.imageUuid,
-
+      imageUrl: this.imageUuid ? await ImageUrlService.makeUrl(this.imageUuid)  : undefined,
       createdAt: this.createdAt,
 
       wroteByMe: userId ? this.user.id === userId : undefined,
