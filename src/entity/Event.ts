@@ -103,7 +103,7 @@ export default class Event extends BaseEntity {
       id: this.id,
       userId: this.user.id,
       nickname: this.user.nickname,
-      profileImage: this.user.imageUuid ? await ImageUrlService.makeUrl(this.user.imageUuid)  : undefined,
+      profileImage: await ImageUrlService.makeUrl(this.user.imageUuid),
       title: this.title,
       host: this.host,
       category: this.category,
@@ -115,7 +115,7 @@ export default class Event extends BaseEntity {
 
       body: this.body,
       imageUuid: this.imageUuid,
-      imageUrl: this.imageUuid ? await ImageUrlService.makeUrl(this.imageUuid)  : undefined,
+      imageUrl: await ImageUrlService.makeUrl(this.imageUuid),
       createdAt: this.createdAt,
 
       wroteByMe: userId ? this.user.id === userId : undefined,

@@ -29,7 +29,7 @@ export default class Comment extends BaseEntity {
       id: this.id,
       userId: this.user.id,
       nickname: this.user.nickname,
-      profileImage: this.user.imageUuid ? await ImageUrlService.makeUrl(this.user.imageUuid)  : undefined,
+      profileImage: await ImageUrlService.makeUrl(this.user.imageUuid),
       eventId: this.event.id,
       content: this.content,
       createdAt: this.createdAt,

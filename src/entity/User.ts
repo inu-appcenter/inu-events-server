@@ -129,7 +129,7 @@ export default class User extends BaseEntity {
       email: this.email,
       nickname: this.nickname,
       imageUuid: this.imageUuid,
-      imageUrl: this.imageUuid ? await ImageUrlService.makeUrl(this.imageUuid)  : undefined,
+      imageUrl: await ImageUrlService.makeUrl(this.imageUuid),
     }
   }
 }
