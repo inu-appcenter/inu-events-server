@@ -6,7 +6,7 @@ import {CommentResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '댓글 다 가져오기.',
-  description: '댓글을 싹 다 가져옵니다.',
+  description: '어느 행사에 달린 댓글을 싹 다 가져옵니다. eventId 쿼리스트링 파라미터가 필수입니다!!',
 
   query: {
     eventId: stringAsInt,

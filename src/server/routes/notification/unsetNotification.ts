@@ -6,7 +6,7 @@ import {EventNotificationRequestScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사 오픈/마감 알림 취소하기',
-  description: 'ㅎㅎ.',
+  description: '행사의 오픈 또는 마감 알림을 취소합니다. 이미 보내진 알림에는 영향을 미치지 못합니다.',
 
   body: EventNotificationRequestScheme
 });

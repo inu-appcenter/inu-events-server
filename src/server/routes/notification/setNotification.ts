@@ -6,7 +6,7 @@ import {EventNotificationRequestScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사 오픈/마감 알림 등록하기',
-  description: 'ㅎㅎ.',
+  description: '행사의 오픈 또는 마감 알림을 등록합니다. 만약 해당 일시가 지난 상태에서 알림을 등록하면 1분(스케줄러 인터벌) 내에 알림이 발송될 것입니다.',
 
   body: EventNotificationRequestScheme
 });
