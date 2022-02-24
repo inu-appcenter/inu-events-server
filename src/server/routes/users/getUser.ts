@@ -20,6 +20,6 @@ export default defineRoute('get', '/users/:id', schema, async (req, res) => {
 
   const user = await UserService.getUser(id);
 
-  return res.json(user.toResponse());
+  return res.json(await user.toResponse());
 });
 
