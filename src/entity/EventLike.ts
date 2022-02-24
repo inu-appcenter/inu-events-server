@@ -1,12 +1,15 @@
-import {BaseEntity, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import User from './User';
 import Event from './Event';
+import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 /**
  * 어느 행사에 달린 "좋아요"를 나타냅니다.
  */
 @Entity()
-export default class EventLike extends BaseEntity {
+export default class EventLike extends BaseBetterEntity {
+  static relations = ['event', 'event.user', 'event.comments', 'event.likes', 'event.notifications'];
+
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number
 

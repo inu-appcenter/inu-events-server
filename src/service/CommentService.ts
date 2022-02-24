@@ -19,7 +19,7 @@ class CommentService {
   }
 
   async getComment(commentId: number): Promise<Comment> {
-    return await Comment.findOneOrFail(commentId, {relations: ['user', 'event']});
+    return await Comment.findOneOrFail(commentId);
   }
 
   async getComments(eventId: number): Promise<Comment[]> {
@@ -28,7 +28,7 @@ class CommentService {
       return [];
     }
 
-    return await Comment.find({where: {event}, order: {id: 'ASC'}, relations: ['user', 'event']});
+    return await Comment.find({where: {event}, order: {id: 'ASC'}});
   }
 
   async patchComment(commentId: number, body: Partial<ModifyCommentParams>): Promise<string> {

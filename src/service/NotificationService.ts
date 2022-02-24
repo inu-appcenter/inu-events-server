@@ -1,17 +1,12 @@
 import User from '../entity/User';
-import {NoSuchResource} from '../common/errors/general';
-import assert from 'assert';
 import EventNotification from '../entity/EventNotification';
 import Event from '../entity/Event';
 import {log} from '../common/utils/log';
 
 class NotificationService {
   async setNotification(userId: number, eventId: number, setFor: string) {
-    const user = await User.findOne(userId);
-    const event = await Event.findOne(eventId);
-
-    assert(user, NoSuchResource());
-    assert(event, NoSuchResource());
+    const user = await User.findOneOrFail(userId);
+    const event = await Event.findOneOrFail(eventId);
 
     const existingNotification = await EventNotification.findOne({where: {user, event, setFor, sent: false}});
 
@@ -26,11 +21,8 @@ class NotificationService {
   }
 
   async unsetNotification(userId: number, eventId: number, setFor?: string) {
-    const user = await User.findOne(userId);
-    const event = await Event.findOne(eventId);
-
-    assert(user, NoSuchResource());
-    assert(event, NoSuchResource());
+    const user = await User.findOneOrFail(userId);
+    const event = await Event.findOneOrFail(eventId);
 
     const existingNotification = await EventNotification.findOne({
       where: {
@@ -50,34 +42,20 @@ class NotificationService {
   }
 
   async getNotification(userId: number, eventId: number) {
-    const user = await User.findOne(userId);
-    const event = await Event.findOne(eventId);
+    const user = await User.findOneOrFail(userId);
+    const event = await Event.findOneOrFail(eventId);
 
-    assert(user, NoSuchResource());
-    assert(event, NoSuchResource());
-
-    return await EventNotification.findOne({
-      where: {user, event},
-      relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments']
-    });
+    return await EventNotification.findOne({user, event});
   }
 
-  async getNotifications(userId: number) {
-    const user = await User.findOne(userId);
+  async getUnsentNotifications(userId: number) {
+    const user = await User.findOneOrFail(userId);
 
-    assert(user, NoSuchResource());
-
-    return await EventNotification.find({
-      where: {user},
-      relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments']
-    });
+    return await EventNotification.find({user, sent: false});
   }
 
   async getAllUnSentNotifications() {
-    return await EventNotification.find({
-      where: {sent: false},
-      relations: ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments']
-    });
+    return await EventNotification.find({sent: false});
   }
 }
 

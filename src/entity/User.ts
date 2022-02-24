@@ -1,4 +1,4 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import Event from './Event';
 import Comment from './Comment';
 import {Infer} from '../common/utils/zod';
@@ -6,13 +6,14 @@ import EventNotification from './EventNotification';
 import EventLike from './EventLike';
 import {log} from '../common/utils/log';
 import {UserResponseScheme} from './schemes';
-import ImageUrlService from "../service/imageUrlService";
+import ImageUrlService from '../service/imageUrlService';
+import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 /**
  * 사용자!
  */
 @Entity()
-export default class User extends BaseEntity {
+export default class User extends BaseBetterEntity {
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number;
 
@@ -117,10 +118,6 @@ export default class User extends BaseEntity {
     // 지금 이 이벤트의 카테고리가 내래 구독중인 카테고리 중에 있능가??>??
     // 그니께...이것이 내가 구독중인 카테고리인가 ???
     return subscribingCategories.includes(thisCategory);
-  }
-
-  toString() {
-    return `[id가 ${this.id}인 사용자]`;
   }
 
   async toResponse(): Promise<Infer<typeof UserResponseScheme>> {

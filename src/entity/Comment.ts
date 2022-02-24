@@ -1,12 +1,15 @@
 import User from './User';
 import Event from './Event';
 import {Infer} from '../common/utils/zod';
-import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {CommentResponseScheme} from './schemes';
 import ImageUrlService from "../service/imageUrlService";
+import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()
-export default class Comment extends BaseEntity {
+export default class Comment extends BaseBetterEntity {
+  static relations = ['user', 'event'];
+
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number;
 

@@ -1,13 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn
-} from 'typeorm'
+import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import User from './User'
 import Comment from './Comment'
 import {Infer} from '../common/utils/zod';
@@ -17,9 +8,12 @@ import EventNotification from './EventNotification';
 import {EventResponseScheme} from './schemes';
 import NotificationService from '../service/NotificationService';
 import ImageUrlService from '../service/imageUrlService'
+import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()
-export default class Event extends BaseEntity {
+export default class Event extends BaseBetterEntity {
+  static relations = ['user', 'comments', 'likes', 'notifications'];
+
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number
 
@@ -92,10 +86,6 @@ export default class Event extends BaseEntity {
 
   hit() {
     this.views += 1;
-  }
-
-  toString() {
-    return `[id가 ${this.id}인 행사]`;
   }
 
   async toEventResponse(userId?: number): Promise<Infer<typeof EventResponseScheme>> {

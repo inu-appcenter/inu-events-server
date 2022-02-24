@@ -1,8 +1,9 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import User from './User';
 import Event from './Event';
 import {Infer} from '../common/utils/zod';
 import {EventNotificationScheme} from './schemes';
+import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 /**
  * 행사 오픈/마감 알림(이하 "알림")을 나타내는 엔티티입니다.
@@ -11,7 +12,9 @@ import {EventNotificationScheme} from './schemes';
  * 알림들은 푸시알림 전송 후 처리 완료로 기록될 것입니다.
  */
 @Entity()
-export default class EventNotification extends BaseEntity {
+export default class EventNotification extends BaseBetterEntity {
+  static relations = ['user', 'event', 'event.user', 'event.likes', 'event.notifications', 'event.comments'];
+
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number
 

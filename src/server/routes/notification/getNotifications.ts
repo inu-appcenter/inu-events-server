@@ -14,7 +14,7 @@ const schema = defineSchema({
 export default defineRoute('get', '/notifications', schema, authorizer(), async (req, res) => {
   const userId = req.requireUserId();
 
-  const notifications = await NotificationService.getNotifications(userId);
+  const notifications = await NotificationService.getUnsentNotifications(userId);
 
   return res.json(await Promise.all(notifications.map(n => n.toResponse(userId))));
 });
