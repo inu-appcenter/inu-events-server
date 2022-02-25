@@ -49,3 +49,97 @@ INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
 해당 스트링은 `ISO-8601` 규격으로, 거의 모든 플랫폼에서 기본적으로 파싱을 지원하는 규격입니다.
 
 디버깅의 편의를 위해 대한민국 표준시로 표기하였으며, 이를 나타내기 위해 스트링의 끝에 `+09:00`을 붙였습니다.
+
+### 엔티티와 DTO를 다룰 때, nullability에 대해
+
+자바스크립트 환경에는
+
+- 없음을 나타내는 값인 `null`,
+- 값이 없음을 나타내는 `undefined`
+
+이렇게 두 독특한 키워드가 존재합니다.
+
+이 둘 중 하나만 사용하면 얼마나 좋겠냐마는, 그럴 수가 없습니다.
+
+`null`과 `undefined`를 현명하게 다루는 방법을 안내합니다:
+
+#### 엔티티의 속성을 정의할 때
+
+기존에는 아래와 같이 했습니다:
+
+```typescript
+@Entity()
+export default class Event extends BaseBetterEntity {
+  // ...
+  @Column({nullable: true, comment: '단체. 이 행사 또는 모집을 여는 주체가 누구인가?'})
+  host?: string;
+  // ...
+}
+```
+
+속성 이름 뒤에 붙은 물음표(`?`)는 이 필드가 `undefined`일 수 있다는 뜻입니다. 그렇습니다. 다른 언어에서의 `null`이 여기에서는 `undefined`입니다.
+
+그런데 TypeORM을 사용해서 `nullable` 칼럼에 `NULL`을 집어넣으려면 진짜로 `null`을 끼워 주어야 합니다. 진짜 `null`을요.
+
+그리고 TypeORM을 사용해서 엔티티를 가져올 때 `nullable` 필드에는 `undefiend`가 들어갑니다.
+
+즉슨, `nullable` 필드를 표현하려면 해당 필드의 타입은 `T | undefined | null`이어야 합니다.
+
+이를 적용한 속성 정의는 다음과 같습니다:
+
+```typescript
+@Entity()
+export default class Event extends BaseBetterEntity {
+  // ...
+  @Column({type: String, nullable: true, comment: '단체. 이 행사 또는 모집을 여는 주체가 누구인가?'})
+  host?: string | null;
+  // ...
+}
+```
+
+> @Column()의 옵션에 `type: String`이 들어갔습니다.
+> 필드의 타입이 `string`에서 `string | null`이 되면서 더이상 `String`으로의 타입 추론이 불가능해졌기 때문입니다.
+> 따라서 이를 명시해 주어야 합니다.
+> 아, `varchar`나 `text`를 바로 써줄 수도 있지만, 그건 TypeORM이 결정하도록 놔두겠습니다. 어떤 DB를 쓸 지 모르니까요.
+
+#### 요청 / 응답 스케마를 정의할 때
+
+`optional` 필드에 `nullable`도 달아 줍니다.
+
+```diff
+-  host: z.string().optional(), 
++  host: z.string().optional().nullable(),
+```
+
+`optional`이면서 `nullable`이라는 것은 다음을 시사합니다:
+
+- 이 필드는 요청에 안 올 수 있다.
+- 이 필드에는 유효한 값이 올 수 있다.
+- 이 필드에는 명시적으로 빈 값인 `null`이 들어서 올 수 있다.
+
+`Event.host`, `User.imageUuid` 등이 이런 필드에 해당합니다.
+
+아, 그렇다면 `optional`이기만 한 것은요?
+
+- 이 필드는 요청에 안 올 수 있다.
+- 이 필드에는 유효한 값이 올 수 있다.
+- 그렇지만 `null`은 오면 안 된다.
+
+이 경우는 `PATCH` 요청에서 `nullable`이 아닌 필드에 해당합니다. 아예 안 보내거나, 유효한 값을 보내야 합니다.
+
+`nullable`이기만 한 필드는 어떨까요? 아직 우리 앱에 그런 필드는 없습니다.
+
+#### 보너스: PATCH 요청의 스케마를 정의할 때
+
+스케마는 `schema.ts` 파일에 몰아 놓았습니다.
+
+타입스크립트의 타입 정의로는 `Partial<T>`로 모든 필드가 optional인 타입을 만들 수 있습니다.
+
+그런데 `zod` 타입 정의를 속성으로 가지는 오브젝트 타입인 우리의 스케마들은요?
+
+`partialSchemaOf()` 함수를 사용하면, 모든 필드에 `.optional()`이 추가된 버전의 스케마를 만들 수 있습니다.
+
+예를 들어, `POST /events` 요청의 body 규격이 `EventRequestScheme`이라면,
+`PATCH /events/{eventId}` 요청의 body 규격은 `partialSchemaOf(EventRequestScheme)`와 같이 쓸 수 있습니다.
+
+전자는 `Infer<typeof EventRequestScheme>` 타입을 제공하며, 후자는 `Partial<Infer<typeof EventRequestScheme>>` 타입을 제공합니다.
