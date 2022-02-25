@@ -1,6 +1,8 @@
 import {z, ZodArray, ZodObject} from 'zod';
 import {generateSchema} from '@anatine/zod-openapi';
 import p from '../../../package.json';
+import fetch from 'isomorphic-fetch';
+import path from 'path';
 
 type Spec = {
   summary?: string;
@@ -17,16 +19,20 @@ class SpecStorage {
   private specs: Spec[] = [];
 
   addSpec(spec: Spec) {
+    spec.path = spec.path.replace(/:([^/]*)/, '{$1}');
+
     this.specs.push(spec);
   }
 
-  generateOpenApi(): any {
+  async generateOpenApi() {
+    const description = await (await fetch('https://raw.githubusercontent.com/inu-appcenter/inu-events-server/master/README.md')).text();
+
     return {
       openapi: '3.0.0',
       info: {
         version: p.version,
-        title: '유니레터!',
-        description: '유니레터 서버 API 문서입니다.',
+        title: '유니레터 서버',
+        description: description,
         contact: {
           'name': '유니레터 서버팀'
         },
