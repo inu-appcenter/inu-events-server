@@ -1,54 +1,74 @@
-import {z} from 'zod';
-import {extendApi} from '@anatine/zod-openapi';
+import {z, ZodOptional, ZodRawShape} from 'zod';
+import {stringAsDate} from '../server/libs/zodTypes';
+
+export function partialSchemeOf<T extends ZodRawShape>(shape: T): { [K in keyof T]: ZodOptional<T[K]> } {
+  return Object.keys(shape).reduce((acc, key) => {
+    return {...acc, [key]: shape[key].optional()}
+  }, {} as { [K in keyof T]: ZodOptional<T[K]> });
+}
+
+export const EventRequestScheme = {
+  title: z.string(),
+  host: z.string().optional().nullable(),
+  category: z.string(),
+  target: z.string(),
+  startAt: stringAsDate,
+  endAt: stringAsDate.optional().nullable(),
+  contact: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+
+  body: z.string(),
+  imageUuid: z.string().optional().nullable(),
+};
 
 export const EventResponseScheme = {
   id: z.number(),
   userId: z.number(),
   nickname: z.string(),
-  profileImage: z.string().optional(),
+  profileImage: z.string().optional().nullable(),
 
   title: z.string(),
-  host: z.string().optional(),
+  host: z.string().optional().nullable(),
   category: z.string(),
   target: z.string(),
   startAt: z.date(),
-  endAt: z.date().optional(),
-  contact: z.string().optional(),
-  location: z.string().optional(),
+  endAt: z.date().optional().nullable(),
+  contact: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
 
   body: z.string(),
-  imageUuid: z.string().optional(),
-  imageUrl: z.string().optional(),
+  imageUuid: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
   createdAt: z.date(),
 
   /**
    * 추가 속성.
    */
-  wroteByMe: z.boolean().optional(),
+  wroteByMe: z.boolean().optional().nullable(),
   likedByMe: z.boolean().optional(),
-  notificationSetByMe: z.boolean().optional(),
-  notificationSetFor: z.string().optional(),
+  notificationSetByMe: z.boolean().optional().nullable(),
+  notificationSetFor: z.string().optional().nullable(),
 
   comments: z.number(),
   views: z.number(),
   likes: z.number(),
   notifications: z.number(),
-
-  /**
-   * 곧 사라질 운명들
-   */
-  submissionUrl: extendApi(z.string().optional(), {description: '곧 사라져요~'})
 }
+
+export const CommentRequestScheme = {
+  eventId: z.number(),
+  content: z.string(),
+};
 
 export const CommentResponseScheme = {
   id: z.number(),
   userId: z.number(),
   nickname: z.string(),
-  profileImage: z.string().optional(),
+  profileImage: z.string().optional().nullable(),
   eventId: z.number(),
   content: z.string(),
   createdAt: z.date(),
-  wroteByMe: z.boolean().optional()
+  wroteByMe: z.boolean().optional().nullable()
 };
 
 export const EventNotificationScheme = {
@@ -65,8 +85,8 @@ export const UserResponseScheme = {
   id: z.number(),
   email: z.string(),
   nickname: z.string(),
-  imageUuid: z.string().optional(),
-  imageUrl: z.string().optional(),
+  imageUuid: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
 }
 
 export const SubscriptionSchema = {

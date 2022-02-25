@@ -1,34 +1,23 @@
-import User from '../entity/User';
 import Event from '../entity/Event';
-import FcmService from './FcmService';
 import {log} from '../common/utils/log';
 import {preview} from '../server/libs/json';
 import Comment from '../entity/Comment';
 import EventLike from '../entity/EventLike';
 import EventNotification from '../entity/EventNotification';
-
-type ModifyEventParams = {
-  user: User;
-  host?: string;
-  category: string;
-  title: string;
-  body: string;
-  imageUuid?: string;
-  submissionUrl?: string;
-  startAt?: Date;
-  endAt?: Date
-}
+import UserService from './UserService';
+import SubscriptionService from './SubscriptionService';
+import {Infer} from '../common/utils/zod';
+import {EventRequestScheme} from '../entity/schemes';
 
 class EventService {
-  async makeEvent(body: ModifyEventParams): Promise<Event> {
-    const {user} = body;
-    const event = await Event.create(body).save();
+  async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
+    const user = await UserService.getUser(userId);
+
+    const event = await Event.create({user, ...body}).save();
 
     log(`이벤트를 생성합니다: ${preview(body)}`);
 
-    if (user.shallThisUserBeNotifiedWithThisEvent(event)) {
-      await FcmService.send(user, `${event.category}에 새 글이 올라왔어요`, '');
-    }
+    await SubscriptionService.broadcast(event);
 
     return event;
   }
@@ -46,7 +35,7 @@ class EventService {
     return await Event.find();
   }
 
-  async patchEvent(eventId: number, body: Partial<ModifyEventParams>): Promise<string> {
+  async patchEvent(eventId: number, body: Partial<Infer<typeof EventRequestScheme>>): Promise<string> {
     log(`이벤트 ${eventId}를 업데이트합니다: ${preview(body)}`);
 
     const patchevent = await Event.update(

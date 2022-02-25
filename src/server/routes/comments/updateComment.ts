@@ -1,9 +1,9 @@
 import {defineSchema} from '../../libs/schema';
-import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import CommentService from '../../../service/CommentService';
 import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
+import {CommentRequestScheme, partialSchemeOf} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '댓글 하나를 업데이트합니다.',
@@ -12,9 +12,7 @@ const schema = defineSchema({
   params: {
     commentId: stringAsInt,
   },
-  body: {
-    content: z.string()
-  },
+  body: partialSchemeOf(CommentRequestScheme)
 });
 
 export default defineRoute('patch', '/comments/:commentId', schema, authorizer(), async (req, res) => {

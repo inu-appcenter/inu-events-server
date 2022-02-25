@@ -1,16 +1,16 @@
-import User from '../entity/User';
 import Event from '../entity/Event';
 import Comment from '../entity/Comment';
 import {log} from '../common/utils/log';
-
-type ModifyCommentParams = {
-  user: User;
-  event: Event;
-  content: string;
-};
+import UserService from './UserService';
+import EventService from './EventService';
+import {Infer} from '../common/utils/zod';
+import {CommentRequestScheme} from '../entity/schemes';
 
 class CommentService {
-  async makeComment({user, event, content}: ModifyCommentParams): Promise<Comment> {
+  async makeComment(userId: number, {eventId, content}: Infer<typeof CommentRequestScheme>): Promise<Comment> {
+    const user = await UserService.getUser(userId);
+    const event = await EventService.getEvent(eventId);
+
     return await Comment.create({
       user: user,
       event: event,
@@ -31,11 +31,9 @@ class CommentService {
     return await Comment.find({where: {event}, order: {id: 'ASC'}});
   }
 
-  async patchComment(commentId: number, body: Partial<ModifyCommentParams>): Promise<string> {
-    const patchevent = await Comment.update(
-      {id: commentId},
-      body
-    );
+  async patchComment(commentId: number, body: Partial<Infer<typeof CommentRequestScheme>>): Promise<string> {
+    const patchevent = await Comment.update(commentId, body);
+
     return patchevent.raw;
   }
 

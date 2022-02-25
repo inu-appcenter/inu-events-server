@@ -28,8 +28,8 @@ export default class Event extends BaseBetterEntity {
   @Column({comment: '제목.'})
   title: string;
 
-  @Column({nullable: true, comment: '단체. 이 행사 또는 모집을 여는 주체가 누구인가?'})
-  host?: string;
+  @Column({type: String, nullable: true, comment: '단체. 이 행사 또는 모집을 여는 주체가 누구인가?'})
+  host?: string | null;
 
   @Column({comment: '분류.'})
   category: string;
@@ -40,14 +40,14 @@ export default class Event extends BaseBetterEntity {
   @Column({comment: '행사 시작 일시.'})
   startAt: Date;
 
-  @Column({nullable: true, comment: '행사 종료 일시(없을 수 있음).'})
-  endAt?: Date;
+  @Column({type: Date, nullable: true, comment: '행사 종료 일시(없을 수 있음).'})
+  endAt?: Date | null;
 
-  @Column({nullable: true, comment: '연락처. 궁금한 부분은 어디로 연락하면 되나?(휴대전화번호, 이메일 등등)'})
-  contact?: string;
+  @Column({type: String, nullable: true, comment: '연락처. 궁금한 부분은 어디로 연락하면 되나?(휴대전화번호, 이메일 등등)'})
+  contact?: string | null;
 
-  @Column({nullable: true, comment: '위치. 장소 또는 링크.'})
-  location?: string;
+  @Column({type: String, nullable: true, comment: '위치. 장소 또는 링크.'})
+  location?: string | null;
 
   /**
    * 2페이지에 노출
@@ -56,8 +56,8 @@ export default class Event extends BaseBetterEntity {
   @Column({comment: '본문.', length: 1000})
   body: string;
 
-  @Column({nullable: true, comment: '이미지 식별자.'})
-  imageUuid?: string;
+  @Column({type: String, nullable: true, comment: '이미지 식별자.'})
+  imageUuid?: string | null;
 
 
   @Column({comment: '조회수'})
@@ -117,8 +117,6 @@ export default class Event extends BaseBetterEntity {
       views: this.views,
       likes: this.likes.length,
       notifications: this.notifications.length,
-
-      submissionUrl: this.location, // TODO 하위호환 필드
     }
   }
 }

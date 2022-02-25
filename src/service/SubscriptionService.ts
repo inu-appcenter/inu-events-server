@@ -1,5 +1,7 @@
 import User from '../entity/User';
 import {Infer} from '../common/utils/zod';
+import FcmService from './FcmService';
+import Event from '../entity/Event';
 import {SubscriptionSchema, TopicsScheme} from '../entity/schemes';
 
 class SubscriptionService {
@@ -33,6 +35,16 @@ class SubscriptionService {
     user.setTopics(topics);
 
     await user.save();
+  }
+
+  async broadcast(event: Event) {
+    const allUsers = await User.find();
+
+    for (const user of allUsers) {
+      if (user.shallThisUserBeNotifiedWithThisEvent(event)) {
+        await FcmService.send(user, `${event.category}에 새 글이 올라왔어요`, '');
+      }
+    }
   }
 }
 

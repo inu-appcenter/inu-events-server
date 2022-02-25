@@ -23,8 +23,8 @@ export default class User extends BaseBetterEntity {
   @Column({comment: '사용자 닉네임.'})
   nickname: string;
 
-  @Column({nullable: true, comment: '사용자 프로필 사진 UUID.'})
-  imageUuid?: string;
+  @Column({type: String, nullable: true, comment: '사용자 프로필 사진 UUID.'})
+  imageUuid?: string | null;
 
   @Column({comment: '로그인한 방법(카카오, 구글 등).'})
   oauthProvider: string;
@@ -35,20 +35,20 @@ export default class User extends BaseBetterEntity {
   @Column({comment: '자동로그인용 토큰.'})
   rememberMeToken: string;
 
-  @Column({nullable: true, comment: 'FCM 토큰.'})
-  fcmToken?: string;
+  @Column({type: String, nullable: true, comment: 'FCM 토큰.'})
+  fcmToken?: string | null;
 
   @Column({comment: '전체 알림 수신 여부.'})
   subscribing: boolean = false;
 
-  @Column({nullable: true, comment: '전체 알림 카테고리 필터(쉼표로 구분).'})
-  subscribingOn?: string;
+  @Column({type: String, nullable: true, comment: '전체 알림 카테고리 필터(쉼표로 구분).'})
+  subscribingOn?: string | null;
 
   @CreateDateColumn({comment: '생성 일시.'})
   createdAt: Date;
 
-  @Column({nullable: true, comment: '삭제 일시.'})
-  deletedAt?: Date;
+  @Column({type: Date, nullable: true, comment: '삭제 일시.'})
+  deletedAt?: Date | null;
 
   /**
    * 사용자가 등록한 행사들.

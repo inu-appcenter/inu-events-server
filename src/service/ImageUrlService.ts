@@ -5,7 +5,7 @@ class ImageUrlService {
    *
    * @param imageUuid 주어진 UUID.
    */
-  async makeUrl(imageUuid?: string): Promise<string | undefined> {
+  async makeUrl(imageUuid?: string | null): Promise<string | undefined> {
     return imageUuid ? `http://uniletter.inuappcenter.kr/images/${imageUuid}` : undefined;
   }
 }

@@ -1,9 +1,9 @@
 import {defineSchema} from '../../libs/schema';
-import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
-import {stringAsDate, stringAsInt} from '../../libs/zodTypes';
+import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
+import {EventRequestScheme, partialSchemeOf} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '행사를 업데이트합니다.',
@@ -12,19 +12,7 @@ const schema = defineSchema({
   params: {
     eventId: stringAsInt,
   },
-  body: {
-    title: z.string().optional(),
-    host: z.string().optional(),
-    category: z.string().optional(),
-    target: z.string().optional(),
-    startAt: stringAsDate.optional(),
-    endAt: stringAsDate.optional(),
-    contact: z.string().optional(),
-    location: z.string().optional(),
-
-    body: z.string().optional(),
-    imageUuid: z.string().optional(),
-  }
+  body: partialSchemeOf(EventRequestScheme),
 });
 
 export default defineRoute('patch', '/events/:eventId?', schema, authorizer(), async (req, res) => {
