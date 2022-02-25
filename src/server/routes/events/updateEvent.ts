@@ -15,7 +15,7 @@ const schema = defineSchema({
   body: partialSchemeOf(EventRequestScheme),
 });
 
-export default defineRoute('patch', '/events/:eventId?', schema, authorizer(), async (req, res) => {
+export default defineRoute('patch', '/events/:eventId', schema, authorizer(), async (req, res) => {
   const {eventId} = req.params;
 
   await EventService.patchEvent(eventId, req.body);
