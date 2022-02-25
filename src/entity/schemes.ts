@@ -8,7 +8,7 @@ export const EventResponseScheme = {
   profileImage: z.string().optional(),
 
   title: z.string(),
-  host: z.string(),
+  host: z.string().optional(),
   category: z.string(),
   target: z.string(),
   startAt: z.date(),

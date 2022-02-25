@@ -28,8 +28,8 @@ export default class Event extends BaseBetterEntity {
   @Column({comment: '제목.'})
   title: string;
 
-  @Column({comment: '단체. 이 행사 또는 모집을 여는 주체가 누구인가?'})
-  host: string;
+  @Column({nullable: true, comment: '단체. 이 행사 또는 모집을 여는 주체가 누구인가?'})
+  host?: string;
 
   @Column({comment: '분류.'})
   category: string;
