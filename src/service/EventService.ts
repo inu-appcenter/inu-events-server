@@ -4,7 +4,7 @@ import FcmService from './FcmService';
 
 type ModifyEventParams = {
   user: User;
-  host: string;
+  host?: string;
   category: string;
   title: string;
   body: string;

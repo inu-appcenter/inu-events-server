@@ -12,7 +12,7 @@ const schema = defineSchema({
 
   body: {
     title: z.string(),
-    host: z.string(),
+    host: z.string().optional(),
     category: z.string(),
     target: z.string(),
     startAt: stringAsDate,
