@@ -3,6 +3,9 @@ import Event from '../entity/Event';
 import FcmService from './FcmService';
 import {log} from '../common/utils/log';
 import {preview} from '../server/libs/json';
+import Comment from '../entity/Comment';
+import EventLike from '../entity/EventLike';
+import EventNotification from '../entity/EventNotification';
 
 type ModifyEventParams = {
   user: User;
@@ -55,6 +58,18 @@ class EventService {
   }
 
   async deleteEvent(eventId: number): Promise<void> {
+    const event = await Event.findOneOrFail(eventId);
+
+    log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 댓글을 모두 지웁니다.`);
+    await Comment.delete({event});
+
+    log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 좋아요를 모두 지웁니다.`);
+    await EventLike.delete({event});
+
+    log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 좋아요를 모두 지웁니다.`);
+    await EventNotification.delete({event});
+
+    log(`이제 ${event}를 삭제합니다.`);
     await Event.delete({id: eventId});
   }
 }
