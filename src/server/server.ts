@@ -3,9 +3,9 @@ import cookieParser from 'cookie-parser';
 import {errorHandler} from './middleware/errorHandler';
 import {registerRoutes} from '../common/utils/express';
 import {userIdGetterAssigner} from './middleware/userIdGetterAssigner';
-import jsonReplacer from './middleware/jsonReplacer';
 import {recorder} from './middleware/recorder';
 import swagger from 'swagger-ui-express';
+import {jsonReplacer} from './libs/json';
 
 export async function startServer() {
   const app = express();
