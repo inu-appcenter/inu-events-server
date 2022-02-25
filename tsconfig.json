@@ -3,7 +3,8 @@
     "lib": [
       "es5",
       "es6",
-      "es2020"
+      "es2020",
+      "DOM"
     ],
     "target": "es6",
     "module": "commonjs",
