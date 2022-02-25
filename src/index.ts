@@ -1,3 +1,5 @@
+process.env.TZ = 'Asia/Seoul'
+
 import 'reflect-metadata';
 import 'dotenv/config';
 import {startTypeORM} from './infrastructure/db';
