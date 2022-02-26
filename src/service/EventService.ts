@@ -32,7 +32,7 @@ class EventService {
   }
 
   async getEvents(): Promise<Event[]> {
-    return await Event.find();
+    return await Event.find({order: {id: 'DESC'}});
   }
 
   async patchEvent(eventId: number, body: Partial<Infer<typeof EventRequestScheme>>): Promise<string> {
