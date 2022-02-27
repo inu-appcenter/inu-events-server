@@ -1,6 +1,7 @@
 import Event from '../entity/Event';
 import {log} from '../common/utils/log';
 import {preview} from '../server/libs/json';
+import User from '../entity/User';
 import Comment from '../entity/Comment';
 import EventLike from '../entity/EventLike';
 import EventNotification from '../entity/EventNotification';
@@ -29,6 +30,15 @@ class EventService {
     await event.save();
 
     return event;
+  }
+
+  async getMyEvents(userId: number): Promise<Event[]> {
+    const user = await User.findOneOrFail(userId);
+    if (user == null) {
+      return [];
+    }
+
+    return await Event.find({where: {user}, order: {id: 'DESC'}});
   }
 
   async getEvents(): Promise<Event[]> {
