@@ -14,9 +14,9 @@ class FcmService {
   }
 
   private async sendInternal(fcmToken: string, title: string, body: string) {
-    await sendFcm(fcmToken, title, body);
+    log(`[${fcmToken}] 여기로 알림 빵야 가즈ㅏㅏ! 제목은 [${title}], 내용은 [${body}]`);
 
-    log(`[${fcmToken}] 여기로 알림 빵야!`);
+    await sendFcm(fcmToken, title, body);
   }
 
   async setFcmToken(userId: number, fcmToken: string) {
