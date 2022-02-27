@@ -3,7 +3,6 @@ import {z} from 'zod';
 import {defineRoute} from '../../libs/route';
 import LoginService from '../../../service/LoginService';
 import config from '../../../config';
-import {stringAsInt} from '../../libs/zodTypes';
 
 const schema = defineSchema({
   summary: 'OAuth 로그인',

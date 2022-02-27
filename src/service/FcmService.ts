@@ -1,6 +1,7 @@
 import User from '../entity/User';
 import {log} from '../common/utils/log';
 import {sendFcm} from '../infrastructure/fcm';
+import UserService from './UserService';
 
 class FcmService {
   async send(user: User, title: string, body: string) {
@@ -16,6 +17,14 @@ class FcmService {
     await sendFcm(fcmToken, title, body);
 
     log(`[${fcmToken}] 여기로 알림 빵야!`);
+  }
+
+  async setFcmToken(userId: number, fcmToken: string) {
+    const user = await UserService.getUser(userId)
+
+    user.setFcmToken(fcmToken);
+
+    await user.save();
   }
 }
 

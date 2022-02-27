@@ -120,6 +120,10 @@ export default class User extends BaseBetterEntity {
     return subscribingCategories.includes(thisCategory);
   }
 
+  setFcmToken(token: string) {
+    this.fcmToken = token;
+  }
+
   async toResponse(): Promise<Infer<typeof UserResponseScheme>> {
     return {
       id: this.id,
