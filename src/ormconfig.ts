@@ -8,6 +8,7 @@ export default <ConnectionOptions>{
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: 'inu_events',
+    charset: 'utf8mb4',
     synchronize: true,
     logging: false,
     entities: [
