@@ -98,26 +98,29 @@ export default class User extends BaseBetterEntity {
     this.subscribingOn = topics.join(', ');
   }
 
+  /**
+   * 이 사용자가 이 이벤트의 알림을 수신해야 할까?
+   *
+   * @param event 판단의 기준이 될 이벤트.
+   */
   shallThisUserBeNotifiedWithThisEvent(event: Event): boolean {
-    // 이 사용자가 이 이벤트의 알림을 수신해야 할까?
+    const thisTopic = event.category;
+    const wantNotifications = this.getSubscription();
+    const topicsInterestedIn = this.getTopics();
 
-    if (!this.subscribing) {
+    if (!wantNotifications) {
       // 구독 안함!
       return false;
     }
 
-    if (this.subscribingOn == null) {
-      // 구독 하는데 키워드 명시 안함: 다 받음.
-      return true;
+    if (topicsInterestedIn.length === 0) {
+      // 구독 하는데 키워드 명시 안함: 설정을 안했네 그냥 보내지마.
+      return false;
     }
-
-    // 구독 중인 카테고리별 알림
-    const subscribingCategories = this.subscribingOn.split(',').map(k => k.trim());
-    const thisCategory = event.category;
 
     // 지금 이 이벤트의 카테고리가 내래 구독중인 카테고리 중에 있능가??>??
     // 그니께...이것이 내가 구독중인 카테고리인가 ???
-    return subscribingCategories.includes(thisCategory);
+    return topicsInterestedIn.includes(thisTopic);
   }
 
   setFcmToken(token: string) {
