@@ -6,7 +6,7 @@ import {SubscriptionSchema} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '새 행사 구독 여부 설정하기',
-  description: 'ㅎㅎ.',
+  description: '새 글 알림 켜짐/꺼짐 여부를 설정합니다.',
 
   body: SubscriptionSchema
 });

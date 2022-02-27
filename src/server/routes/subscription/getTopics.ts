@@ -6,7 +6,7 @@ import {TopicsScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '새 행사 구독 토픽 가져오기',
-  description: 'ㅎㅎ.',
+  description: '새 글 알림에 대한 카테고리 필터를 가져옵니다.',
 
   response: TopicsScheme
 });
