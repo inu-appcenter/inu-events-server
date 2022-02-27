@@ -1,5 +1,6 @@
 import Event from '../entity/Event';
 import Comment from '../entity/Comment';
+import User from '../entity/User';
 import {log} from '../common/utils/log';
 import UserService from './UserService';
 import EventService from './EventService';
@@ -29,6 +30,15 @@ class CommentService {
     }
 
     return await Comment.find({where: {event}, order: {id: 'ASC'}});
+  }
+
+  async getMyComments(userId: number): Promise<Comment[]> {
+    const user = await User.findOneOrFail(userId);
+    if (user == null) {
+      return [];
+    }
+
+    return await Comment.find({where: {user}, order: {id: 'DESC'}});
   }
 
   async patchComment(commentId: number, body: Partial<Infer<typeof CommentRequestScheme>>): Promise<string> {
