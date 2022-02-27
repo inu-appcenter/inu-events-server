@@ -6,7 +6,7 @@ import UserService from './UserService';
 class FcmService {
   async send(user: User, title: string, body: string) {
     if (user.fcmToken == null) {
-      log(`${user}에게 알림을 쏘고 싶은데, fcmToken이 없어서 못보냄~`);
+      log(`${user.toString()}에게 알림을 쏘고 싶은데, fcmToken이 없어서 못보냄~`);
       return;
     }
 

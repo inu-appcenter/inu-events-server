@@ -47,7 +47,7 @@ class SubscriptionService {
     const allUsers = await User.find();
     const toBeNotified = allUsers.filter((u) => u.shallThisUserBeNotifiedWithThisEvent(event));
 
-    log(`이 ${event}에 대해 전체 ${allUsers.length}명의 사용자 중 ${toBeNotified.length}명의 사용자에게 알림을 빵야!!`);
+    log(`이 ${event.toString()}에 대해 전체 ${allUsers.length}명의 사용자 중 ${toBeNotified.length}명의 사용자에게 알림을 빵야!!`);
 
     await Promise.all(toBeNotified.map((u) =>
       FcmService.send(u, `${event.category}에 새 글이 올라왔어요`, '')

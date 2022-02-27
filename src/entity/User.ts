@@ -125,6 +125,8 @@ export default class User extends BaseBetterEntity {
 
   setFcmToken(token: string) {
     this.fcmToken = token;
+
+    log(`${this.toString()} FCM 토큰 설정 완료: ${token}`);
   }
 
   async toResponse(): Promise<Infer<typeof UserResponseScheme>> {
