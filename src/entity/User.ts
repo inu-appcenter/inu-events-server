@@ -130,7 +130,7 @@ export default class User extends BaseBetterEntity {
   }
 
   toString(): string {
-    return `[id가 ${this.id}이고 nickname이 ${this.nickname}인 사용자c]`;
+    return `[id가 ${this.id}이고 nickname이 ${this.nickname}인 사용자]`;
   }
 
   async toResponse(): Promise<Infer<typeof UserResponseScheme>> {
