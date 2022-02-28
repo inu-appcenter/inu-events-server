@@ -23,7 +23,8 @@ export default class HttpError extends Error {
   }
 
   static with(statusCode: number): HttpErrorConstructorGenerator {
-    return (error: string, message: string) => () => new HttpError(statusCode, error, message);
+    return (error: string, message: string) => (messageOverride?: string) =>
+      new HttpError(statusCode, error, messageOverride ?? message);
   }
 
   get responseBody() {
@@ -35,4 +36,7 @@ export default class HttpError extends Error {
   }
 }
 
-export type HttpErrorConstructorGenerator = (error: string, message: string) => () => HttpError;
+export type HttpErrorConstructorGenerator = (
+  error: string,
+  message: string
+) => (messageOverride?: string) => HttpError;
