@@ -52,15 +52,15 @@ class EventService {
       return [];
     }
     const eventSet:Event[] =new Array();
+    const eventIdList: string | number[] =[];
+
     const myComments = Comment.find({where: {user}, order: {id: 'DESC'}, });
     for (const myComment of await myComments ){
       const event = await Event.findOneOrFail({where: {id: myComment.event.id}, order: {id: 'DESC'}});
-      eventSet.push(event);
+      eventIdList.includes(event.id)? null :(eventSet.push(event)&&eventIdList.push(event.id));
     }
       return eventSet;
-
   }
-
 
 
   async patchEvent(eventId: number, body: Partial<Infer<typeof EventRequestScheme>>): Promise<string> {
