@@ -34,9 +34,6 @@ class EventService {
 
   async getMyEvents(userId: number): Promise<Event[]> {
     const user = await User.findOneOrFail(userId);
-    if (user == null) {
-      return [];
-    }
 
     return await Event.find({where: {user}, order: {id: 'DESC'}});
   }

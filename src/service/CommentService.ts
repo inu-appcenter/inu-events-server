@@ -34,9 +34,6 @@ class CommentService {
 
   async getMyComments(userId: number): Promise<Comment[]> {
     const user = await User.findOneOrFail(userId);
-    if (user == null) {
-      return [];
-    }
 
     return await Comment.find({where: {user}, order: {id: 'DESC'}});
   }
