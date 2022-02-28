@@ -129,6 +129,10 @@ export default class User extends BaseBetterEntity {
     log(`${this.toString()} FCM 토큰 설정 완료: ${token}`);
   }
 
+  toString(): string {
+    return `[id가 ${this.id}이고 nickname이 ${this.nickname}인 사용자c]`;
+  }
+
   async toResponse(): Promise<Infer<typeof UserResponseScheme>> {
     return {
       id: this.id,
