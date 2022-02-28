@@ -2,13 +2,13 @@ import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {authorizer} from '../../middleware/authorizer';
 import SubscriptionService from '../../../service/SubscriptionService';
-import {SubscriptionSchema} from '../../../entity/schemes';
+import {SubscriptionScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
   summary: '새 행사 구독 여부 가져오기',
   description: '새 글 알림이 켜져있는지 아니면 꺼져있는지 여부를 가져옵니다.',
 
-  response: SubscriptionSchema
+  response: SubscriptionScheme
 });
 
 export default defineRoute('get', '/subscription/subscribing', schema, authorizer(), async (req, res) => {

@@ -89,10 +89,15 @@ export const UserResponseScheme = {
   imageUrl: z.string().optional().nullable(),
 }
 
-export const SubscriptionSchema = {
+export const SubscriptionScheme = {
   subscribing: z.boolean()
 }
 
 export const TopicsScheme = {
   topics: z.array(z.string())
 }
+
+export const UpdateMeRequestScheme = {
+  nickname: z.string(),
+  imageUuid: z.string().optional().nullable()
+};

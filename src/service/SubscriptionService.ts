@@ -2,11 +2,11 @@ import User from '../entity/User';
 import {Infer} from '../common/utils/zod';
 import FcmService from './FcmService';
 import Event from '../entity/Event';
-import {SubscriptionSchema, TopicsScheme} from '../entity/schemes';
+import {SubscriptionScheme, TopicsScheme} from '../entity/schemes';
 import {log} from '../common/utils/log';
 
 class SubscriptionService {
-  async getSubscription(userId: number): Promise<Infer<typeof SubscriptionSchema>> {
+  async getSubscription(userId: number): Promise<Infer<typeof SubscriptionScheme>> {
     const user = await User.findOneOrFail(userId);
 
     return {
