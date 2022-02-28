@@ -45,6 +45,24 @@ class EventService {
     return await Event.find({order: {id: 'DESC'}});
   }
 
+
+  async getEventsIveCommentedOn(userId: number): Promise<Event[]> {
+    const user = await User.findOneOrFail(userId)
+    if (user == null) {
+      return [];
+    }
+    const eventSet:Event[] =new Array();
+    const myComments = Comment.find({where: {user}, order: {id: 'DESC'}, });
+    for (const myComment of await myComments ){
+      const event = await Event.findOneOrFail({where: {id: myComment.event.id}, order: {id: 'DESC'}});
+      eventSet.push(event);
+    }
+      return eventSet;
+
+  }
+
+
+
   async patchEvent(eventId: number, body: Partial<Infer<typeof EventRequestScheme>>): Promise<string> {
     log(`이벤트 ${eventId}를 업데이트합니다: ${preview(body)}`);
 
