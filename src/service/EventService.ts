@@ -83,7 +83,7 @@ class EventService {
     log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 좋아요를 모두 지웁니다.`);
     await EventLike.delete({event});
 
-    log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 좋아요를 모두 지웁니다.`);
+    log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 알림을 모두 지웁니다.`);
     await EventNotification.delete({event});
 
     log(`이제 ${event}를 삭제합니다.`);
