@@ -34,15 +34,33 @@ class EventService {
 
   async getMyEvents(userId: number): Promise<Event[]> {
     const user = await User.findOneOrFail(userId);
-    if (user == null) {
-      return [];
-    }
 
     return await Event.find({where: {user}, order: {id: 'DESC'}});
   }
 
   async getEvents(): Promise<Event[]> {
     return await Event.find({order: {id: 'DESC'}});
+  }
+
+  /**
+   * 내가 댓글을 단 Event를 모두 가져오기.
+   * @param userId 내 사용자 id.
+   */
+  async getEventsIveCommentedOn(userId: number): Promise<Event[]> {
+    return await Event.createQueryBuilder('event')
+
+      /** relations 필드 가져오는 부분 */
+      .leftJoinAndSelect('event.user', 'user')
+      .leftJoinAndSelect('event.comments', 'comments')
+      .leftJoinAndSelect('event.likes', 'likes')
+      .leftJoinAndSelect('event.notifications', 'notifications')
+
+      /** where 절을 위한 join(select는 안 함) */
+      .leftJoin('event.comments', 'event_comments')
+      .leftJoin('event_comments.user', 'comments_user')
+      .where('comments_user.id = :userId', {userId})
+
+      .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
 
   async patchEvent(eventId: number, body: Partial<Infer<typeof EventRequestScheme>>): Promise<string> {

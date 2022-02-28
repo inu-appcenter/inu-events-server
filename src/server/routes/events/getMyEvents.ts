@@ -2,6 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
 import {EventResponseScheme} from '../../../entity/schemes';
+import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
   summary: '내가 쓴 행사를 다 가져옵니다.',
@@ -10,8 +11,10 @@ const schema = defineSchema({
   response: [EventResponseScheme]
 });
 
-export default defineRoute('get', '/myevents', schema, async (req, res) => {
+export default defineRoute('get', '/myevents', schema, authorizer(), async (req, res) => {
   const userId = req.requireUserId();
+
   const eventInformation = await EventService.getMyEvents(userId);
+
   return res.json(await Promise.all(eventInformation.map(e => e.toResponse(userId))))
 });
