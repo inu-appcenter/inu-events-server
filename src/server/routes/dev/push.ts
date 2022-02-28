@@ -28,7 +28,8 @@ export default defineRoute('get', '/push', schema, async (req, res) => {
 
   assert(user.fcmToken, CantDoThat(`${user.toString()}에 fcm 토큰이 없어요!`));
 
-  await FcmService.send(user, title ?? '너는 정말 최고야', body ?? '정말 잘 하고 있어 응원할게');
+  await FcmService.send(user, title || '너는 정말 최고야', body || '정말 잘 하고 있어 응원할게');
 
   return res.send(`ㅇㅋㅇㅋ ${user.toString()}한테 보냄 ㅎ`);
 });
+
