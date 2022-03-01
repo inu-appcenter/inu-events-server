@@ -6,17 +6,23 @@ import UserService from './UserService';
 import EventService from './EventService';
 import {Infer} from '../common/utils/zod';
 import {CommentRequestScheme} from '../entity/schemes';
+import FcmService from "./FcmService";
 
 class CommentService {
   async makeComment(userId: number, {eventId, content}: Infer<typeof CommentRequestScheme>): Promise<Comment> {
     const user = await UserService.getUser(userId);
     const event = await EventService.getEvent(eventId);
 
-    return await Comment.create({
+    const createComment = await Comment.create({
       user: user,
       event: event,
       content: content
     }).save();
+
+    if(event.user.id !== user.id) { // 글을 쓴 사람 != 댓글 단 사람 일때
+      await FcmService.send(event.user, `${event.title}`, `${user.nickname} 님이 ${event.user.nickname} 님의 글에  댓글을 남겼습니다.`);
+    }
+    return createComment;
   }
 
   async getComment(commentId: number): Promise<Comment> {
