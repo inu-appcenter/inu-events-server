@@ -40,7 +40,13 @@ class ScheduledPushService {
         continue;
       }
 
-      await FcmService.send(notification.user, '하하', '히히'/*TODO*/);
+      await FcmService.send(
+        notification.user,
+        notification.event.title,
+        notification.setFor === 'start' ?
+          `${notification.user.nickname}님이 신청하신 행사가 5분 후 시작된대요!!!` :
+          `${notification.user.nickname}님이 신청하신 행사가 마감 하루전이에요!!! `
+      );
 
       log(`${notification.user.toString()}에게 ${notification.event.toString()}에 대해 ${notification.setFor} 알림을 쐈습니다!`);
 
