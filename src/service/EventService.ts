@@ -4,11 +4,13 @@ import {preview} from '../server/libs/json';
 import User from '../entity/User';
 import Comment from '../entity/Comment';
 import EventLike from '../entity/EventLike';
+import BlockedList from "../entity/BlockedList";
 import EventNotification from '../entity/EventNotification';
 import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
 import {EventRequestScheme} from '../entity/schemes';
+import {authorizer} from "../server/middleware/authorizer";
 
 class EventService {
   async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
@@ -41,6 +43,34 @@ class EventService {
   async getEvents(): Promise<Event[]> {
     return await Event.find({order: {id: 'DESC'}});
   }
+
+  // 안됨 ㅠㅠ
+  async getEventsWithoutBlockedUser(userId: number): Promise<Event[]> {
+
+      return await Event.createQueryBuilder('event')
+          /** relations 필드 가져오는 부분 */
+          .leftJoinAndSelect('event.user', 'user')
+          .leftJoinAndSelect('event.comments', 'comments')
+          .leftJoinAndSelect('event.likes', 'likes')
+          .leftJoinAndSelect('event.notifications', 'notifications')
+          // .leftJoinAndSelect('user.blockingUser', 'blockingUser')
+          // .leftJoinAndSelect('user.blockedUser', 'blockedUser')
+
+          /** where 절을 위한 join(select는 안 함) */
+          .leftJoin('event.user', 'user')
+          .leftJoin('user.BlockedList', 'blocked_list')
+          .leftJoin('blocked_list.blockingUser', 'blocking_user')
+          .leftJoin('blocked_list.blockedUser', 'blocked_user')
+          .where(':userId NOT IN blocked_user.id', {userId: userId})
+
+          .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
+
+    // ㅠㅠ
+    //  return await Event.query(`SELECT * FROM Event
+    //   WHERE user_id NOT IN (SELECT  blocked_user_id FROM Blocked_list WHERE blocking_user_id=${userId})`);
+    // }
+    }
+
 
   /**
    * 내가 댓글을 단 Event를 모두 가져오기.

@@ -1,6 +1,7 @@
 import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import User from './User'
 import Comment from './Comment'
+import BlockedList from './BlockedList'
 import {Infer} from '../common/utils/zod';
 import LikeService from '../service/LikeService';
 import EventLike from './EventLike';
@@ -12,7 +13,7 @@ import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()
 export default class Event extends BaseBetterEntity {
-  static relations = ['user', 'comments', 'likes', 'notifications'];
+  static relations = ['user', 'comments', 'likes', 'notifications', 'user.BlockedList'];
 
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number

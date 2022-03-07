@@ -19,6 +19,6 @@ export function authorizer<TParams = any, TQuery = any, TBody = any>(): RequestH
   };
 }
 
-function extractJwt(req: express.Request<any, any, any, any>): string | undefined {
+export function extractJwt(req: express.Request<any, any, any, any>): string | undefined {
   return req.header('token') ?? req.cookies[config.server.jwt.cookieName];
 }

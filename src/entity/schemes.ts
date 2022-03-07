@@ -101,3 +101,15 @@ export const UpdateMeRequestScheme = {
   nickname: z.string(),
   imageUuid: z.string().optional().nullable()
 };
+
+export const BlockUserRequestScheme = {
+  blockedUserId: z.number()
+};
+
+export const BlockUserResponseScheme = {
+  id: z.number(),
+  blockingUserId: z.number(),
+  blockedUserId: z.number(),
+  createdAt: z.date()
+}
+
