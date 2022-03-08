@@ -61,7 +61,7 @@ export default class Event extends BaseBetterEntity {
   imageUuid?: string | null;
 
 
-  @Column({comment: '조회수'})
+  @Column({comment: '조회수.'})
   views: number = 0;
 
   @CreateDateColumn({comment: '생성 일시.'})
