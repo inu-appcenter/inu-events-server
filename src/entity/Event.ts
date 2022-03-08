@@ -1,7 +1,7 @@
 import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import User from './User'
 import Comment from './Comment'
-import BlockedList from './BlockedList'
+import Block from './Block'
 import {Infer} from '../common/utils/zod';
 import LikeService from '../service/LikeService';
 import EventLike from './EventLike';

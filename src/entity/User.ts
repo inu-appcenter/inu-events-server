@@ -1,7 +1,7 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import Event from './Event';
 import Comment from './Comment';
-import BlockedList from './BlockedList';
+import Block from './Block';
 import {Infer} from '../common/utils/zod';
 import EventNotification from './EventNotification';
 import EventLike from './EventLike';
@@ -78,8 +78,8 @@ export default class User extends BaseBetterEntity {
   /**
    * 사용자가 차단한 사용자들.
    */
-  @OneToMany(() => BlockedList, (b) => b.blockingUser)
-  BlockedList: BlockedList[];
+  @OneToMany(() => Block, (b) => b.blockingUser)
+  blockedList: Block[];
 
   getSubscription() {
     return this.subscribing;
