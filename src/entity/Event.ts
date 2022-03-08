@@ -1,7 +1,6 @@
 import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import User from './User'
 import Comment from './Comment'
-import Block from './Block'
 import {Infer} from '../common/utils/zod';
 import LikeService from '../service/LikeService';
 import EventLike from './EventLike';
@@ -10,6 +9,7 @@ import {EventResponseScheme} from './schemes';
 import NotificationService from '../service/NotificationService';
 import ImageUrlService from '../service/ImageUrlService'
 import BaseBetterEntity from '../common/base/BaseBetterEntity';
+import CommentService from '../service/CommentService';
 
 @Entity()
 export default class Event extends BaseBetterEntity {
@@ -114,7 +114,7 @@ export default class Event extends BaseBetterEntity {
       notificationSetByMe: userId ? (await NotificationService.getUnSentNotification(userId, this.id)) != null : undefined,
       notificationSetFor: userId ? (await NotificationService.getUnSentNotification(userId, this.id))?.setFor : undefined,
 
-      comments: this.comments.length,
+      comments: (await CommentService.getComments(this.id, userId)).length,
       views: this.views,
       likes: this.likes.length,
       notifications: this.notifications.length,
