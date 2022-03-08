@@ -6,13 +6,13 @@ import Block from '../entity/Block';
 import {CantBlockYourSelf} from '../common/errors/general';
 
 class BlockingService {
-  async blockUser(userId: number, {userIdToBlock}: Infer<typeof BlockUserRequestScheme>): Promise<Block> {
-    if (userId === userIdToBlock) {
+  async blockUser(userId: number, {targetUserId}: Infer<typeof BlockUserRequestScheme>): Promise<Block> {
+    if (userId === targetUserId) {
       throw CantBlockYourSelf();
     }
 
     const blockingUser = await UserService.getUser(userId);
-    const blockedUser = await UserService.getUser(userIdToBlock);
+    const blockedUser = await UserService.getUser(targetUserId);
 
     const existingBlock = await Block.findOne({blockingUser, blockedUser});
     if (existingBlock != null) {
@@ -25,6 +25,25 @@ class BlockingService {
     log(`${blockingUser.toString()}가 ${blockedUser.toString()}를 차단합니다.`);
 
     return block;
+  }
+
+  async unblockUser(userId: number, {targetUserId}: Infer<typeof BlockUserRequestScheme>): Promise<void> {
+    if (userId === targetUserId) {
+      throw CantBlockYourSelf();
+    }
+
+    const blockingUser = await UserService.getUser(userId);
+    const blockedUser = await UserService.getUser(targetUserId);
+
+    const existingBlock = await Block.findOne({blockingUser, blockedUser});
+    if (existingBlock == null) {
+      log(`${blockingUser.toString()}는 ${blockedUser.toString()}를 차단한 적이 없습니다.`);
+      return;
+    }
+
+    await existingBlock.remove();
+
+    log(`${blockingUser.toString()}가 ${blockedUser.toString()}를 차단 해제합니다.`);
   }
 }
 

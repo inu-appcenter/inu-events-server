@@ -103,7 +103,7 @@ export const UpdateMeRequestScheme = {
 };
 
 export const BlockUserRequestScheme = {
-  userIdToBlock: z.number()
+  targetUserId: z.number()
 };
 
 export const BlockUserResponseScheme = {
@@ -112,4 +112,3 @@ export const BlockUserResponseScheme = {
   blockedUserId: z.number(),
   createdAt: z.date()
 }
-
