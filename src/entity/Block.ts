@@ -1,12 +1,12 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
+import {CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
 import User from './User'
 import {Infer} from '../common/utils/zod';
-import {BlockUserResponseScheme} from './schemes';
+import {BlockResponseScheme} from './schemes';
 import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()
 export default class Block extends BaseBetterEntity {
-  static relations = ['user'];
+  static relations = ['blockingUser', 'blockedUser'];
 
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number
@@ -22,12 +22,10 @@ export default class Block extends BaseBetterEntity {
   @CreateDateColumn({comment: '차단 일시.'})
   createdAt: Date;
 
-  async toResponse(userId?: number): Promise<Infer<typeof BlockUserResponseScheme>> {
+  async toResponse(userId?: number): Promise<Infer<typeof BlockResponseScheme>> {
     return {
-      id: this.id,
-      blockingUserId: this.blockingUser.id,
-      blockedUserId: this.blockedUser.id,
-      createdAt: this.createdAt
+      user: this.blockedUser,
+      blockedAt: this.createdAt
     }
   }
 }

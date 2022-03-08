@@ -1,7 +1,7 @@
 import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {authorizer} from '../../middleware/authorizer';
-import {BlockUserRequestScheme, BlockUserResponseScheme} from '../../../entity/schemes';
+import {BlockResponseScheme, BlockUserRequestScheme} from '../../../entity/schemes';
 import BlockingService from "../../../service/BlockingService";
 
 const schema = defineSchema({
@@ -10,7 +10,7 @@ const schema = defineSchema({
 
     body: BlockUserRequestScheme,
 
-    response: BlockUserResponseScheme
+    response: BlockResponseScheme
 });
 
 export default defineRoute('post', '/blocks', schema, authorizer(), async (req, res) => {

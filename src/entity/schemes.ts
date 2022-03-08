@@ -106,9 +106,7 @@ export const BlockUserRequestScheme = {
   targetUserId: z.number()
 };
 
-export const BlockUserResponseScheme = {
-  id: z.number(),
-  blockingUserId: z.number(),
-  blockedUserId: z.number(),
-  createdAt: z.date()
-}
+export const BlockResponseScheme = {
+  user: z.object(UserResponseScheme),
+  blockedAt: z.date(),
+};

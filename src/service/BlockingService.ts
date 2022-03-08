@@ -45,6 +45,12 @@ class BlockingService {
 
     log(`${blockingUser.toString()}가 ${blockedUser.toString()}를 차단 해제합니다.`);
   }
+
+  async getBlocks(userId: number): Promise<Block[]> {
+    const blockingUser = await UserService.getUser(userId);
+
+    return await Block.find({blockingUser});
+  }
 }
 
 export default new BlockingService();
