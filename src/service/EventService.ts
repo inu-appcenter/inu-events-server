@@ -38,37 +38,37 @@ class EventService {
     return await Event.find({where: {user}, order: {id: 'DESC'}});
   }
 
-  async getEvents(): Promise<Event[]> {
+  async getEvents(userId?: number): Promise<Event[]> {
+    if (userId == null) {
+      return await this.getEventsRegardlessBlockings();
+    } else {
+      return await this.getEventsWithoutBlockedUser(userId);
+    }
+  }
+
+  private async getEventsRegardlessBlockings(): Promise<Event[]> {
     return await Event.find({order: {id: 'DESC'}});
   }
 
-  // 안됨 ㅠㅠ
-  async getEventsWithoutBlockedUser(userId: number): Promise<Event[]> {
-
+  // 됨 :)
+  private async getEventsWithoutBlockedUser(requestorId: number): Promise<Event[]> {
     return await Event.createQueryBuilder('event')
       /** relations 필드 가져오는 부분 */
       .leftJoinAndSelect('event.user', 'user')
       .leftJoinAndSelect('event.comments', 'comments')
       .leftJoinAndSelect('event.likes', 'likes')
       .leftJoinAndSelect('event.notifications', 'notifications')
-      // .leftJoinAndSelect('user.blockingUser', 'blockingUser')
-      // .leftJoinAndSelect('user.blockedUser', 'blockedUser')
 
       /** where 절을 위한 join(select는 안 함) */
-      .leftJoin('event.user', 'user')
-      .leftJoin('user.BlockedList', 'blocked_list')
-      .leftJoin('blocked_list.blockingUser', 'blocking_user')
-      .leftJoin('blocked_list.blockedUser', 'blocked_user')
-      .where(':userId NOT IN blocked_user.id', {userId: userId})
+      .leftJoin('event.user', 'event_composer')
+      .where(`event_composer.id NOT IN (
+        SELECT blocked_user_id 
+        FROM block
+        WHERE block.blocking_user_id = :requestorId
+      )`, {requestorId})
 
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
-
-    // ㅠㅠ
-    //  return await Event.query(`SELECT * FROM Event
-    //   WHERE user_id NOT IN (SELECT  blocked_user_id FROM Blocked_list WHERE blocking_user_id=${userId})`);
-    // }
   }
-
 
   /**
    * 내가 댓글을 단 Event를 모두 가져오기.
