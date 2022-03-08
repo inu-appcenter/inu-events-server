@@ -29,13 +29,39 @@ class CommentService {
     return await Comment.findOneOrFail(commentId);
   }
 
-  async getComments(eventId: number): Promise<Comment[]> {
+  async getComments(eventId: number, userId?: number): Promise<Comment[]> {
     const event = await Event.findOne(eventId);
     if (event == null) {
       return [];
     }
 
+    if (userId == null) {
+      return await this.getCommentsRegardlessBlockings(event);
+    } else {
+      return await this.getCommentsWithoutBlockedUser(event, userId);
+    }
+  }
+
+  private async getCommentsRegardlessBlockings(event: Event): Promise<Comment[]> {
     return await Comment.find({where: {event}, order: {id: 'ASC'}});
+  }
+
+  private async getCommentsWithoutBlockedUser(event: Event, requestorId: number): Promise<Comment[]> {
+    return await Comment.createQueryBuilder('comment')
+      /** relations 필드 가져오는 부분 */
+      .leftJoinAndSelect('comment.user', 'user')
+      .leftJoinAndSelect('comment.event', 'event')
+
+      /** where 절을 위한 join(select는 안 함) */
+      .leftJoin('comment.user', 'comment_composer')
+      .where('event.id = :eventId', {eventId: event.id})
+      .andWhere(`comment_composer.id NOT IN (
+        SELECT blocked_user_id 
+        FROM block
+        WHERE block.blocking_user_id = :requestorId
+      )`, {requestorId})
+
+      .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
 
   async getMyComments(userId: number): Promise<Comment[]> {
