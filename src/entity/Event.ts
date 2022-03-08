@@ -13,7 +13,7 @@ import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
 @Entity()
 export default class Event extends BaseBetterEntity {
-  static relations = ['user', 'comments', 'likes', 'notifications', 'user.BlockedList'];
+  static relations = ['user', 'comments', 'likes', 'notifications'];
 
   @PrimaryGeneratedColumn({comment: '식별자.'})
   id: number
