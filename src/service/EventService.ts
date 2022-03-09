@@ -66,6 +66,7 @@ class EventService {
         FROM block
         WHERE block.blocking_user_id = :requestorId
       )`, {requestorId})
+        .orderBy('event.id', 'DESC')
 
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
