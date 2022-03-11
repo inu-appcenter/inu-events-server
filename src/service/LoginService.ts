@@ -59,7 +59,7 @@ class LoginService {
 
     return await User.create({
       email: email,
-      nickname: `haha-${new Date().getTime()}`,
+      nickname: `uni-${new Date().getTime()}`,
       oauthProvider: 'google',
       oauthId: oauthId,
       rememberMeToken: generateUUID(),
