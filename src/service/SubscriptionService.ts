@@ -50,7 +50,7 @@ class SubscriptionService {
     log(`이 ${event.toString()}에 대해 전체 ${allUsers.length}명의 사용자 중 ${toBeNotified.length}명의 사용자에게 알림을 빵야!!`);
 
     await Promise.all(toBeNotified.map((u) =>
-      FcmService.send(u, `${event.category}에 새 글이 올라왔어요`, '')
+      FcmService.send(u, `${event.category}에 새 글이 올라왔어요`, `${event.title}`)
     ))
   }
 }
