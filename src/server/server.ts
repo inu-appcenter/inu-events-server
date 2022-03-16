@@ -6,12 +6,17 @@ import {userIdGetterAssigner} from './middleware/userIdGetterAssigner';
 import {recorder} from './middleware/recorder';
 import swagger from 'swagger-ui-express';
 import {jsonReplacer} from './libs/json';
+import cors from 'cors';
 
 export async function startServer() {
   const app = express();
 
   app.set('json replacer', jsonReplacer);
 
+  app.use(cors({
+    origin: /.*/, // 요청의 origin을 그대로 응답에 내보냅니다.
+    credentials: true,
+  }));
   app.use(swagger.serve);
   app.use(cookieParser());
   app.use(express.json());
