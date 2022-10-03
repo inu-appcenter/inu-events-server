@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import appleSignin from 'apple-signin-auth';
 import {OAuth2Client} from 'google-auth-library';
 import InternalServerError from './common/errors/http/InternalServerError';
+import config from './config';
 
 export type OAuthInfo = {
   email: string;
@@ -55,22 +56,15 @@ export async function getGoogleOAuthInfo(accessToken: string): Promise<OAuthInfo
  *
  */
 export async function getAppleOAuthInfo(accessToken: string): Promise<OAuthInfo> {
-  // TODO 여기에 뭘 써줘야할까,,,
-  const clientID = '???';
-  const teamID = '???';
-  const keyIdentifier = '???';
-  const privateKey = '???';
-  const redirectUri = '???';
+  const clientID = config.external.appleSignIn.bundleID; /*일단 지금은 Apple iOS 기기용으로 기대중*/
 
   const info = await appleSignin.getAuthorizationToken(accessToken/*사실 auth code임. accessToken아님 엌ㅋ*/, {
     clientID,
     clientSecret: appleSignin.getClientSecret({
       clientID,
-      teamID,
-      keyIdentifier,
-      privateKey
+      ...config.external.appleSignIn
     }),
-    redirectUri,
+    ...config.external.appleSignIn
   });
 
   const {id_token} = info;
