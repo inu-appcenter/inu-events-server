@@ -20,6 +20,8 @@
       "@types/assert": "^1.5.6",
       "@types/cors": "^2.8.12",
       "ant-path-matcher": "^0.0.5",
+      "apple-sign-in-ts": "^1.0.2",
+      "apple-signin-auth": "^1.7.4",
       "cookie-parser": "^1.4.6",
       "cors": "^2.8.5",
       "date-fns": "^2.28.0",

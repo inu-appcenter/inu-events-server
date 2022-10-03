@@ -7,6 +7,7 @@ import {startServer} from './server/server';
 import {startScheduler} from './scheduled/scheduler';
 import {log} from './common/utils/log';
 
+
 async function run() {
   await startTypeORM();
   log(`TypeORM 시작!`);
@@ -19,3 +20,5 @@ async function run() {
 }
 
 run().then().catch((e) => log(e));
+
+

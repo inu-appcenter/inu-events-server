@@ -1,10 +1,16 @@
 import {OAuth2Client} from 'google-auth-library';
+import appleSignin from 'apple-signin-auth';
 import InternalServerError from './common/errors/http/InternalServerError';
 
 export type OAuthInfo = {
   email: string;
   oauthId: string;
 };
+
+export type AppleIdTokenInfo = {
+  email: string;
+  oauthId: string;
+}
 
 const NoEmail = InternalServerError.of(
   'no_email',
@@ -41,3 +47,44 @@ export async function getGoogleOAuthInfo(accessToken: string): Promise<OAuthInfo
     oauthId: sub,
   };
 }
+
+
+
+
+/**
+ * 애플 로그인 (Token -> User Info)
+ *
+ */
+export async function getAppleOAuthInfo(accessToken: string): Promise<OAuthInfo> {
+  try {
+    const info = await appleSignin.verifyIdToken(accessToken, {
+      audience: process.env.APL_CLIENTID, // client id - can also be an array
+      nonce: 'NONCE',
+      ignoreExpiration: true, // default is false
+    });
+    const {email, sub} = info;
+
+    if (email == null) {
+      throw NoEmail();
+    }
+
+    if (sub == null) {
+      throw NoSubject();
+    }
+
+    return {
+      email: email,
+      oauthId: sub,
+    };
+
+  } catch (err) {
+    // Token is not verified
+    console.error(err);
+  }
+
+
+
+}
+
+
+
