@@ -1,4 +1,4 @@
-import {getGoogleOAuthInfo} from '../oauth';
+import {getAppleOAuthInfo, getGoogleOAuthInfo} from '../oauth';
 import Unauthorized from '../common/errors/http/Unauthorized';
 import User from '../entity/User';
 import {createJwt} from '../common/utils/token';
@@ -33,10 +33,10 @@ class LoginService {
    * 구글 로그인 해서 액세스 토큰으로 로그인.
    * @param accessToken
    */
-  async oauthLogin(accessToken: string): Promise<LoginResult> {
+  async googleOAuthLogin(accessToken: string): Promise<LoginResult> {
     const {email, oauthId} = await this.resolveUserInfoFromGoogle(accessToken);
 
-    const user = await this.getOrCreateUser(email, oauthId);
+    const user = await this.getOrCreateUser(email, 'google', oauthId);
 
     return this.onSuccess(user);
   }
@@ -51,8 +51,30 @@ class LoginService {
     }
   }
 
-  private async getOrCreateUser(email: string, oauthId: string): Promise<User> {
-    const found = await User.findOne({where: {oauthId}});
+  /**
+   * 애플 로그인 해서 액세스 토큰(사실 auth code ㅎ)으로 로그인.
+   * @param accessToken
+   */
+  async appleOAuthLogin(accessToken: string): Promise<LoginResult> {
+    const {email, oauthId} = await this.resolveUserInfoFromApple(accessToken);
+
+    const user = await this.getOrCreateUser(email, 'apple', oauthId);
+
+    return this.onSuccess(user);
+  }
+
+  private async resolveUserInfoFromApple(accessToken: string) {
+    try {
+      return await getAppleOAuthInfo(accessToken); //token -> info
+    } catch (e: any) {
+      printError(e);
+
+      throw WrongAuth();
+    }
+  }
+
+  private async getOrCreateUser(email: string, oauthProvider: string, oauthId: string): Promise<User> {
+    const found = await User.findOne({where: {oauthProvider, oauthId}});
     if (found != null) {
       return found;
     }
@@ -60,7 +82,7 @@ class LoginService {
     return await User.create({
       email: email,
       nickname: `uni-${new Date().getTime()}`,
-      oauthProvider: 'google',
+      oauthProvider: oauthProvider,
       oauthId: oauthId,
       rememberMeToken: generateUUID(),
     }).save();
@@ -77,7 +99,7 @@ class LoginService {
       throw NoSuchUser();
     }
 
-    const tokenMatches = user.rememberMeToken == rememberMeToken;
+    const tokenMatches = user.rememberMeToken === rememberMeToken;
 
     if (!tokenMatches) {
       throw InvalidToken();
