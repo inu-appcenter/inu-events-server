@@ -5,8 +5,8 @@ import LoginService from '../../../service/LoginService';
 import config from '../../../config';
 
 const schema = defineSchema({
-  summary: 'OAuth 로그인',
-  description: '내 정보를 가져옵니다.',
+  summary: '[이제안씀] OAuth 로그인',
+  description: '[이제안씀!!!] 여기말고 /login/oauth/google 쓰세요!!!!!!!!!',
 
   body: {
     accessToken: z.string(),
@@ -19,10 +19,14 @@ const schema = defineSchema({
   }
 });
 
+/**
+ * 이제 이 route는 사용되지 않습니다!!!!
+ * /login/oauth/google을 대신 사용하세요!!!!!!!!!!!
+ */
 export default defineRoute('post', '/login/oauth', schema, async (req, res) => {
   const {accessToken} = req.body;
 
-  const {user, jwt, rememberMeToken} = await LoginService.oauthLogin(accessToken);
+  const {user, jwt, rememberMeToken} = await LoginService.googleOAuthLogin(accessToken);
 
   return res
     .header('token', jwt)
