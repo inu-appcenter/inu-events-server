@@ -28,7 +28,7 @@ type LoginResult = {
     rememberMeToken: string;
 }
 
-class LoginService {
+class AppleLoginService {
     /**
      * 애플 로그인 해서 액세스 토큰으로 로그인.
      * @param accessToken
@@ -99,4 +99,4 @@ class LoginService {
     }
 }
 
-export default new LoginService();
+export default new AppleLoginService();

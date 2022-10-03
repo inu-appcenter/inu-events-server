@@ -1,5 +1,6 @@
-import {OAuth2Client} from 'google-auth-library';
+import jwt from 'jsonwebtoken';
 import appleSignin from 'apple-signin-auth';
+import {OAuth2Client} from 'google-auth-library';
 import InternalServerError from './common/errors/http/InternalServerError';
 
 export type OAuthInfo = {
@@ -49,41 +50,47 @@ export async function getGoogleOAuthInfo(accessToken: string): Promise<OAuthInfo
 }
 
 
-
-
 /**
  * 애플 로그인 (Token -> User Info)
  *
  */
 export async function getAppleOAuthInfo(accessToken: string): Promise<OAuthInfo> {
-  try {
-    const info = await appleSignin.verifyIdToken(accessToken, {
-      audience: process.env.APL_CLIENTID, // client id - can also be an array
-      nonce: 'NONCE',
-      ignoreExpiration: true, // default is false
-    });
-    const {email, sub} = info;
+  // TODO 여기에 뭘 써줘야할까,,,
+  const clientID = '???';
+  const teamID = '???';
+  const keyIdentifier = '???';
+  const privateKey = '???';
+  const redirectUri = '???';
 
-    if (email == null) {
-      throw NoEmail();
-    }
+  const info = await appleSignin.getAuthorizationToken(accessToken/*사실 auth code임. accessToken아님 엌ㅋ*/, {
+    clientID,
+    clientSecret: appleSignin.getClientSecret({
+      clientID,
+      teamID,
+      keyIdentifier,
+      privateKey
+    }),
+    redirectUri,
+  });
 
-    if (sub == null) {
-      throw NoSubject();
-    }
+  const {id_token} = info;
 
-    return {
-      email: email,
-      oauthId: sub,
-    };
+  const idTokenDecoded = jwt.decode(id_token) as { email: string, sub: string };
 
-  } catch (err) {
-    // Token is not verified
-    console.error(err);
+  const {email, sub} = idTokenDecoded;
+
+  if (email == null) {
+    throw NoEmail();
   }
 
+  if (sub == null) {
+    throw NoSubject();
+  }
 
-
+  return {
+    email: email,
+    oauthId: sub,
+  };
 }
 
 
