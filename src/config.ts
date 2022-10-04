@@ -19,7 +19,7 @@ export default {
         clearInvalid: true,
         strictHeader: true,
       },
-      key: requireEnv('JWT_KEY'), // 이게 없었어 일단 재배포를 하기위해 임시로..
+      key: process.env.JWT_KEY || 'hahahahahahahahaha',
       expiresIn: '24h',
     },
     storage: {
