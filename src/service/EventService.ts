@@ -40,9 +40,9 @@ class EventService {
 
   async getEvents(userId?: number): Promise<Event[]> {
     if (userId == null) {
-      return await this.getEventsRegardlessBlockings();
+      return await this.getEventsRegardlessBlockings(); // 비회원은 전부
     } else {
-      return await this.getEventsWithoutBlockedUser(userId);
+      return await this.getEventsWithoutBlockedUser(userId); // 로그인 한 사람은 blocking user 빼고
     }
   }
 
@@ -70,6 +70,52 @@ class EventService {
 
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
+
+
+  /**
+   * 현재 진행 중인 행사만 가져옵니다.
+   * @param userId 내 사용자 id.
+   */
+  async getEventsOnGoing(userId?: number): Promise<Event[]> {
+    if (userId == null) {
+      return await this.getEventsOnGoingRegardlessBlockings();
+    } else {
+      return await this.getEventsOnGoingWithoutBlockedUser(userId);
+    }
+  }
+
+  // SELECT title FROM event WHERE end_at>NOW();
+  // 마감되지 않은(현재 진행중인) 행사 전부 가져오기
+  private async getEventsOnGoingRegardlessBlockings(): Promise<Event[]> {
+    return await Event.createQueryBuilder('event')
+        .where(`event.end_at >= NOW()`)
+        .orderBy('event.id', 'DESC')
+        .getMany();
+  }
+
+  //TODO
+  private async getEventsOnGoingWithoutBlockedUser(requestorId: number): Promise<Event[]> {
+    return await Event.createQueryBuilder('event')
+        .where(`event.end_at >= NOW()`)
+
+        /** relations 필드 가져오는 부분 */
+        .leftJoinAndSelect('event.user', 'user')
+        .leftJoinAndSelect('event.comments', 'comments')
+        .leftJoinAndSelect('event.likes', 'likes')
+        .leftJoinAndSelect('event.notifications', 'notifications')
+
+        /** where 절을 위한 join(select는 안 함) */
+        .leftJoin('event.user', 'event_composer')
+        .where(`event_composer.id NOT IN (
+        SELECT blocked_user_id 
+        FROM block
+        WHERE block.blocking_user_id = :requestorId
+      ) AND event.end_at > NOW() `, {requestorId})
+        .orderBy('event.id', 'DESC')
+        .getMany();
+  }
+
+
 
   /**
    * 내가 댓글을 단 Event를 모두 가져오기.
