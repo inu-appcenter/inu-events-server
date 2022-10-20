@@ -9,6 +9,7 @@ import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
 import {EventRequestScheme} from '../entity/schemes';
+import {MoreThanOrEqual} from "typeorm";
 
 class EventService {
   async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
@@ -77,6 +78,7 @@ class EventService {
    * @param userId 내 사용자 id.
    */
   async getEventsOnGoing(userId?: number): Promise<Event[]> {
+    console.log(userId);
     return await this.getEventsOnGoingRegardlessBlockings();
 
     // if (userId == null) {
@@ -89,12 +91,12 @@ class EventService {
   // SELECT title FROM event WHERE end_at>NOW();
   // 마감되지 않은(현재 진행중인) 행사 전부 가져오기
   private async getEventsOnGoingRegardlessBlockings(): Promise<Event[]> {
-    const curTime = new Date()
-    console.log(curTime)
-    return await Event.createQueryBuilder('event')
-        .where(`event.end_at >= :curTime`, {curTime})
-        .orderBy('event.id', 'DESC')
-        .getMany();
+    return await Event.find(
+        {where: {endAt: MoreThanOrEqual(new Date())},
+        order: {id: 'DESC'}
+      });
+
+
   }
 
   //TODO
