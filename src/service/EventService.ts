@@ -77,18 +77,22 @@ class EventService {
    * @param userId 내 사용자 id.
    */
   async getEventsOnGoing(userId?: number): Promise<Event[]> {
-    if (userId == null) {
-      return await this.getEventsOnGoingRegardlessBlockings();
-    } else {
-      return await this.getEventsOnGoingWithoutBlockedUser(userId);
-    }
+    return await this.getEventsOnGoingRegardlessBlockings();
+
+    // if (userId == null) {
+    //   return await this.getEventsOnGoingRegardlessBlockings();
+    // } else {
+    //   return await this.getEventsOnGoingWithoutBlockedUser(userId);
+    // }
   }
 
   // SELECT title FROM event WHERE end_at>NOW();
   // 마감되지 않은(현재 진행중인) 행사 전부 가져오기
   private async getEventsOnGoingRegardlessBlockings(): Promise<Event[]> {
+    const curTime = new Date()
+    console.log(curTime)
     return await Event.createQueryBuilder('event')
-        .where(`event.end_at >= NOW()`)
+        .where(`event.end_at >= :curTime`, {curTime})
         .orderBy('event.id', 'DESC')
         .getMany();
   }
