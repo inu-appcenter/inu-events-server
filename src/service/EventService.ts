@@ -9,6 +9,7 @@ import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
 import {EventRequestScheme} from '../entity/schemes';
+import {MoreThanOrEqual} from "typeorm";
 
 class EventService {
   async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
@@ -40,9 +41,9 @@ class EventService {
 
   async getEvents(userId?: number): Promise<Event[]> {
     if (userId == null) {
-      return await this.getEventsRegardlessBlockings();
+      return await this.getEventsRegardlessBlockings(); // 비회원은 전부
     } else {
-      return await this.getEventsWithoutBlockedUser(userId);
+      return await this.getEventsWithoutBlockedUser(userId); // 로그인 한 사람은 blocking user 빼고
     }
   }
 
@@ -70,6 +71,24 @@ class EventService {
 
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
+
+
+  /**
+   * 현재 진행 중인 행사만 가져옵니다.
+   * @param userId 내 사용자 id.
+   */
+  async getEventsOnGoing(userId?: number): Promise<Event[]> {
+    return await this.getEventsOnGoingRegardlessBlockings();
+  }
+
+  // 마감되지 않은(현재 진행중인) 행사 전부 가져오기
+  private async getEventsOnGoingRegardlessBlockings(): Promise<Event[]> {
+    return await Event.find(
+        {where: {endAt: MoreThanOrEqual(new Date())},
+        order: {id: 'DESC'}
+      });
+  }
+
 
   /**
    * 내가 댓글을 단 Event를 모두 가져오기.
