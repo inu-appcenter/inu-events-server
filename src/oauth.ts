@@ -9,10 +9,6 @@ export type OAuthInfo = {
   oauthId: string;
 };
 
-export type AppleIdTokenInfo = {
-  email: string;
-  oauthId: string;
-}
 
 const NoEmail = InternalServerError.of(
   'no_email',
