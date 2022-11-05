@@ -1,3 +1,5 @@
+import config from "./config";
+
 process.env.TZ = 'Asia/Seoul'
 
 import 'reflect-metadata';
@@ -17,6 +19,8 @@ async function run() {
 
   await startServer();
   log(`서버 시작!`);
+
+  log(config.external.appleSignIn)
 }
 
 run().then().catch((e) => log(e));
