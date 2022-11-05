@@ -53,8 +53,6 @@ export async function getGoogleOAuthInfo(accessToken: string): Promise<OAuthInfo
  *
  */
 export async function getAppleOAuthInfo(accessToken: string): Promise<OAuthInfo> {
-
-  log(config.external.appleSignIn)
   const clientID = config.external.appleSignIn.bundleID; /*일단 지금은 Apple iOS 기기용으로 기대중*/
 
   const info = await appleSignin.getAuthorizationToken(accessToken/*사실 auth code임. accessToken아님 엌ㅋ*/, {

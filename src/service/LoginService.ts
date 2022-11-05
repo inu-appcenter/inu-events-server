@@ -34,9 +34,9 @@ class LoginService {
    * @param accessToken
    */
   async googleOAuthLogin(accessToken: string): Promise<LoginResult> {
-    const {email, oauthId} = await this.resolveUserInfoFromGoogle(accessToken);
+    const {email, oauthId, refreshToken} = await this.resolveUserInfoFromGoogle(accessToken);
 
-    const user = await this.getOrCreateUser(email, 'google', oauthId);
+    const user = await this.getOrCreateUser(email, 'google', oauthId, refreshToken);
 
     return this.onSuccess(user);
   }
@@ -56,9 +56,9 @@ class LoginService {
    * @param accessToken
    */
   async appleOAuthLogin(accessToken: string): Promise<LoginResult> {
-    const {email, oauthId} = await this.resolveUserInfoFromApple(accessToken);
+    const {email, oauthId, refreshToken} = await this.resolveUserInfoFromApple(accessToken);
 
-    const user = await this.getOrCreateUser(email, 'apple', oauthId);
+    const user = await this.getOrCreateUser(email, 'apple', oauthId, refreshToken);
 
     return this.onSuccess(user);
   }
@@ -73,7 +73,10 @@ class LoginService {
     }
   }
 
-  private async getOrCreateUser(email: string, oauthProvider: string, oauthId: string): Promise<User> {
+  /**
+   * User 생성
+  */
+  private async getOrCreateUser(email: string, oauthProvider: string, oauthId: string, refreshToken:string): Promise<User> {
     const found = await User.findOne({where: {oauthProvider, oauthId}});
     if (found != null) {
       return found;
@@ -84,9 +87,11 @@ class LoginService {
       nickname: `uni-${new Date().getTime()}`,
       oauthProvider: oauthProvider,
       oauthId: oauthId,
-      rememberMeToken: generateUUID(),
+      rememberMeToken: refreshToken,
     }).save();
   }
+
+
 
   /**
    * 자동 로그인.
