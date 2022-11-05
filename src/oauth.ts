@@ -3,16 +3,13 @@ import appleSignin from 'apple-signin-auth';
 import {OAuth2Client} from 'google-auth-library';
 import InternalServerError from './common/errors/http/InternalServerError';
 import config from './config';
+import {generateUUID} from "./common/utils/uuid";
 
 export type OAuthInfo = {
   email: string;
   oauthId: string;
+  refreshToken : string;
 };
-
-export type AppleIdTokenInfo = {
-  email: string;
-  oauthId: string;
-}
 
 const NoEmail = InternalServerError.of(
   'no_email',
@@ -47,6 +44,7 @@ export async function getGoogleOAuthInfo(accessToken: string): Promise<OAuthInfo
   return {
     email: email,
     oauthId: sub,
+    refreshToken: generateUUID()
   };
 }
 
@@ -67,7 +65,9 @@ export async function getAppleOAuthInfo(accessToken: string): Promise<OAuthInfo>
     ...config.external.appleSignIn
   });
 
-  const {id_token} = info;
+  /* id_token : A JSON Web Token that contains the user’s identity information.
+   * refresh_token : used to regenerate (new) access tokens.*/
+  const {id_token, refresh_token} = info;
 
   const idTokenDecoded = jwt.decode(id_token) as { email: string, sub: string };
 
@@ -84,6 +84,7 @@ export async function getAppleOAuthInfo(accessToken: string): Promise<OAuthInfo>
   return {
     email: email,
     oauthId: sub,
+    refreshToken: refresh_token,
   };
 }
 
