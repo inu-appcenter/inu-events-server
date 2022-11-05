@@ -7,18 +7,18 @@ import {generateUUID} from '../common/utils/uuid';
 import {log} from '../common/utils/log';
 
 const WrongAuth = Unauthorized.of(
-  'wrong_auth',
-  '인증 이상함!!!!!!!!!!'
+    'wrong_auth',
+    '인증 이상함!!!!!!!!!!'
 );
 
 const NoSuchUser = Unauthorized.of(
-  'no_such_user',
-  '그런 사람 또 없습니다~'
+    'no_such_user',
+    '그런 사람 또 없습니다~'
 );
 
 const InvalidToken = Unauthorized.of(
-  'invalid_remember_me_token',
-  '유효하지 않은 자동로그인 토큰입니다.'
+    'invalid_remember_me_token',
+    '유효하지 않은 자동로그인 토큰입니다.'
 );
 
 type LoginResult = {
@@ -34,9 +34,9 @@ class LoginService {
    * @param accessToken
    */
   async googleOAuthLogin(accessToken: string): Promise<LoginResult> {
-    const {email, oauthId, refreshToken} = await this.resolveUserInfoFromGoogle(accessToken);
+    const {email, oauthId} = await this.resolveUserInfoFromGoogle(accessToken);
 
-    const user = await this.getOrCreateUser(email, 'google', oauthId, refreshToken);
+    const user = await this.getOrCreateUser(email, 'google', oauthId);
 
     return this.onSuccess(user);
   }
@@ -56,9 +56,9 @@ class LoginService {
    * @param accessToken
    */
   async appleOAuthLogin(accessToken: string): Promise<LoginResult> {
-    const {email, oauthId, refreshToken} = await this.resolveUserInfoFromApple(accessToken);
+    const {email, oauthId} = await this.resolveUserInfoFromApple(accessToken);
 
-    const user = await this.getOrCreateUser(email, 'apple', oauthId, refreshToken);
+    const user = await this.getOrCreateUser(email, 'apple', oauthId);
 
     return this.onSuccess(user);
   }
@@ -73,10 +73,7 @@ class LoginService {
     }
   }
 
-  /**
-   * User 생성
-  */
-  private async getOrCreateUser(email: string, oauthProvider: string, oauthId: string, refreshToken:string): Promise<User> {
+  private async getOrCreateUser(email: string, oauthProvider: string, oauthId: string): Promise<User> {
     const found = await User.findOne({where: {oauthProvider, oauthId}});
     if (found != null) {
       return found;
@@ -87,11 +84,9 @@ class LoginService {
       nickname: `uni-${new Date().getTime()}`,
       oauthProvider: oauthProvider,
       oauthId: oauthId,
-      rememberMeToken: refreshToken,
+      rememberMeToken: generateUUID(),
     }).save();
   }
-
-
 
   /**
    * 자동 로그인.
