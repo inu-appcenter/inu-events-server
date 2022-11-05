@@ -110,3 +110,9 @@ export const BlockResponseScheme = {
   user: z.object(UserResponseScheme),
   blockedAt: z.date(),
 };
+
+export const ReportResponseScheme = {
+  userId: z.string(), // 일단 ID로 하자
+  eventId: z.string(),
+  msg: z.string().optional().nullable()
+};
