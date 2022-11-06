@@ -112,7 +112,43 @@ export const BlockResponseScheme = {
 };
 
 export const ReportResponseScheme = {
-  userId: z.string(), // 일단 ID로 하자
-  eventId: z.string(),
+  userId: z.number(), // 일단 ID로 하자
+  eventId: z.number(),
   msg: z.string().optional().nullable()
+
+  // // 신고한 사용자 정보
+  // userId: z.number(),
+  // nickname: z.string(),
+  // email: z.string(),
+  // profileImage: z.string().optional().nullable(),
+  // profileImageUrl: z.string().optional().nullable(),
+  
+  // // 신고당한 글 정보
+  // id: z.number(),
+  // title: z.string(),
+  // host: z.string().optional().nullable(),
+  // category: z.string(),
+  // target: z.string(),
+  // startAt: z.date(),
+  // endAt: z.date().optional().nullable(),
+  // contact: z.string().optional().nullable(),
+  // location: z.string().optional().nullable(),
+
+  // body: z.string(),
+  // imageUuid: z.string().optional().nullable(),
+  // imageUrl: z.string().optional().nullable(),
+  // createdAt: z.date(),
+
+  // /**
+  //  * 추가 속성.
+  //  */
+  // wroteByMe: z.boolean().optional().nullable(),
+  // likedByMe: z.boolean().optional(),
+  // notificationSetByMe: z.boolean().optional().nullable(),
+  // notificationSetFor: z.string().optional().nullable(),
+
+  // comments: z.number(),
+  // views: z.number(),
+  // likes: z.number(),
+  // notifications: z.number(),
 };
