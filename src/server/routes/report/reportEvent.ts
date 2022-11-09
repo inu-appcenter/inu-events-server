@@ -13,16 +13,14 @@ const schema = defineSchema({
     params: {
         eventId: stringAsInt,
     },
-    response: [ReportResponseScheme]
+
 });
 
 
 export default defineRoute('post', '/reports/:eventId', schema, authorizer(), async (req, res) => {
     const userId = req.requireUserId();
     const {eventId} = req.params;
-
-
     await ReportService.ReportEvent(userId, eventId);
-    return res.json({ userId:userId, eventId: eventId, msg: "신고되었습니다."});
-    // res.send();
+
+    res.send();
 });

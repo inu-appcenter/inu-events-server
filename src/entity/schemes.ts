@@ -113,8 +113,7 @@ export const BlockResponseScheme = {
 
 export const ReportResponseScheme = {
   userId: z.number(), // 일단 ID로 하자
-  eventId: z.number(),
-  msg: z.string().optional().nullable()
+  event: z.object(EventResponseScheme),
 
   // // 신고한 사용자 정보
   // userId: z.number(),
