@@ -30,7 +30,7 @@ class UserService {
     return deleteUser.raw;
   }
 
-  async deleteMyAllEvent(userId:number): Promise<void> {
+  async deleteUserHardly(userId:number): Promise<void> {
     const user = await User.findOneOrFail(userId);
     const event = await Event.find({where:{user}});
 
@@ -53,10 +53,10 @@ class UserService {
       id: userId
     });
 
-    log(`${user.toString()} 탈퇴 성공!`);
     await User.delete({
       id: userId
     });
+    log(`${user.toString()} 탈퇴 성공!`);
   }
 }
 
