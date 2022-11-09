@@ -5,8 +5,8 @@ import {authorizer} from '../../middleware/authorizer';
 import LikeService from '../../../service/LikeService';
 
 const schema = defineSchema({
-  summary: '행사 취소',
-  description: '행사에 좋아요를 취소합니다.',
+  summary: '행사 좋아요(저장) 취소',
+  description: '행사에 좋아요(저장)를 취소합니다.',
 
   body: {
     eventId: z.number()

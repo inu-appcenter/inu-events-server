@@ -5,7 +5,7 @@ import LoginService from '../../../service/LoginService';
 import config from '../../../config';
 
 const schema = defineSchema({
-  summary: 'OAuth 로그인',
+  summary: 'OAuth 자동 로그인',
   description: '내 정보를 가져옵니다.',
 
   body: {

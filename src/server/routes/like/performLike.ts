@@ -5,8 +5,8 @@ import {z} from 'zod';
 import LikeService from '../../../service/LikeService';
 
 const schema = defineSchema({
-  summary: '행사 좋아요',
-  description: '행사에 좋아요를 추가합니다.',
+  summary: '행사 좋아요(저장하기)',
+  description: '행사에 좋아요(저장) 표시를 합니다. (북마크 클릭 시)',
 
   body: {
     eventId: z.number()

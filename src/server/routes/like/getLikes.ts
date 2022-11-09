@@ -5,8 +5,8 @@ import LikeService from '../../../service/LikeService';
 import {EventResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
-  summary: '행사 좋아요 가져오기',
-  description: '좋아요 한 행사를 가져옵니다.',
+  summary: '행사 좋아요(저장) 가져오기',
+  description: '좋아요(저장) 한 행사를 가져옵니다. 앱에서 북마크 표시한 이벤트를 불러옵니다.',
 
   response: [EventResponseScheme]
 });

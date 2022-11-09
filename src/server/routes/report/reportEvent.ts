@@ -1,14 +1,13 @@
 import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import {authorizer} from '../../middleware/authorizer';
-import { ReportResponseScheme} from '../../../entity/schemes';
 import {stringAsInt} from "../../libs/zodTypes";
 import ReportService from '../../../service/ReportService';
 
 
 const schema = defineSchema({
     summary: '이벤트를 신고합니다.',
-    description: 'DB 저장해볼게여',
+    description: '신고하는 이벤트를 DB의 report table에 저장합니다. (댓글신고는 오류날 수 있습니다.)',
 
     params: {
         eventId: stringAsInt,
