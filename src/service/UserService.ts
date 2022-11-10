@@ -7,6 +7,8 @@ import EventLike from '../entity/EventLike';
 import EventNotification from '../entity/EventNotification';
 import EventService from './EventService';
 import Block from '../entity/Block';
+import BlockingService from "./BlockingService";
+import CommentService from "./CommentService";
 
 class UserService {
   async getUser(id: number): Promise<User> {
@@ -38,7 +40,7 @@ class UserService {
     await EventLike.delete({user});
 
     log(`회원 탈퇴하기에 앞서, ${user.toString()}가 작성한 댓글 모두 삭제!`);
-    await EventLike.delete({user});
+    await CommentService.deleteMyAllComment(userId)
 
     log(`회원 탈퇴하기에 앞서, ${user.toString()}가 설정한 알림 모두 삭제!`);
     await EventNotification.delete({user});

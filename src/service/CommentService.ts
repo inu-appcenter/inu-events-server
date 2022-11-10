@@ -83,6 +83,14 @@ class CommentService {
       id: commentId
     });
   }
+
+  async deleteMyAllComment(userId: number): Promise<void> {
+    const user = await User.findOneOrFail(userId);
+    log(`${userId}가 작성한 댓글 모두 삭제 삭제!`);
+    await Comment.delete({
+      user: user
+    });
+  }
 }
 
 export default new CommentService();
