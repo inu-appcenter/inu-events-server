@@ -50,7 +50,7 @@ class UserService {
 
     log(`${user.toString()}가 설정한 차단 모두 삭제!`);
     await Block.delete({
-      id: userId
+      blockingUser: userId
     });
 
     await User.delete({
