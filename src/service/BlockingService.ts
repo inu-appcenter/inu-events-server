@@ -46,6 +46,21 @@ class BlockingService {
     log(`${blockingUser.toString()}가 ${blockedUser.toString()}를 차단 해제합니다.`);
   }
 
+  async unBlockAllUser(userId: number): Promise<void> {
+    const blockingUser = await UserService.getUser(userId);
+
+    const existingBlock = await Block.findOne({blockingUser});
+    if (existingBlock == null) {
+      log(`${blockingUser.toString()}는 다른 사용자를 차단한 적이 없습니다.`);
+      return;
+    }
+
+    await existingBlock.remove();
+
+    log(`${blockingUser.toString()}가 모든 유저의 차단을 해제합니다.`);
+  }
+
+
   async getBlocks(userId: number): Promise<Block[]> {
     const blockingUser = await UserService.getUser(userId);
 
