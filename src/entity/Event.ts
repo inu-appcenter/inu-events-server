@@ -54,7 +54,7 @@ export default class Event extends BaseBetterEntity {
    * 2페이지에 노출
    */
 
-  @Column({comment: '본문.', length: 1000})
+  @Column({comment: '본문.', length: 10000})
   body: string;
 
   @Column({type: String, nullable: true, comment: '이미지 식별자.'})
