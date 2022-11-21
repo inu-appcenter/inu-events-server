@@ -20,7 +20,7 @@ const schema = defineSchema({
 
 export default defineRoute('get', '/events-by-page', schema, async (req, res) => {
     const {userId} = req;
-    const {pageNum, pageSize} = req.params;
+    const {pageNum, pageSize} = req.query;
 
     log(`Route: pageNum 값은 ${pageNum} 입니다./ pageSize는 ${pageSize} 입니다.`)
     const eventInformation = await EventService.getEventsbyPage(userId, pageNum, pageSize);
