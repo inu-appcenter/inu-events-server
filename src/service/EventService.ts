@@ -49,7 +49,7 @@ class EventService {
   }
 
   // 페이지 별로 이벤트 가져옴 (NEW) TODO
-  async getEventsbyPage(userId?: number, pageNum?:number, pageSize?:number ) : Promise<Event[]> {
+  async getEventsbyPage(userId?: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
     const totalEvent = await this.getTotalEvent(); // 전체 이벤트 데이터 수
     if(pageNum != null  && pageSize != null){
       // 일단은 회원 비회원 구분 X
@@ -60,8 +60,6 @@ class EventService {
       return await this.getEventsRegardlessBlockings();
     }
 
-
-
   }
 
 
@@ -71,7 +69,7 @@ class EventService {
   }
 
   // 전체 페이지 수 가져오기
-  private async getTotalEvent(): Promise<number> {
+  async getTotalEvent(): Promise<number> {
     const page =  await Event.count();
     log(`전체 이벤트 수는 ${page}.`)
     return await Event.count();
