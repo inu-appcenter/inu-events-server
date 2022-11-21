@@ -8,7 +8,7 @@ import EventNotification from '../entity/EventNotification';
 import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
-import {EventPageResponseScheme, EventRequestScheme} from '../entity/schemes';
+import { EventRequestScheme} from '../entity/schemes';
 import {MoreThanOrEqual} from "typeorm";
 
 class EventService {
@@ -50,16 +50,12 @@ class EventService {
 
   // 페이지 별로 이벤트 가져옴 (NEW) TODO
   async getEventsbyPage(userId?: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
-    const totalEvent = await this.getTotalEvent(); // 전체 이벤트 데이터 수
     if(pageNum != null  && pageSize != null){
       // 일단은 회원 비회원 구분 X
-      const maxPage = totalEvent / (pageSize);
-      log(`maxpage 값은 ${maxPage} 입니다.`) // 정수 형태로 내림 해줘야 하나?
       return await this.getEventsRegardlessBlockingsbyPage(pageNum, pageSize);
     }else {
       return await this.getEventsRegardlessBlockings();
     }
-
   }
 
 
