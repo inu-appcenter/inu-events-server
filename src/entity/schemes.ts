@@ -118,8 +118,8 @@ export const ReportResponseScheme = {
 };
 
 export const EventPageResponseScheme = {
- // maxPage: z.number(),
-//  totalEvent: z.number(),
+  maxPage: z.number(),
+  totalEvent: z.number(),
   event: z.object(EventResponseScheme),
 
 };
