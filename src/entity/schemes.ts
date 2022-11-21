@@ -116,3 +116,10 @@ export const ReportResponseScheme = {
   eventId: z.string(),
   msg: z.string().optional().nullable()
 };
+
+export const EventPageResponseScheme = {
+  maxPage: z.number(),
+  totalEvent: z.number(),
+  event: z.object(EventResponseScheme),
+
+};

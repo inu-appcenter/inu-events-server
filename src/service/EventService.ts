@@ -8,7 +8,7 @@ import EventNotification from '../entity/EventNotification';
 import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
-import {EventRequestScheme} from '../entity/schemes';
+import { EventRequestScheme} from '../entity/schemes';
 import {MoreThanOrEqual} from "typeorm";
 
 class EventService {
@@ -39,6 +39,7 @@ class EventService {
     return await Event.find({where: {user}, order: {id: 'DESC'}});
   }
 
+  // 이벤트 전체 가져옴 ( 이전 버전용 남겨둠 )
   async getEvents(userId?: number): Promise<Event[]> {
     if (userId == null) {
       return await this.getEventsRegardlessBlockings(); // 비회원은 전부
@@ -47,9 +48,39 @@ class EventService {
     }
   }
 
-  private async getEventsRegardlessBlockings(): Promise<Event[]> {
+  // 페이지 별로 이벤트 가져옴 (NEW) TODO
+  async getEventsbyPage(userId?: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
+    if(pageNum != null  && pageSize != null){
+      // 일단은 회원 비회원 구분 X
+      return await this.getEventsRegardlessBlockingsbyPage(pageNum, pageSize);
+    }else {
+      return await this.getEventsRegardlessBlockings();
+    }
+  }
+
+
+  // 로그인 안했을 때 (비회원)
+  private async getEventsRegardlessBlockings(): Promise<Event[]> { // 기존
     return await Event.find({order: {id: 'DESC'}});
   }
+
+  // 전체 페이지 수 가져오기
+  async getTotalEvent(): Promise<number> {
+    const page =  await Event.count();
+    log(`전체 이벤트 수는 ${page}.`)
+    return await Event.count();
+
+  }
+
+  private async getEventsRegardlessBlockingsbyPage(pageNum:number, pageSize:number): Promise<Event[]>  {
+    const offset = pageSize * pageNum;
+
+    return await Event.find(
+        {order: {id: 'DESC'},
+          skip: offset,
+          take: pageSize,});
+  }
+
 
   // 됨 :)
   private async getEventsWithoutBlockedUser(requestorId: number): Promise<Event[]> {
