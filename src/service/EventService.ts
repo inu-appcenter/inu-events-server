@@ -64,10 +64,8 @@ class EventService {
     return await Event.find({order: {id: 'DESC'}});
   }
 
-  // 전체 페이지 수 가져오기
+  // 전체 이벤트 수 가져오기
   async getTotalEvent(): Promise<number> {
-    const page =  await Event.count();
-    log(`전체 이벤트 수는 ${page}.`)
     return await Event.count();
 
   }
