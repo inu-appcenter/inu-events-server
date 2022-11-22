@@ -6,7 +6,10 @@ import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
     summary: '행사를 페이지 별로 가져옵니다.',
-    description: 'pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n pageNum은 0부터 시작입니다. \n maxPage는 올림한 값입니다. 하나라도 비어있으면 오류남.',
+    description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
+        ' - pageNum은 0부터 시작입니다. \n' +
+        '- maxPage는 올림한 값입니다. 하나라도 비어있으면 오류남.\n' +
+        ' - pageSize= 0이면 전체 이벤트 내려줌',
 
     query: {
         pageNum: stringAsInt,
