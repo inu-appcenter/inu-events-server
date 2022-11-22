@@ -103,18 +103,27 @@ class EventService {
 
 
   /**
-   * 현재 진행 중인 행사만 가져옵니다.
-   * @param userId 내 사용자 id.
+   * 현재 진행 중인 행사만 가져옵니다. (페이징 적용)
+   * @param userId 내 사용자 id. pageNum?:number, pageSize?:number
    */
-  async getEventsOnGoing(userId?: number): Promise<Event[]> {
-    return await this.getEventsOnGoingRegardlessBlockings();
+  async getEventsOnGoing(userId?: number, pageNum?:number, pageSize?:number ){
+    if(pageNum == null || pageSize == null){
+      log(`pageNum 또는 pageSize 가 비어있어서 못내려줌!`)
+      return
+    }else{
+      return await this.getEventsOnGoingRegardlessBlockings(pageNum, pageSize);
+    }
+
   }
 
   // 마감되지 않은(현재 진행중인) 행사 전부 가져오기
-  private async getEventsOnGoingRegardlessBlockings(): Promise<Event[]> {
+  private async getEventsOnGoingRegardlessBlockings(pageNum:number, pageSize:number): Promise<Event[]> {
+    const offset = pageSize * pageNum;
     return await Event.find(
         {where: {endAt: MoreThanOrEqual(new Date())},
-        order: {id: 'DESC'}
+          order: {id: 'DESC'},
+          skip: offset,
+          take: pageSize,
       });
   }
 
