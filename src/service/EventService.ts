@@ -70,6 +70,12 @@ class EventService {
 
   }
 
+  // 진행 중인 이벤트 수 가져오기
+  async getOngoingTotalEvent(): Promise<number> {
+    return await Event.count({where: {endAt: MoreThanOrEqual(new Date())}});
+  }
+
+
   private async getEventsRegardlessBlockingsbyPage(pageNum:number, pageSize:number): Promise<Event[]>  {
     const offset = pageSize * pageNum;
 

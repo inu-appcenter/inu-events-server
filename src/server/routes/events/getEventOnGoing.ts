@@ -25,7 +25,7 @@ export default defineRoute('get', '/events-ongoing', schema, async (req, res) =>
     const {pageNum, pageSize} = req.query;
 
     const eventInformation = await EventService.getEventsOnGoing(userId, pageNum, pageSize);
-    const totalEvent = await EventService.getTotalEvent();
+    const totalEvent = await EventService.getOngoingTotalEvent();
 
     const eventPageInformation = {  maxPage: Math.ceil(totalEvent / pageSize) ,
         totalEvent: totalEvent,
