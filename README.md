@@ -6,26 +6,37 @@ INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
 
 ## 개발 팁
 
-### Swagger 문서를 보는 방법
+### 1. Swagger 문서를 보는 방법
 
-#### 일부 API 규격은 문서와 다를 수 있습니다.
+#### 1.1 일부 API 규격은 문서와 다를 수 있습니다.
+<details>
+<summary>자세히 보기</summary>
+<div markdown="1">
 
 예를 들어 `multipart/form-data`로 요청해야 하는 이미지 업로드 API의 경우, 해당 content type을 문서에서 나타내지 못해 사실과 다르게 적혀있습니다.
 
 또한 응답 body가 없이 성공시 200 상태 코드만 전달하는 API의 경우, 200 응답 schema가 `"string"` 형태로 나타날 수 있으나, 이 또한 실제 규격과 다릅니다.
 
 아직 문서 자동생성이 온전하지 않아 추가적인 설명이 필요한 부분이 많으니, 문서가 의심스럽다면 서버 작성자에게 문의 주세요!
+</div>
+</details>
 
-#### 직접 요청을 보내볼 수 있습니다.
+
+#### 1.2. 직접 요청을 보내볼 수 있습니다.
 
 `Try it out`을 눌러 보세요.
 
-다만 로그인이 필요한 요청은 처리하기 어렵습니다.
+다만 로그인이 필요한 요청은 토큰을 받아 로그인 후 swagger에서도 처리할 수 있습니다.
 
-### 날짜를 다루는 방법
+<br> 
 
-#### 서버에 보낼 때
+### 2. 날짜를 다루는 방법
 
+#### 2.1 서버에 보낼 때
+
+<details>
+<summary>자세히 보기</summary>
+<div markdown="1">
 서버는 다음을 포함하여, `moment` 라이브러리가 유효한 `ISO-8601` 형태라고 판단하는 스트링을 받아들일 수 있습니다:
 
 - `2022-02-22 08:30:00`
@@ -39,9 +50,15 @@ INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
 **타임존이나 오프셋이 없는 스트링은 암묵적으로 대한민국 표준시로 간주합니다.**
 
 예를 들어, `2022-02-22T08:30:00`은 `2022-02-22T08:30:00+09:00`으로 해석됩니다.
+</div>
+</details>
 
-#### 서버로부터 받을 때
 
+#### 2.2 서버로부터 받을 때
+
+<details>
+<summary>자세히 보기</summary>
+<div markdown="1">
 서버는 JSON 응답 속 날짜 스트링을 다음과 같은 단 하나의 형태로 제공합니다:
 
 - `2022-02-22T08:30:00.000+09:00`
@@ -49,8 +66,13 @@ INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
 해당 스트링은 `ISO-8601` 규격으로, 거의 모든 플랫폼에서 기본적으로 파싱을 지원하는 규격입니다.
 
 디버깅의 편의를 위해 대한민국 표준시로 표기하였으며, 이를 나타내기 위해 스트링의 끝에 `+09:00`을 붙였습니다.
+</div>
+</details>
 
-### 엔티티와 DTO를 다룰 때, nullability에 대해
+<br> 
+
+
+### 3. 엔티티와 DTO를 다룰 때, nullability에 대해
 
 자바스크립트 환경에는
 
@@ -63,8 +85,11 @@ INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
 
 `null`과 `undefined`를 현명하게 다루는 방법을 안내합니다:
 
-#### 엔티티의 속성을 정의할 때
+#### 3.1 엔티티의 속성을 정의할 때
 
+<details>
+<summary>자세히 보기</summary>
+<div markdown="1">
 기존에는 아래와 같이 했습니다:
 
 ```typescript
@@ -101,8 +126,15 @@ export default class Event extends BaseBetterEntity {
 > 필드의 타입이 `string`에서 `string | null`이 되면서 더이상 `String`으로의 타입 추론이 불가능해졌기 때문입니다.
 > 따라서 이를 명시해 주어야 합니다.
 > 아, `varchar`나 `text`를 바로 써줄 수도 있지만, 그건 TypeORM이 결정하도록 놔두겠습니다. 어떤 DB를 쓸 지 모르니까요.
+</div>
+</details>
 
-#### 요청 / 응답 스케마를 정의할 때
+
+
+#### 3.2 요청 / 응답 스케마를 정의할 때
+<details>
+<summary>자세히 보기</summary>
+<div markdown="1">
 
 `optional` 필드에 `nullable`도 달아 줍니다.
 
@@ -128,8 +160,14 @@ export default class Event extends BaseBetterEntity {
 이 경우는 `PATCH` 요청에서 `nullable`이 아닌 필드에 해당합니다. 아예 안 보내거나, 유효한 값을 보내야 합니다.
 
 `nullable`이기만 한 필드는 어떨까요? 아직 우리 앱에 그런 필드는 없습니다.
+</div>
+</details>
+
 
 #### 보너스: PATCH 요청의 스케마를 정의할 때
+<details>
+<summary>자세히 보기</summary>
+<div markdown="1">
 
 스케마는 `schema.ts` 파일에 몰아 놓았습니다.
 
@@ -143,3 +181,7 @@ export default class Event extends BaseBetterEntity {
 `PATCH /events/{eventId}` 요청의 body 규격은 `partialSchemaOf(EventRequestScheme)`와 같이 쓸 수 있습니다.
 
 전자는 `Infer<typeof EventRequestScheme>` 타입을 제공하며, 후자는 `Partial<Infer<typeof EventRequestScheme>>` 타입을 제공합니다.
+</div>
+</details>
+
+
