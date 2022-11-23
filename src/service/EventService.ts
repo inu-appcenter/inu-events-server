@@ -10,6 +10,7 @@ import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
 import { EventRequestScheme} from '../entity/schemes';
 import {MoreThanOrEqual} from "typeorm";
+import { findConfigFile } from 'typescript';
 
 class EventService {
   async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
@@ -69,7 +70,28 @@ class EventService {
     }
 
   }
-
+  
+  async getCategorybyFiltering(categoryId?:number,eventStatus?:boolean):  Promise<Event[]>  {
+    switch(categoryId) {
+      case 0: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"선택없음"},order: {id: 'DESC'}});
+              else return await  Event.find({where:{category:"선택없음"}});
+      case 1: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"동아리/소모임"},order: {id: 'DESC'}});
+              else return await  Event.find({where:{category:"동아리/소모임"}});
+      case 2: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"학생회"},order: {id: 'DESC'}});
+              else return await  Event.find({where:{category:"학생회"}});
+      case 3: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"간식나눔"},order: {id: 'DESC'}}); 
+              else return await  Event.find({where:{category:"간식나눔"}});
+      case 4: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"대회/공모전"},order: {id: 'DESC'}});
+              else return await  Event.find({where:{category:"대회/공모전"}});
+      case 5: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"스터디"},order: {id: 'DESC'}});
+              else return await  Event.find({where:{category:"스터디"}});
+      case 6: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"구인"},order: {id: 'DESC'}});
+              else return await  Event.find({where:{category:"구인"}});
+      case 7: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"기타"},order: {id: 'DESC'}}); 
+              else return await  Event.find({where:{category:"기타"}});
+      default: return await  this.getEvents();
+    }
+  }
 
   // 로그인 안했을 때 (비회원)
   private async getEventsRegardlessBlockings(): Promise<Event[]> { // 기존
@@ -94,6 +116,8 @@ class EventService {
           skip: pageSize * pageNum,
           take: pageSize,});
   }
+
+
 
 
   // 됨 :)
@@ -219,6 +243,8 @@ class EventService {
     log(`이제 ${event}를 삭제합니다.`);
     await Event.delete({id: eventId});
   }
+
+
 }
 
 export default new EventService();
