@@ -77,10 +77,10 @@ class EventService {
   }
 
   // 전체 이벤트 수 가져오기
-  async getTotalEvent(): Promise<number> {
+  private async getTotalEvent(): Promise<number> {
     return await Event.count();
-
   }
+
 
   // 진행 중인 이벤트 수 가져오기
   async getOngoingTotalEvent(): Promise<number> {
