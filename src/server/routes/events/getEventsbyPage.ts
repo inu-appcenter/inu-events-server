@@ -9,7 +9,7 @@ const schema = defineSchema({
     summary: '행사를 페이지 별로 가져옵니다.',
     description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
         ' - pageNum은 0부터 시작입니다. \n' +
-        '- query 하나라도 비어있으면 400 오류 납니다. (optional로 할까요?) \n' +
+        '- query 하나라도 비어있으면 전체 결과를 출력합니다. (이전 버전 호환용) \n' +
         ' - pageSize= 0이면 전체 이벤트 내려줌',
 
     query: {
@@ -24,7 +24,7 @@ export default defineRoute('get', '/events-by-page', schema, async (req, res) =>
     const {userId} = req;
     const {pageNum, pageSize} = req.query;
     let eventInformation;
-    if(pageNum == null  || pageSize == null){ // 하나라도 비어있으면
+    if(pageNum == undefined  || pageSize == undefined){ // 하나라도 비어있으면
         log(`pageNum: ${pageNum}, pageSize: ${pageSize} 하나라도 비어있으면 전체 결과 출력합니다!`);
         eventInformation = await EventService.getEvents(userId); // 전체 결과
     }else{
