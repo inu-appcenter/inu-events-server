@@ -44,10 +44,18 @@ class LikeService {
     return existingLike != null;
   }
 
-  async getLikedEvents(userId: number) {
+  async getLikedEvents(userId: number, pageNum?:number, pageSize?:number ) {
     const theUser = await User.findOneOrFail(userId);
 
-    const allLikes = await EventLike.find({user: theUser});
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
+    }
+
+    const allLikes = await EventLike.find({where: {theUser},
+      order: {id: 'DESC'},
+      skip: pageSize * pageNum,
+      take: pageSize,});
 
     return allLikes.map((l) => l.event);
   }
