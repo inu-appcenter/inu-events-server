@@ -159,10 +159,15 @@ class EventService {
 
 
   /**
-   * 내가 댓글을 단 Event를 모두 가져오기.
+   * 내가 댓글을 단 Event를 모두 가져오기. (페이징 적용)
    * @param userId 내 사용자 id.
    */
-  async getEventsIveCommentedOn(userId: number): Promise<Event[]> {
+  async getEventsIveCommentedOn(userId: number, pageNum?:number, pageSize?:number): Promise<Event[]> {
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
+    }
+
     return await Event.createQueryBuilder('event')
 
       /** relations 필드 가져오는 부분 */
@@ -175,7 +180,8 @@ class EventService {
       .leftJoin('event.comments', 'event_comments')
       .leftJoin('event_comments.user', 'comments_user')
       .where('comments_user.id = :userId', {userId})
-
+      .take(pageSize)
+      .skip(pageSize * pageNum) // 페이징 적용
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
 
