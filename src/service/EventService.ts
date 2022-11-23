@@ -33,10 +33,17 @@ class EventService {
     return event;
   }
 
-  async getMyEvents(userId: number): Promise<Event[]> {
+  // 내가 쓴 이벤트 가져옵니다. (페이징 적용)
+  async getMyEvents(userId: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
     const user = await User.findOneOrFail(userId);
-
-    return await Event.find({where: {user}, order: {id: 'DESC'}});
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
+    }
+    return await Event.find({where: {user},
+                          order: {id: 'DESC'},
+                          skip: pageSize * pageNum,
+                          take: pageSize,});
   }
 
   // 이벤트 전체 가져옴
