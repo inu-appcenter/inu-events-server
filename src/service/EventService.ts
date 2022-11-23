@@ -105,7 +105,6 @@ class EventService {
         WHERE block.blocking_user_id = :requestorId
       )`, {requestorId})
         .orderBy('event.id', 'DESC')
-
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
 
@@ -137,17 +136,17 @@ class EventService {
    * 현재 진행 중인 행사만 가져옵니다. (페이징 적용)
    * @param userId 내 사용자 id. pageNum?:number, pageSize?:number
    */
-  async getEventsOnGoing(userId?: number, pageNum?:number, pageSize?:number ){
-    if(pageNum == null || pageSize == null){
-      log(`pageNum 또는 pageSize 가 비어있어서 못내려줌!`)
-      return
-    }else{
-      return await this.getEventsOnGoingRegardlessBlockings(pageNum, pageSize);
+  async getEventsOnGoing(userId?: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
     }
-
+    return await this.getEventsOnGoingRegardlessBlockings(pageNum, pageSize);
   }
 
-  // 마감되지 않은(현재 진행중인) 행사 전부 가져오기
+
+
+  // 마감되지 않은(현재 진행중인) 행사 페이지 별로 가져오지
   private async getEventsOnGoingRegardlessBlockings(pageNum:number, pageSize:number): Promise<Event[]> {
     const offset = pageSize * pageNum;
     return await Event.find(
