@@ -48,13 +48,16 @@ class EventService {
     }
   }
 
-  // 페이지 별로 이벤트 가져옴 (NEW) TODO
+  // 페이지 별로 이벤트 가져옴 NEW
   async getEventsbyPage(userId?: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
-    if(pageNum != null  && pageSize != null){
-      // 일단은 회원 비회원 구분 X
-      return await this.getEventsRegardlessBlockingsbyPage(pageNum, pageSize);
-    }else {
-      return await this.getEventsRegardlessBlockings();
+    if(pageNum != null && pageSize != null){ //두 값이 모두 비어있지 않을 때.
+      if (userId == null){ // 로그인 X.
+        return await this.getEventsRegardlessBlockingsbyPage(pageNum, pageSize); // 비회원은 전부
+      }else{ // 로그인 한 사용자.
+        return await this.getEventsWithoutBlockedUserbyPage(userId, pageNum, pageSize); // 로그인 한 사람은 blocking user 빼고
+      }
+    }else{ // 뭔가 하나라도 비어있을 때
+      return await this.getEvents(userId) // 기존에 이벤트 전체 가져오는 형태 (할까말까... 걍 에러 때려?)
     }
   }
 
@@ -78,7 +81,6 @@ class EventService {
 
   private async getEventsRegardlessBlockingsbyPage(pageNum:number, pageSize:number): Promise<Event[]>  {
     const offset = pageSize * pageNum;
-
     return await Event.find(
         {order: {id: 'DESC'},
           skip: offset,
@@ -106,6 +108,29 @@ class EventService {
 
       .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
+
+  // 차단된 사용자 제외하고 페이지 별로 내려주기 NEW
+  private async getEventsWithoutBlockedUserbyPage(requestorId: number, pageNum:number, pageSize:number ): Promise<Event[]> {
+    return await Event.createQueryBuilder('event')
+        /** relations 필드 가져오는 부분 */
+        .leftJoinAndSelect('event.user', 'user')
+        .leftJoinAndSelect('event.comments', 'comments')
+        .leftJoinAndSelect('event.likes', 'likes')
+        .leftJoinAndSelect('event.notifications', 'notifications')
+
+        /** where 절을 위한 join(select는 안 함) */
+        .leftJoin('event.user', 'event_composer')
+        .where(`event_composer.id NOT IN (
+        SELECT blocked_user_id 
+        FROM block
+        WHERE block.blocking_user_id = :requestorId
+      )`, {requestorId})
+        .take(pageSize)
+        .skip(pageSize * pageNum) // 페이징 적용
+        .orderBy('event.id', 'DESC')
+        .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
+  }
+
 
 
   /**
