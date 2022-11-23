@@ -50,15 +50,17 @@ class EventService {
 
   // 페이지 별로 이벤트 가져옴 NEW
   async getEventsbyPage(userId?: number, pageNum?:number, pageSize?:number ): Promise<Event[]> {
-    if(pageNum != null && pageSize != null){ //두 값이 모두 비어있지 않을 때.
-      if (userId == null){ // 로그인 X.
-        return await this.getEventsRegardlessBlockingsbyPage(pageNum, pageSize); // 비회원은 전부
-      }else{ // 로그인 한 사용자.
-        return await this.getEventsWithoutBlockedUserbyPage(userId, pageNum, pageSize); // 로그인 한 사람은 blocking user 빼고
-      }
-    }else{ // 뭔가 하나라도 비어있을 때
-      return await this.getEvents(userId) // 기존에 이벤트 전체 가져오는 형태 (할까말까... 걍 에러 때려?)
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
     }
+
+    if (userId == null){ // 로그인 X.
+      return await this.getEventsRegardlessBlockingsbyPage(pageNum, pageSize); // 비회원은 전부
+    }else{ // 로그인 한 사용자.
+      return await this.getEventsWithoutBlockedUserbyPage(userId, pageNum, pageSize); // 로그인 한 사람은 blocking user 빼고
+    }
+
   }
 
 
@@ -80,10 +82,9 @@ class EventService {
 
 
   private async getEventsRegardlessBlockingsbyPage(pageNum:number, pageSize:number): Promise<Event[]>  {
-    const offset = pageSize * pageNum;
     return await Event.find(
         {order: {id: 'DESC'},
-          skip: offset,
+          skip: pageSize * pageNum,
           take: pageSize,});
   }
 

@@ -23,13 +23,8 @@ const schema = defineSchema({
 export default defineRoute('get', '/events-by-page', schema, async (req, res) => {
     const {userId} = req;
     const {pageNum, pageSize} = req.query;
-    let eventInformation;
-    if(pageNum == undefined  || pageSize == undefined){ // 하나라도 비어있으면
-        log(`pageNum: ${pageNum}, pageSize: ${pageSize} 하나라도 비어있으면 전체 결과 출력합니다!`);
-        eventInformation = await EventService.getEvents(userId); // 전체 결과
-    }else{
-        eventInformation = await EventService.getEventsbyPage(userId, pageNum, pageSize); // 페이징 적용
-    }
+
+    const eventInformation = await EventService.getEventsbyPage(userId, pageNum, pageSize); // 페이징 적용
 
     return res.json(await Promise.all(eventInformation.map(e => e.toResponse(userId))));
 });
