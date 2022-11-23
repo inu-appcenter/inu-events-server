@@ -6,7 +6,7 @@ import {stringAsInt} from "../../libs/zodTypes";
 import {log} from "../../../common/utils/log";
 
 const schema = defineSchema({
-    summary: '행사를 페이지 별로 가져옵니다.',
+    summary: '행사를 페이지 별로 가져옵니다. (나중에 /events로 통합?)',
     description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
         ' - pageNum은 0부터 시작입니다. \n' +
         '- query 하나라도 비어있으면 전체 결과를 출력합니다. (이전 버전 호환용) \n' +
