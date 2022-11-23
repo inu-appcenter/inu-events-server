@@ -39,7 +39,7 @@ class EventService {
     return await Event.find({where: {user}, order: {id: 'DESC'}});
   }
 
-  // 이벤트 전체 가져옴 ( 이전 버전용 남겨둠 )
+  // 이벤트 전체 가져옴
   async getEvents(userId?: number): Promise<Event[]> {
     if (userId == null) {
       return await this.getEventsRegardlessBlockings(); // 비회원은 전부
