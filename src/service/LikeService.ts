@@ -52,7 +52,7 @@ class LikeService {
       pageSize = 0; // 전체 가져오는걸로!
     }
 
-    const allLikes = await EventLike.find({where: {theUser},
+    const allLikes = await EventLike.find({where: {user: theUser},
       order: {id: 'DESC'},
       skip: pageSize * pageNum,
       take: pageSize,});
