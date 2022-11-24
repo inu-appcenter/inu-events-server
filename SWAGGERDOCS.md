@@ -2,9 +2,21 @@
 INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
 
 
-## 📌 개발 팁
+## 📌 NEW
+> - 알림 설정 목록(`GET /notification`)을 제외한 모든 이벤트를 내려주는 라우터는 페이징이 적용되었습니다. 
+> - 페이지 관련 변수 `pageNum`, `pageSize` 둘 중에 하나라도 비어있으면 전체 이벤트를 내려줍니다. (하위 버전 호환)  
+    `pageNum` 는 0부터 시작합니다.
+> - categoryId : `선택없음:0` `동아리/소모임:1` `학생회:2` `간식나눔:3` `대회/공모전:4` `스터디:5` `구인:6` `기타:7`  
+>   ( `선택없음`으로 작성된 글은 거의 없거나 중요하지 않으므로, tagList 가장 우측에 배치하는 것이 좋아보입니다! )
 
-### 1. Swagger 문서를 보는 방법
+
+
+
+<details>
+<summary> <h2> ⭐ 개발 팁</h2> </summary>
+<div markdown="1">
+
+  ### 1. Swagger 문서를 보는 방법
 
 #### 1.1 일부 API 규격은 문서와 다를 수 있습니다.
 <details>
@@ -179,6 +191,10 @@ export default class Event extends BaseBetterEntity {
 `PATCH /events/{eventId}` 요청의 body 규격은 `partialSchemaOf(EventRequestScheme)`와 같이 쓸 수 있습니다.
 
 전자는 `Infer<typeof EventRequestScheme>` 타입을 제공하며, 후자는 `Partial<Infer<typeof EventRequestScheme>>` 타입을 제공합니다.
+</div>
+</details>
+
+
 </div>
 </details>
 
