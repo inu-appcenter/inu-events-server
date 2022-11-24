@@ -17,8 +17,9 @@ const schema = defineSchema({
 });
 
 export default defineRoute('get', '/events-by-category', schema, async (req, res) => {
+  const {userId} = req;
   const {categoryId , eventStatus} = req.query;
 
-  const eventCategoryInformation = await EventService.getCategorybyFiltering(categoryId,eventStatus);
+  const eventCategoryInformation = await EventService.getCategorybyFiltering(userId,categoryId,eventStatus);
   return res.json(eventCategoryInformation);
 });
