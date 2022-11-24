@@ -3,8 +3,10 @@ import {generateSchema} from '@anatine/zod-openapi';
 import p from '../../../package.json';
 import fetch from 'isomorphic-fetch';
 import path from 'path';
+import fs from "fs";
 
 type Spec = {
+  //tags?: string;
   summary?: string;
   description?: string;
   method: string;
@@ -24,7 +26,7 @@ class SpecStorage {
     this.specs.push(spec);
   }
 
-  async generateOpenApi() {
+  async generateOpenApi() { // dir: string = '/routes'
     const description = await (await fetch('https://raw.githubusercontent.com/inu-appcenter/inu-events-server/master/SWAGGERDOCS.md')).text();
 
     return {
@@ -42,24 +44,25 @@ class SpecStorage {
       schemes: ['http'],
       consumes: ['application/json'],
       produces: ['application/json'],
-      paths: this.generatePaths(),
+      paths: this.generatePaths(), // (dir)
     };
   }
 
-  private generatePaths() {
+  private generatePaths() { //(dir: string = '/routes')
     const pathsPart: any = {};
-
     const allPaths = this.specs.map(s => s.path);
+    // const files = fs.readdirSync(dir);
 
     for (const path of allPaths) {
       const thisPathPart: any = {};
 
-      const allMethods = this.specs.filter(s => s.path === path).map(s => s.method);
+      const allMethods = this.specs.filter(s => s.path === path).map(s => s.method)
 
       for (const method of allMethods) {
         const thisSpec = this.specs.find(s => s.path === path && s.method === method)!!;
 
         thisPathPart[method] = {
+          //tags : this.getDirName(files, path),
           summary: thisSpec.summary,
           description: thisSpec.description,
           parameters: this.generateParameters(thisSpec),
@@ -128,6 +131,9 @@ class SpecStorage {
         }
       }
     } : undefined;
+  }
+
+  private getDirName(files: string[], path: string){
   }
 }
 

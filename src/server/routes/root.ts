@@ -14,7 +14,7 @@ export default defineRoute('get', '/', schema, async (req, res, next) => {
   if (handler == null) {
     log('문서를 생성합니다!');
 
-    handler = swagger.setup(await SpecStorage.generateOpenApi());
+    handler = swagger.setup(await SpecStorage.generateOpenApi()); // dir
   }
 
   return handler(req, res, next);
