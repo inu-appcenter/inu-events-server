@@ -25,7 +25,7 @@ class SpecStorage {
   }
 
   async generateOpenApi() {
-    const description = await (await fetch('https://raw.githubusercontent.com/inu-appcenter/inu-events-server/master/README.md')).text();
+    const description = await (await fetch('https://raw.githubusercontent.com/inu-appcenter/inu-events-server/master/SWAGGERDOCS.md')).text();
 
     return {
       openapi: '3.0.0',
