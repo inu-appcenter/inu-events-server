@@ -9,9 +9,8 @@ import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
 import { EventRequestScheme} from '../entity/schemes';
-import {Any, MoreThanOrEqual} from "typeorm";
-import { findConfigFile } from 'typescript';
-import { any } from 'zod';
+import { MoreThanOrEqual} from "typeorm";
+
 
 class EventService {
   async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
