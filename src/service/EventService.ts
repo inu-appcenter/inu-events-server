@@ -78,29 +78,21 @@ class EventService {
       pageNum = 0;
       pageSize = 0; // 전체 가져오는걸로!
     }
+    if(categoryId == undefined) categoryId = 0; // 값이 안들어왔으면 선택없음을 디폴트로 하자.
 
-    let category =""
-    if(categoryId == 0) category = "선택없음"; 
-    else if(categoryId == 1) category = "동아리/소모임"; 
-    else if(categoryId == 2) category = "학생회"; 
-    else if(categoryId == 3) category = "간식나눔"; 
-    else if(categoryId == 4) category = "대회/공모전"; 
-    else if(categoryId == 6) category = "스터디"; 
-    else if(categoryId == 7) category="구인"; 
-    else if (categoryId == 8) category="기타"; 
-    else category = "선택없음"; 
+    const categoryList = ["선택없음", "동아리/소모임", "학생회", "간식나눔", "대회/공모전", "스터디", "구인", "기타"];
+
 
     if(userId == undefined) { // 로그인 X 
       if(eventStatus == true) {
-        return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
+        return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:categoryList[categoryId]},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
       } else {
-        return await  Event.find({where:{category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
+        return await  Event.find({where:{category:categoryList[categoryId]},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
       }
-
     }
     
     else { // 로그인 한 사용자
-      return await this.getEventsWithoutBlockedUserbyFiltering(userId, category, eventStatus,pageNum,pageSize); // 로그인 한 사람은 blocking user 빼고
+      return await this.getEventsWithoutBlockedUserbyFiltering(userId, categoryList[categoryId], eventStatus,pageNum,pageSize); // 로그인 한 사람은 blocking user 빼고
     }
   }
 
