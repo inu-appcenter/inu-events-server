@@ -9,8 +9,8 @@ import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import {Infer} from '../common/utils/zod';
 import { EventRequestScheme} from '../entity/schemes';
-import {MoreThanOrEqual} from "typeorm";
-import { findConfigFile } from 'typescript';
+import { MoreThanOrEqual} from "typeorm";
+
 
 class EventService {
   async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
@@ -71,25 +71,36 @@ class EventService {
 
   }
   
-  async getCategorybyFiltering(categoryId?:number,eventStatus?:boolean):  Promise<Event[]>  {
-    switch(categoryId) {
-      case 0: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"선택없음"},order: {id: 'DESC'}});
-              else return await  Event.find({where:{category:"선택없음"}});
-      case 1: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"동아리/소모임"},order: {id: 'DESC'}});
-              else return await  Event.find({where:{category:"동아리/소모임"}});
-      case 2: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"학생회"},order: {id: 'DESC'}});
-              else return await  Event.find({where:{category:"학생회"}});
-      case 3: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"간식나눔"},order: {id: 'DESC'}}); 
-              else return await  Event.find({where:{category:"간식나눔"}});
-      case 4: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"대회/공모전"},order: {id: 'DESC'}});
-              else return await  Event.find({where:{category:"대회/공모전"}});
-      case 5: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"스터디"},order: {id: 'DESC'}});
-              else return await  Event.find({where:{category:"스터디"}});
-      case 6: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"구인"},order: {id: 'DESC'}});
-              else return await  Event.find({where:{category:"구인"}});
-      case 7: if(eventStatus == true) return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:"기타"},order: {id: 'DESC'}}); 
-              else return await  Event.find({where:{category:"기타"}});
-      default: return await  this.getEvents();
+  async getCategorybyFiltering(userId?:number,categoryId?:number,eventStatus?:boolean,pageNum?:number, pageSize?:number):  Promise<Event[]>  {
+    if(eventStatus == undefined) eventStatus = false; // 비어있으면 전체 가져옴
+
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
+    }
+
+    let category =""
+    if(categoryId == 0) category = "선택없음"; 
+    else if(categoryId == 1) category = "동아리/소모임"; 
+    else if(categoryId == 2) category = "학생회"; 
+    else if(categoryId == 3) category = "간식나눔"; 
+    else if(categoryId == 4) category = "대회/공모전"; 
+    else if(categoryId == 6) category = "스터디"; 
+    else if(categoryId == 7) category="구인"; 
+    else if (categoryId == 8) category="기타"; 
+    else category = "선택없음"; 
+
+    if(userId == undefined) { // 로그인 X 
+      if(eventStatus == true) {
+        return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
+      } else {
+        return await  Event.find({where:{category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
+      }
+
+    }
+    
+    else { // 로그인 한 사용자
+      return await this.getEventsWithoutBlockedUserbyFiltering(userId, category, eventStatus,pageNum,pageSize); // 로그인 한 사람은 blocking user 빼고
     }
   }
 
@@ -137,7 +148,7 @@ class EventService {
         WHERE block.blocking_user_id = :requestorId
       )`, {requestorId})
         .orderBy('event.id', 'DESC')
-      .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
+      .getMany()// group by 안해도 얘가 잘 처리해줌 ^~^
   }
 
   // 차단된 사용자 제외하고 페이지 별로 내려주기 NEW
@@ -161,6 +172,54 @@ class EventService {
         .orderBy('event.id', 'DESC')
         .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
   }
+
+  //차단한 사용자 제외하고 필터링
+  private async getEventsWithoutBlockedUserbyFiltering(requestorId: number, category:string, eventStatus:boolean,pageNum:number, pageSize:number): Promise<Event[]> {
+    if(eventStatus == true) { // 진행중인 이벤트만 가져옴
+      return await Event.createQueryBuilder('event')
+      /** relations 필드 가져오는 부분 */
+      .leftJoinAndSelect('event.user', 'user')
+      .leftJoinAndSelect('event.comments', 'comments')
+      .leftJoinAndSelect('event.likes', 'likes')
+      .leftJoinAndSelect('event.notifications', 'notifications')
+
+      /** where 절을 위한 join(select는 안 함) */
+      .leftJoin('event.user', 'event_composer')
+      .where(`event_composer.id NOT IN (
+      SELECT blocked_user_id 
+      FROM block
+      WHERE block.blocking_user_id = :requestorId
+      )`, {requestorId})
+      .andWhere(`event.endAt >= :date`,{date :new Date()})
+      .andWhere(`event.category = :category`,{category:category})
+      .take(pageSize)
+      .skip(pageSize * pageNum) // 페이징 적용
+      .orderBy('event.id', 'DESC')
+      .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
+    }
+    else { // 모든 이벤트 가져옴
+      return await Event.createQueryBuilder('event')
+      /** relations 필드 가져오는 부분 */
+      .leftJoinAndSelect('event.user', 'user')
+      .leftJoinAndSelect('event.comments', 'comments')
+      .leftJoinAndSelect('event.likes', 'likes')
+      .leftJoinAndSelect('event.notifications', 'notifications')
+
+      /** where 절을 위한 join(select는 안 함) */
+      .leftJoin('event.user', 'event_composer')
+      .where(`event_composer.id NOT IN (
+      SELECT blocked_user_id 
+      FROM block
+      WHERE block.blocking_user_id = :requestorId
+      )`, {requestorId})
+      .andWhere(`event.category = :category`,{category:category})
+      .take(pageSize)
+      .skip(pageSize * pageNum) // 페이징 적용
+      .orderBy('event.id', 'DESC')
+      .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
+    }
+  }
+
 
 
 
