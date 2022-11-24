@@ -94,7 +94,7 @@ class EventService {
       if(eventStatus == true) {
         return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
       } else {
-        return await  Event.find({where:{category:category},skip: pageSize * pageNum,take: pageSize});
+        return await  Event.find({where:{category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
       }
 
     }
