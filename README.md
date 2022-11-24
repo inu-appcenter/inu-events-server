@@ -12,5 +12,8 @@ INU 행사 알림/신청 플랫폼 **유니레터** 서버입니다.
   </a>
 </p>
 
-<br> 
 
+## 🗃️ Uni Letter code storage
+- Server : [inu-events-server](https://github.com/inu-appcenter/inu-events-server)
+- Android : [inu-events-android](https://github.com/inu-appcenter/inu-events-android)
+- iOS : [Uniletter_iOS](https://github.com/inu-appcenter/Uniletter_iOS)
