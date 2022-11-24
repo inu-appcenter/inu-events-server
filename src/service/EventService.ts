@@ -72,13 +72,14 @@ class EventService {
 
   }
   
-  async getCategorybyFiltering(userId?:number,categoryId?:number,eventStatus?:boolean):  Promise<Event[]>  {
-    
-    if(categoryId == undefined || eventStatus == undefined) { 
-      categoryId = 0; // 기본 값 : 선택없음 카테고리
-      eventStatus = false;
+  async getCategorybyFiltering(userId?:number,categoryId?:number,eventStatus?:boolean,pageNum?:number, pageSize?:number):  Promise<Event[]>  {
+    if(eventStatus == undefined) eventStatus = false; // 비어있으면 전체 가져옴
+
+    if(pageNum == undefined  || pageSize == undefined) { // 하나라도 비어있으면
+      pageNum = 0;
+      pageSize = 0; // 전체 가져오는걸로!
     }
-    
+
     let category =""
     if(categoryId == 0) category = "선택없음"; 
     else if(categoryId == 1) category = "동아리/소모임"; 
@@ -90,15 +91,17 @@ class EventService {
     else if (categoryId == 8) category="기타"; 
     else category = "선택없음"; 
 
-    if(userId == null) { // 로그인 X 
-      if(eventStatus == true) // 진행 중인 이벤트만
-        { return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:category},order: {id: 'DESC'}});}
-      else //모든 이벤트 다
-        { return await  Event.find({where:{category:category}}); }
+    if(userId == undefined) { // 로그인 X 
+      if(eventStatus == true) {
+        return await Event.find({where: {endAt: MoreThanOrEqual(new Date()),category:category},order: {id: 'DESC'},skip: pageSize * pageNum,take: pageSize});
+      } else {
+        return await  Event.find({where:{category:category},skip: pageSize * pageNum,take: pageSize});
+      }
+
     }
     
     else { // 로그인 한 사용자
-      return await this.getEventsWithoutBlockedUserbyFiltering(userId, category, eventStatus); // 로그인 한 사람은 blocking user 빼고
+      return await this.getEventsWithoutBlockedUserbyFiltering(userId, category, eventStatus,pageNum,pageSize); // 로그인 한 사람은 blocking user 빼고
     }
   }
 
@@ -172,7 +175,7 @@ class EventService {
   }
 
   //차단한 사용자 제외하고 필터링
-  private async getEventsWithoutBlockedUserbyFiltering(requestorId: number, category:string, eventStatus:boolean ): Promise<Event[]> {
+  private async getEventsWithoutBlockedUserbyFiltering(requestorId: number, category:string, eventStatus:boolean,pageNum:number, pageSize:number): Promise<Event[]> {
     if(eventStatus == true) { // 진행중인 이벤트만 가져옴
       return await Event.createQueryBuilder('event')
       /** relations 필드 가져오는 부분 */
@@ -190,6 +193,8 @@ class EventService {
       )`, {requestorId})
       .andWhere(`event.endAt >= :date`,{date :new Date()})
       .andWhere(`event.category = :category`,{category:category})
+      .take(pageSize)
+      .skip(pageSize * pageNum) // 페이징 적용
       .orderBy('event.id', 'DESC')
       .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
     }
@@ -209,6 +214,8 @@ class EventService {
       WHERE block.blocking_user_id = :requestorId
       )`, {requestorId})
       .andWhere(`event.category = :category`,{category:category})
+      .take(pageSize)
+      .skip(pageSize * pageNum) // 페이징 적용
       .orderBy('event.id', 'DESC')
       .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
     }
