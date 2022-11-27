@@ -13,7 +13,25 @@ import {In, MoreThanOrEqual} from 'typeorm';
 
 
 class EventService {
-    private categoryList = ['선택없음', '동아리/소모임', '학생회', '간식나눔', '대회/공모전', '스터디', '구인', '기타'];
+    private categoryList = [
+        '', // 인덱스 0 자리채우기용,,,
+        '동아리/소모임',
+        '학생회',
+        '간식나눔',
+        '대회/공모전',
+        '스터디',
+        '구인',
+        '기타',
+        '교육/강연'
+    ];
+
+    private specifyCategories(categoryId?: number): string[] {
+        const id = categoryId ?? 0;
+
+        return id > 0 // id가 0보다 크다?
+            ? [this.categoryList[id]] // 무언가 지정한거임!
+            : this.categoryList; // 아니면 전부 다 가능!
+    }
 
     async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
         const user = await UserService.getUser(userId);
@@ -82,12 +100,9 @@ class EventService {
             pageNum = 0;
             pageSize = 0; // 전체 가져오는걸로!
         }
-        if (categoryId == undefined) categoryId = 0; // 값이 안들어왔으면 선택없음을 디폴트로 하자.
 
         // 검색 대상 카테고리는 여러 개를 or 조건으로 담을 수 있게 합니다!
-        const categories = categoryId === 0 // 카테고리가 0이다?
-            ? this.categoryList // 그럼 아무 카테고리여도 가능~
-            : [this.categoryList[categoryId]]; // 아니면 주어진 그 카테고리만 가능!
+        const categories = this.specifyCategories(categoryId);
 
         if (userId == undefined) { // 로그인 X
             if (ongoingEventsOnly) {
