@@ -4,7 +4,7 @@ import EventService from '../../../service/EventService';
 import {EventResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
-  summary: '행사를 다 가져옵니다. (원래 /events 였던 항목인데 이제 안씀!)',
+  summary: '[이제안씀] 행사를 다 가져옵니다. (원래 /events 였던 항목인데 이제 안씀!)',
   description: '싹다!, 이벤트 id 역순으로!',
 
   response: [EventResponseScheme]
