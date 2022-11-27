@@ -25,5 +25,6 @@ export default defineRoute('get', '/events-by-category', schema, async (req, res
   const {categoryId , eventStatus,pageNum,pageSize} = req.query;
 
   const eventCategoryInformation = await EventService.getCategorybyFiltering(userId,categoryId,eventStatus,pageNum,pageSize);
-  return res.json(eventCategoryInformation);
+
+  return res.json(await Promise.all(eventCategoryInformation.map(e => e.toResponse(userId))));
 });
