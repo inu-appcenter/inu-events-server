@@ -7,7 +7,7 @@ import SpecStorage from './SpecStorage';
 export function defineRoute<TParams = any, TQuery = any, TBody = any, TResponse = any>(
   method: 'all' | 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head',
   path: string,
-  schema: RequestValidation<TParams, TQuery, TBody> & { summary?: string; description?: string; response?: ZodSchema<TResponse, ZodTypeDef, any> | ZodArray<any> },
+  schema: RequestValidation<TParams, TQuery, TBody> & { tags?: string[], summary?: string; description?: string; response?: ZodSchema<TResponse, ZodTypeDef, any> | ZodArray<any> },
   ...handlers: RequestHandler<TParams, any, TBody, TQuery>[]
 ): express.Router {
 
@@ -15,6 +15,7 @@ export function defineRoute<TParams = any, TQuery = any, TBody = any, TResponse 
     method: method,
     path: path,
 
+    tags: schema.tags,
     summary: schema.summary,
     description: schema.description,
 

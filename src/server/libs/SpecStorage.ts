@@ -5,6 +5,7 @@ import fetch from 'isomorphic-fetch';
 import path from 'path';
 
 type Spec = {
+  tags?: string[];
   summary?: string;
   description?: string;
   method: string;
@@ -60,6 +61,7 @@ class SpecStorage {
         const thisSpec = this.specs.find(s => s.path === path && s.method === method)!!;
 
         thisPathPart[method] = {
+          tags: thisSpec.tags,
           summary: thisSpec.summary,
           description: thisSpec.description,
           parameters: this.generateParameters(thisSpec),

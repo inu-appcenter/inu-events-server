@@ -6,6 +6,7 @@ type RawSchema<TParams extends ZodRawShape,
   TBody extends ZodRawShape,
   TObjectResponse extends ZodRawShape,
   TArrayResponse extends ZodArrayOfRawShape> = {
+  tags?: string[];
   summary?: string;
   description?: string;
 
@@ -22,6 +23,7 @@ export function defineSchema<TParams extends ZodRawShape,
   TObjectResponse extends ZodRawShape,
   TArrayResponse extends ZodArrayOfRawShape>(raw: RawSchema<TParams, TQuery, TBody, TObjectResponse, TArrayResponse>) {
   return {
+    tags: raw.tags,
     summary: raw.summary,
     description: raw.description,
 
