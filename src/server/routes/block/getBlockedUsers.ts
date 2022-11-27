@@ -5,6 +5,7 @@ import {BlockResponseScheme} from '../../../entity/schemes';
 import BlockingService from '../../../service/BlockingService';
 
 const schema = defineSchema({
+  tags: ['Block'],
   summary: '차단 목록(=내가 차단한 사용자) 불러오기',
   description: 'ㅎㅎ',
 

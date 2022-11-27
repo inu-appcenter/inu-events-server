@@ -5,6 +5,7 @@ import SubscriptionService from '../../../service/SubscriptionService';
 import {TopicsScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Subscription'],
   summary: '새 행사 구독 토픽 설정하기',
   description: '새 글 알림에 대한 카테고리 필터를 설정합니다. 토픽 설정후에 [PUT]/subscription/subscribing 를 1로 만들어 주어야 알림이 켜집니다.',
 

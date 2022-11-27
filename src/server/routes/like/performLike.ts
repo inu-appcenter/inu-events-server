@@ -5,6 +5,7 @@ import {z} from 'zod';
 import LikeService from '../../../service/LikeService';
 
 const schema = defineSchema({
+  tags: ['Like'],
   summary: '행사 좋아요',
   description: '행사에 좋아요를 추가합니다.',
 

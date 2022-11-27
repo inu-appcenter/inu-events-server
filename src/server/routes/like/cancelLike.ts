@@ -5,6 +5,7 @@ import {authorizer} from '../../middleware/authorizer';
 import LikeService from '../../../service/LikeService';
 
 const schema = defineSchema({
+  tags: ['Like'],
   summary: '행사 취소',
   description: '행사에 좋아요를 취소합니다.',
 

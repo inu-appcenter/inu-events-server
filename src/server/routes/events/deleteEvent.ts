@@ -5,6 +5,7 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  tags: ['Events'],
   summary: '행사 하나를 지웁니다.',
   description: '지울게 없어도 터지진 않아요.',
 

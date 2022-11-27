@@ -6,6 +6,7 @@ import * as path from 'path';
 import config from '../../../config';
 
 const schema = defineSchema({
+  tags: ['Image'],
   summary: '이미지 다운로드',
   description: '이미지를 내려받습니다.',
 

@@ -5,6 +5,7 @@ import { ReportResponseScheme} from '../../../entity/schemes';
 import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
+    tags: ['Report'],
     summary: '이벤트를 신고합니다.',
     description: '임시로 일단 리턴만 해줌',
 

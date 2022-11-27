@@ -6,6 +6,7 @@ import {EventResponseScheme} from '../../../entity/schemes';
 import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
+  tags: ['Like'],
   summary: '행사 좋아요(북마크) 가져오기 (페이징 적용)',
   description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
       ' - pageNum은 0부터 시작입니다. \n' +

@@ -5,6 +5,7 @@ import {authorizer} from '../../middleware/authorizer';
 import {UserResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Users'],
   summary: '내 정보 가져오기',
   description: '내 정보를 가져옵니다.',
 

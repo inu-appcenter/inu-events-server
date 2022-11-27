@@ -5,6 +5,7 @@ import FcmService from '../../../service/FcmService';
 import {z} from 'zod';
 
 const schema = defineSchema({
+  tags: ['FCM'],
   summary: 'FCM 토큰 등록',
   description: '사용자에게 딸린 FCM 토큰을 업데이트합니다. 기존의 것을 덮어씁니다.',
 

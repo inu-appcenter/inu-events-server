@@ -6,6 +6,7 @@ import {authorizer} from '../../middleware/authorizer';
 import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
+  tags: ['Events'],
   summary: '내가 댓글 단 이벤트를 다 가져옵니다. (페이징 적용)',
 
   description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +

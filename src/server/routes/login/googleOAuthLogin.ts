@@ -5,6 +5,7 @@ import LoginService from '../../../service/LoginService';
 import config from '../../../config';
 
 const schema = defineSchema({
+  tags: ['Login'],
   summary: 'Google OAuth 로그인',
   description: '내 정보를 가져옵니다.',
 

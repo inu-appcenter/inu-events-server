@@ -5,6 +5,7 @@ import {authorizer} from '../../middleware/authorizer';
 import {CommentRequestScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Comments'],
   summary: '댓글을 씁니다.',
   description: '네.',
 

@@ -6,6 +6,7 @@ import {authorizer} from '../../middleware/authorizer';
 import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
+  tags: ['Events'],
   summary: '내가 쓴 행사를 다 가져옵니다.',
   description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
       ' - pageNum은 0부터 시작입니다. \n' +

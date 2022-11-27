@@ -5,6 +5,7 @@ import CommentService from '../../../service/CommentService';
 import {CommentResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Comments'],
   summary: '댓글 가져오기.',
   description: '댓글을 하나 가져옵니다.',
 

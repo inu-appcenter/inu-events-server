@@ -5,6 +5,7 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {EventResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Events'],
   summary: '행사 하나를 가져옵니다.',
   description: '없으면 터져요.',
 

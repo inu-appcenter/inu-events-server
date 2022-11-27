@@ -9,6 +9,7 @@ import assert from 'assert';
 import {CantDoThat} from '../../../common/errors/general';
 
 const schema = defineSchema({
+  tags: ['개발용'],
   summary: '[테스트] 푸시알림을 보냅니다.',
   description: '개발용입니다!',
 

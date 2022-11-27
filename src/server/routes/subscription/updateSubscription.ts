@@ -5,6 +5,7 @@ import SubscriptionService from '../../../service/SubscriptionService';
 import {SubscriptionScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Subscription'],
   summary: '새 행사 구독 여부 설정하기',
   description: '새 글 알림 켜짐/꺼짐 여부를 설정합니다.',
 

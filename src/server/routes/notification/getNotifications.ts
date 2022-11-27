@@ -5,6 +5,7 @@ import NotificationService from '../../../service/NotificationService';
 import {EventNotificationScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Notification'],
   summary: '행사 오픈/마감 알림 가져오기',
   description: '모두 다져옵니다. 다만 이미 알림 전송이 진행된 내역에 대해서는 가져오지 않습니다.',
 

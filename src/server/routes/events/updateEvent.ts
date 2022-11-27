@@ -6,6 +6,7 @@ import {authorizer} from '../../middleware/authorizer';
 import {EventRequestScheme, partialSchemeOf} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Events'],
   summary: '행사를 업데이트합니다.',
   description: '없어도 뻗진 않아요. 필요한 필드만 보내주세요.',
 

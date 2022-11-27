@@ -5,6 +5,7 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  tags: ['Comments'],
   summary: '댓글 삭제하기.',
   description: '없어도 뻗진 않아요.',
 

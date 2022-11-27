@@ -5,6 +5,7 @@ import {defineSchema} from '../../libs/schema';
 import {partialSchemeOf, UpdateMeRequestScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Users'],
   summary: '내 정보 업데이트하기',
   description: '내 정보를 업데이트합니다.',
 

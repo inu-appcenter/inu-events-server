@@ -5,6 +5,7 @@ import {defineSchema} from '../../libs/schema';
 import {UserResponseScheme} from '../../../entity/schemes';
 
 const schema = defineSchema({
+  tags: ['Users'],
   summary: '사용자 가져오기',
   description: '사용자를 하나 가져옵니다.',
 

@@ -5,6 +5,7 @@ import {stringAsInt} from '../../libs/zodTypes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  tags: ['Users'],
   summary: '회원탈퇴 - 사용자를 DB에서 완전히 삭제합니다.',
   description: '본인만 삭제가능!!! 사용자와 관련된 글, 댓글, 좋아요, 등등을 모두 지웁니다. 되돌릴 수 없어요! 신중하게!!',
 

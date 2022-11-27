@@ -5,6 +5,7 @@ import {BlockResponseScheme, BlockUserRequestScheme} from '../../../entity/schem
 import BlockingService from "../../../service/BlockingService";
 
 const schema = defineSchema({
+    tags: ['Block'],
     summary: '사용자를 차단합니다.',
     description: '이미 차단한 사람 또 차단해도 안 뻗어요~',
 

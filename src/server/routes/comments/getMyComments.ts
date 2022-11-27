@@ -5,6 +5,7 @@ import {CommentResponseScheme} from '../../../entity/schemes';
 import {authorizer} from '../../middleware/authorizer';
 
 const schema = defineSchema({
+  tags: ['Comments'],
   summary: '내가 쓴 댓글을 다 가져옵니다.',
   description: '댓글 id 역순으로 가져옵니다.',
 
