@@ -5,6 +5,7 @@ import {EventResponseScheme} from '../../../entity/schemes';
 import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
+    tags: ['히히'],
     summary: '행사를 페이지 별로 가져옵니다. (이제 얘를 기본으로 씁니다.)',
     description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
         ' - pageNum은 0부터 시작입니다. \n' +
