@@ -103,7 +103,7 @@ class EventService {
 
         // 검색 대상 카테고리는 여러 개를 or 조건으로 담을 수 있게 합니다!
         const categories = this.specifyCategories(categoryId);
-
+        
         if (userId == undefined) { // 로그인 X
             if (ongoingEventsOnly) {
                 return await Event.find({
@@ -217,7 +217,7 @@ class EventService {
       WHERE block.blocking_user_id = :requestorId
       )`, {requestorId})
                 .andWhere(`event.endAt >= :date`, {date: new Date()})
-                .andWhere(`event.category IN :categories`, {categories})
+                .andWhere(`event.category IN (:categories)`, {categories})
                 .take(pageSize)
                 .skip(pageSize * pageNum) // 페이징 적용
                 .orderBy('event.id', 'DESC')
@@ -237,7 +237,7 @@ class EventService {
       FROM block
       WHERE block.blocking_user_id = :requestorId
       )`, {requestorId})
-                .andWhere(`event.category IN :categories`, {categories})
+                .andWhere(`event.category IN (:categories)`, {categories})
                 .take(pageSize)
                 .skip(pageSize * pageNum) // 페이징 적용
                 .orderBy('event.id', 'DESC')
