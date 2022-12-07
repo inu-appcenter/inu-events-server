@@ -36,9 +36,9 @@ export default defineRoute('post', '/images', schema, fileProcessor, async (req,
     throw ThisWillNeverHappen();
   }
 
-  const {path, originalname, mimetype} = theFile;
+  const {path, originalname, mimetype, size} = theFile;
 
-  log(`"${path}" 경로에 ${mimetype} 타입의 이미지(원본 이름: "${originalname}") 생성됨.`);
+  log(`"${path}" 경로에 ${mimetype} 타입의 이미지 ${size} byte 크기 (원본 이름: "${originalname}") 생성됨.`);
 
   return res.json({
     uuid: theFile.filename
