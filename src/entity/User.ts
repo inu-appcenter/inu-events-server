@@ -6,7 +6,7 @@ import {Infer} from '../common/utils/zod';
 import EventNotification from './EventNotification';
 import EventLike from './EventLike';
 import {log} from '../common/utils/log';
-import {UserResponseScheme} from './schemes';
+import {UserResponseScheme, UserResponseSchemeForDev} from './schemes';
 import ImageUrlService from '../service/ImageUrlService';
 import BaseBetterEntity from '../common/base/BaseBetterEntity';
 
@@ -147,6 +147,16 @@ export default class User extends BaseBetterEntity {
       nickname: this.nickname,
       imageUuid: this.imageUuid,
       imageUrl: await ImageUrlService.makeUrl(this.imageUuid),
+    }
+  }
+
+  async toDevResponse(): Promise<Infer<typeof UserResponseSchemeForDev>> {
+    return {
+      id: this.id,
+      email: this.email,
+      nickname: this.nickname,
+      subscribingOn:this.subscribingOn,
+      createdAt: this.createdAt
     }
   }
 }

@@ -15,6 +15,10 @@ class UserService {
     return await User.findOneOrFail({where: {id}});
   }
 
+  async getAllUsers(): Promise<User[]> {
+    return await User.find({order: {id: 'DESC'}});
+  }
+
   async patchUser(id: number, body: Partial<Infer<typeof UpdateMeRequestScheme>>): Promise<string> {
     const patchuser = await User.update(
       {id},
