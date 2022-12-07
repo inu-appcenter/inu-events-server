@@ -89,6 +89,14 @@ export const UserResponseScheme = {
   imageUrl: z.string().optional().nullable(),
 }
 
+export const UserResponseSchemeForDev = {
+  id: z.number(),
+  email: z.string(),
+  nickname: z.string(),
+  subscribingOn : z.string().optional().nullable(),
+  createdAt:z.date()
+}
+
 export const SubscriptionScheme = {
   subscribing: z.boolean()
 }
