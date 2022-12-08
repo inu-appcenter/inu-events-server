@@ -92,6 +92,7 @@ export const UserResponseScheme = {
 export const UserResponseSchemeForDev = {
   id: z.number(),
   email: z.string(),
+  oauthProvider: z.string(),
   nickname: z.string(),
   subscribingOn : z.string().optional().nullable(),
   createdAt:z.date()

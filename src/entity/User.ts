@@ -154,6 +154,7 @@ export default class User extends BaseBetterEntity {
     return {
       id: this.id,
       email: this.email,
+      oauthProvider: this.oauthProvider,
       nickname: this.nickname,
       subscribingOn:this.subscribingOn,
       createdAt: this.createdAt
