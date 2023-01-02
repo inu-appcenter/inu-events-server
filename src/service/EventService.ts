@@ -132,22 +132,19 @@ class EventService {
     }
 
     async getEventsbySearch(userId?: number, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
-        // if (userId == null) { // 로그인 X.
-        //     return await this.getEventsRegardlessBlockingsbySearch(content); // 비회원은 전부
-        // } else { // 로그인 한 사용자.
-        //     return await this.getEventsWithoutBlockedUserbySearch(content); // 로그인 한 사람은 blocking user 빼고
-        // }
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
             pageNum = 0;
             pageSize = 0; // 전체 가져오는걸로!
         }
-        if (userId == null) {
-            userId = 0;
+
+        if (userId == null) userId = 0;
+        if (content == null) content = ' ';
+
+        if (userId == null) { // 로그인 X.
+            return await this.getEventsRegardlessBlockingsbySearch(content,pageNum, pageSize); // 비회원은 전부
+        } else { // 로그인 한 사용자.
+            return await this.getEventsWithoutBlockedUserbySearch(userId, content, pageNum, pageSize);
         }
-        if (content == null) {
-            content = ' ';
-        }
-        return await this.getEventsWithoutBlockedUserbySearch(userId, content, pageNum, pageSize);
     }
 
     // 로그인 안했을 때 (비회원)
@@ -176,13 +173,16 @@ class EventService {
             });
     }
 
-    // private async getEventsRegardlessBlockingsbySearch(content:string): Promise<Event[]> {
-    //     return await Event.find(
-    //         {
-    //             order: {id: 'DESC'},
-    //             where:{content:'%`content`%'}
-    //         });
-    // }
+    // 로그인 안했을 때(검색)
+    private async getEventsRegardlessBlockingsbySearch(content:string,pageNum: number, pageSize: number): Promise<Event[]> {
+        return await Event.find(
+            {
+                order: {id: 'DESC'},
+                where:{title:`%content%` ,  body:`%content%`},
+                skip: pageSize * pageNum,
+                take: pageSize,
+            });
+    }
 
 
     // 됨 :)
@@ -273,6 +273,7 @@ class EventService {
         }
     }
 
+    // 차단한 사용자의 이벤트들 제외하고 검색
     private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
         const searchContent = '%' + content + '%';
         return await Event.createQueryBuilder('event')
@@ -284,12 +285,12 @@ class EventService {
 
             /** where 절을 위한 join(select는 안 함) */
             .leftJoin('event.user', 'event_composer')
-            .where(`event_composer.id NOT IN (
+            .where(`event.body LIKE :searchContent or event.title LIKE :searchContent `, { searchContent })
+            .andWhere(`event_composer.id NOT IN (
         SELECT blocked_user_id 
         FROM block
         WHERE block.blocking_user_id = :requestorId
         )`, { requestorId })
-            .andWhere(`event.body LIKE :searchContent or event.title LIKE :searchContent `, { searchContent })
             .take(pageSize)
             .skip(pageSize * pageNum) // 페이징 적용
             .orderBy('event.id', 'DESC')
