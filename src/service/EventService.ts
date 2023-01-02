@@ -93,6 +93,7 @@ class EventService {
 
     }
 
+    //카테고리
     async getCategorybyFiltering(userId?: number, categoryId?: number, ongoingEventsOnly?: boolean, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (ongoingEventsOnly == undefined) ongoingEventsOnly = false; // 비어있으면 전체 가져옴
 
@@ -130,6 +131,25 @@ class EventService {
         }
     }
 
+    async getEventsbySearch(userId?: number, content?:string,pageNum?: number, pageSize?: number): Promise<Event[]> {
+        // if (userId == null) { // 로그인 X.
+        //     return await this.getEventsRegardlessBlockingsbySearch(content); // 비회원은 전부
+        // } else { // 로그인 한 사용자.
+        //     return await this.getEventsWithoutBlockedUserbySearch(content); // 로그인 한 사람은 blocking user 빼고
+        // }
+        if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
+            pageNum = 0;
+            pageSize = 0; // 전체 가져오는걸로!
+        }
+        if(userId== null) {
+            userId= 0;
+        }
+        if(content == null) {
+            content= ' ';
+        }
+        return await this.getEventsWithoutBlockedUserbySearch(userId,content,pageNum, pageSize);
+    }
+
     // 로그인 안했을 때 (비회원)
     private async getEventsRegardlessBlockings(): Promise<Event[]> { // 기존
         return await Event.find({order: {id: 'DESC'}});
@@ -156,6 +176,14 @@ class EventService {
             });
     }
 
+    // private async getEventsRegardlessBlockingsbySearch(content:string): Promise<Event[]> {
+    //     return await Event.find(
+    //         {
+    //             order: {id: 'DESC'},
+    //             where:{content:'%`content`%'}
+    //         });
+    // }
+
 
     // 됨 :)
     private async getEventsWithoutBlockedUser(requestorId: number): Promise<Event[]> {
@@ -172,7 +200,7 @@ class EventService {
         SELECT blocked_user_id 
         FROM block
         WHERE block.blocking_user_id = :requestorId
-      )`, {requestorId})
+        )`, {requestorId})
             .orderBy('event.id', 'DESC')
             .getMany()// group by 안해도 얘가 잘 처리해줌 ^~^
     }
@@ -192,7 +220,7 @@ class EventService {
         SELECT blocked_user_id 
         FROM block
         WHERE block.blocking_user_id = :requestorId
-      )`, {requestorId})
+        )`, {requestorId})
             .take(pageSize)
             .skip(pageSize * pageNum) // 페이징 적용
             .orderBy('event.id', 'DESC')
@@ -245,6 +273,29 @@ class EventService {
         }
     }
 
+    private async getEventsWithoutBlockedUserbySearch(requestorId: number,content:string,pageNum: number, pageSize: number): Promise<Event[]> {
+        const searchContent = '%'+content+'%';
+        return await Event.createQueryBuilder('event')
+            /** relations 필드 가져오는 부분 */
+            .leftJoinAndSelect('event.user', 'user')
+            .leftJoinAndSelect('event.comments', 'comments')
+            .leftJoinAndSelect('event.likes', 'likes')
+            .leftJoinAndSelect('event.notifications', 'notifications')
+
+            /** where 절을 위한 join(select는 안 함) */
+            .leftJoin('event.user', 'event_composer')
+            .where(`event_composer.id NOT IN (
+        SELECT blocked_user_id 
+        FROM block
+        WHERE block.blocking_user_id = :requestorId
+        )`, {requestorId})
+        .andWhere(`event.title LIKE :searchContent`,{searchContent})
+        .take(pageSize)
+        .skip(pageSize * pageNum) // 페이징 적용
+        .orderBy('event.id', 'DESC')
+        .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
+
+    }
 
     /**
      * 현재 진행 중인 행사만 가져옵니다. (페이징 적용)
