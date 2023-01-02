@@ -1,15 +1,15 @@
 import Event from '../entity/Event';
-import {log} from '../common/utils/log';
-import {preview} from '../server/libs/json';
+import { log } from '../common/utils/log';
+import { preview } from '../server/libs/json';
 import User from '../entity/User';
 import Comment from '../entity/Comment';
 import EventLike from '../entity/EventLike';
 import EventNotification from '../entity/EventNotification';
 import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
-import {Infer} from '../common/utils/zod';
-import {EventRequestScheme} from '../entity/schemes';
-import {In, MoreThanOrEqual} from 'typeorm';
+import { Infer } from '../common/utils/zod';
+import { EventRequestScheme } from '../entity/schemes';
+import { In, MoreThanOrEqual } from 'typeorm';
 
 
 class EventService {
@@ -36,7 +36,7 @@ class EventService {
     async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
         const user = await UserService.getUser(userId);
 
-        const event = await Event.create({user, ...body}).save();
+        const event = await Event.create({ user, ...body }).save();
 
         log(`이벤트를 생성합니다: ${preview(body)}`);
 
@@ -62,8 +62,8 @@ class EventService {
             pageSize = 0; // 전체 가져오는걸로!
         }
         return await Event.find({
-            where: {user},
-            order: {id: 'DESC'},
+            where: { user },
+            order: { id: 'DESC' },
             skip: pageSize * pageNum,
             take: pageSize,
         });
@@ -104,7 +104,7 @@ class EventService {
 
         // 검색 대상 카테고리는 여러 개를 or 조건으로 담을 수 있게 합니다!
         const categories = this.specifyCategories(categoryId);
-        
+
         if (userId == undefined) { // 로그인 X
             if (ongoingEventsOnly) {
                 return await Event.find({
@@ -112,7 +112,7 @@ class EventService {
                         endAt: MoreThanOrEqual(new Date()),
                         category: In(categories)
                     },
-                    order: {id: 'DESC'},
+                    order: { id: 'DESC' },
                     skip: pageSize * pageNum,
                     take: pageSize
                 });
@@ -121,7 +121,7 @@ class EventService {
                     where: {
                         category: In(categories)
                     },
-                    order: {id: 'DESC'},
+                    order: { id: 'DESC' },
                     skip: pageSize * pageNum,
                     take: pageSize
                 });
@@ -131,7 +131,7 @@ class EventService {
         }
     }
 
-    async getEventsbySearch(userId?: number, content?:string,pageNum?: number, pageSize?: number): Promise<Event[]> {
+    async getEventsbySearch(userId?: number, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
         // if (userId == null) { // 로그인 X.
         //     return await this.getEventsRegardlessBlockingsbySearch(content); // 비회원은 전부
         // } else { // 로그인 한 사용자.
@@ -141,18 +141,18 @@ class EventService {
             pageNum = 0;
             pageSize = 0; // 전체 가져오는걸로!
         }
-        if(userId== null) {
-            userId= 0;
+        if (userId == null) {
+            userId = 0;
         }
-        if(content == null) {
-            content= ' ';
+        if (content == null) {
+            content = ' ';
         }
-        return await this.getEventsWithoutBlockedUserbySearch(userId,content,pageNum, pageSize);
+        return await this.getEventsWithoutBlockedUserbySearch(userId, content, pageNum, pageSize);
     }
 
     // 로그인 안했을 때 (비회원)
     private async getEventsRegardlessBlockings(): Promise<Event[]> { // 기존
-        return await Event.find({order: {id: 'DESC'}});
+        return await Event.find({ order: { id: 'DESC' } });
     }
 
     // 전체 이벤트 수 가져오기
@@ -163,14 +163,14 @@ class EventService {
 
     // 진행 중인 이벤트 수 가져오기
     async getOngoingTotalEvent(): Promise<number> {
-        return await Event.count({where: {endAt: MoreThanOrEqual(new Date())}});
+        return await Event.count({ where: { endAt: MoreThanOrEqual(new Date()) } });
     }
 
 
     private async getEventsRegardlessBlockingsbyPage(pageNum: number, pageSize: number): Promise<Event[]> {
         return await Event.find(
             {
-                order: {id: 'DESC'},
+                order: { id: 'DESC' },
                 skip: pageSize * pageNum,
                 take: pageSize,
             });
@@ -200,7 +200,7 @@ class EventService {
         SELECT blocked_user_id 
         FROM block
         WHERE block.blocking_user_id = :requestorId
-        )`, {requestorId})
+        )`, { requestorId })
             .orderBy('event.id', 'DESC')
             .getMany()// group by 안해도 얘가 잘 처리해줌 ^~^
     }
@@ -220,7 +220,7 @@ class EventService {
         SELECT blocked_user_id 
         FROM block
         WHERE block.blocking_user_id = :requestorId
-        )`, {requestorId})
+        )`, { requestorId })
             .take(pageSize)
             .skip(pageSize * pageNum) // 페이징 적용
             .orderBy('event.id', 'DESC')
@@ -243,9 +243,9 @@ class EventService {
       SELECT blocked_user_id 
       FROM block
       WHERE block.blocking_user_id = :requestorId
-      )`, {requestorId})
-                .andWhere(`event.endAt >= :date`, {date: new Date()})
-                .andWhere(`event.category IN (:categories)`, {categories})
+      )`, { requestorId })
+                .andWhere(`event.endAt >= :date`, { date: new Date() })
+                .andWhere(`event.category IN (:categories)`, { categories })
                 .take(pageSize)
                 .skip(pageSize * pageNum) // 페이징 적용
                 .orderBy('event.id', 'DESC')
@@ -264,8 +264,8 @@ class EventService {
       SELECT blocked_user_id 
       FROM block
       WHERE block.blocking_user_id = :requestorId
-      )`, {requestorId})
-                .andWhere(`event.category IN (:categories)`, {categories})
+      )`, { requestorId })
+                .andWhere(`event.category IN (:categories)`, { categories })
                 .take(pageSize)
                 .skip(pageSize * pageNum) // 페이징 적용
                 .orderBy('event.id', 'DESC')
@@ -273,8 +273,8 @@ class EventService {
         }
     }
 
-    private async getEventsWithoutBlockedUserbySearch(requestorId: number,content:string,pageNum: number, pageSize: number): Promise<Event[]> {
-        const searchContent = '%'+content+'%';
+    private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
+        const searchContent = '%' + content + '%';
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
             .leftJoinAndSelect('event.user', 'user')
@@ -288,12 +288,12 @@ class EventService {
         SELECT blocked_user_id 
         FROM block
         WHERE block.blocking_user_id = :requestorId
-        )`, {requestorId})
-        .andWhere(`event.title LIKE :searchContent`,{searchContent})
-        .take(pageSize)
-        .skip(pageSize * pageNum) // 페이징 적용
-        .orderBy('event.id', 'DESC')
-        .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
+        )`, { requestorId })
+            .andWhere(`event.body LIKE :searchContent or event.title LIKE :searchContent `, { searchContent })
+            .take(pageSize)
+            .skip(pageSize * pageNum) // 페이징 적용
+            .orderBy('event.id', 'DESC')
+            .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
 
     }
 
@@ -315,8 +315,8 @@ class EventService {
         const offset = pageSize * pageNum;
         return await Event.find(
             {
-                where: {endAt: MoreThanOrEqual(new Date())},
-                order: {id: 'DESC'},
+                where: { endAt: MoreThanOrEqual(new Date()) },
+                order: { id: 'DESC' },
                 skip: offset,
                 take: pageSize,
             });
@@ -344,7 +344,7 @@ class EventService {
             /** where 절을 위한 join(select는 안 함) */
             .leftJoin('event.comments', 'event_comments')
             .leftJoin('event_comments.user', 'comments_user')
-            .where('comments_user.id = :userId', {userId})
+            .where('comments_user.id = :userId', { userId })
             .take(pageSize)
             .skip(pageSize * pageNum) // 페이징 적용
             .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
@@ -354,7 +354,7 @@ class EventService {
         log(`이벤트 ${eventId}를 업데이트합니다: ${preview(body)}`);
 
         const patchevent = await Event.update(
-            {id: eventId},
+            { id: eventId },
             body
         );
 
@@ -365,16 +365,16 @@ class EventService {
         const event = await Event.findOneOrFail(eventId);
 
         log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 댓글을 모두 지웁니다.`);
-        await Comment.delete({event});
+        await Comment.delete({ event });
 
         log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 좋아요를 모두 지웁니다.`);
-        await EventLike.delete({event});
+        await EventLike.delete({ event });
 
         log(`${event}를 삭제하기에 앞서, 이벤트에 딸린 알림을 모두 지웁니다.`);
-        await EventNotification.delete({event});
+        await EventNotification.delete({ event });
 
         log(`이제 ${event}를 삭제합니다.`);
-        await Event.delete({id: eventId});
+        await Event.delete({ id: eventId });
     }
 
 
