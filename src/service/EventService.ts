@@ -174,7 +174,7 @@ class EventService {
 
     // 로그인 안했을 때(검색)
     private async getEventsRegardlessBlockingsbySearch(content:string,pageNum: number, pageSize: number): Promise<Event[]> {
-        const keyword= content.replace(/\s{2,}/gi, '|' )
+        const keyword= content.replace(/\s+/gi, '|' )
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
             .leftJoinAndSelect('event.user', 'user')
@@ -284,7 +284,7 @@ class EventService {
 
     // 차단한 사용자의 이벤트들 제외하고 검색
     private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
-        const keyword= content.replace(/\s{2,}/gi, '|' )
+        const keyword= content.replace(/\s+/gi, '|' )
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
             .leftJoinAndSelect('event.user', 'user')
