@@ -5,7 +5,7 @@ import {EventResponseScheme} from '../../../entity/schemes';
 import {stringAsInt} from "../../libs/zodTypes";
 
 const schema = defineSchema({
-    tags: ['Events'],
+    tags: ['이제안씀'],
     summary: '[이제안씀] 현재 진행중인 행사만 가져옵니다. (new 페이징 적용)',
     description: '- 마감인 행사는 보여주지 않고, 진행 중인 행사만 내려줍니다. \n' +
         '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
