@@ -137,9 +137,8 @@ class EventService {
             pageSize = 0; // 전체 가져오는걸로!
         }
 
-        if (userId == null) userId = 0;
         if (content == null) content = ' ';
-
+        log(`모야 내 아이디 뭔데 ${userId}`)
         if (userId == null) { // 로그인 X.
             return await this.getEventsRegardlessBlockingsbySearch(content,pageNum, pageSize); // 비회원은 전부
         } else { // 로그인 한 사용자.
@@ -175,6 +174,7 @@ class EventService {
 
     // 로그인 안했을 때(검색)
     private async getEventsRegardlessBlockingsbySearch(content:string,pageNum: number, pageSize: number): Promise<Event[]> {
+        log("헤헤 로그인 안했을 떄 검색!")
         return await Event.find(
             {
                 order: {id: 'DESC'},
@@ -276,6 +276,7 @@ class EventService {
     // 차단한 사용자의 이벤트들 제외하고 검색
     private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
         const searchContent = '%' + content + '%';
+        log('로그인 한 사용자 검색')
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
             .leftJoinAndSelect('event.user', 'user')
