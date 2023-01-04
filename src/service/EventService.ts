@@ -138,7 +138,7 @@ class EventService {
         }
 
         if (content == null) content = ' ';
-        log(`모야 내 아이디 뭔데 ${userId}`)
+
         if (userId == null) { // 로그인 X.
             return await this.getEventsRegardlessBlockingsbySearch(content,pageNum, pageSize); // 비회원은 전부
         } else { // 로그인 한 사용자.
