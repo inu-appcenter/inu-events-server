@@ -174,15 +174,24 @@ class EventService {
 
     // 로그인 안했을 때(검색)
     private async getEventsRegardlessBlockingsbySearch(content:string,pageNum: number, pageSize: number): Promise<Event[]> {
-        log("헤헤 로그인 안했을 떄 검색!")
-        return await Event.find(
-            {
-                order: {id: 'DESC'},
-                where:{title:`%content%` ,  body:`%content%`},
-                skip: pageSize * pageNum,
-                take: pageSize,
-            });
+        const keyword= content.replace(/\s{2,}/gi, '|' )
+        return await Event.createQueryBuilder('event')
+            /** relations 필드 가져오는 부분 */
+            .leftJoinAndSelect('event.user', 'user')
+            .leftJoinAndSelect('event.comments', 'comments')
+            .leftJoinAndSelect('event.likes', 'likes')
+            .leftJoinAndSelect('event.notifications', 'notifications')
+
+            /** where 절을 위한 join(select는 안 함) */
+            .leftJoin('event.user', 'event_composer')
+            .where(`event.title REGEXP :keyword or event.body LIKE :keyword`, {keyword})
+            .take(pageSize)
+            .skip(pageSize * pageNum) // 페이징 적용
+            .orderBy('event.id', 'DESC')
+            .getMany()
     }
+
+
 
 
     // 됨 :)
@@ -276,7 +285,6 @@ class EventService {
     // 차단한 사용자의 이벤트들 제외하고 검색
     private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s{2,}/gi, '|' )
-        log('로그인 한 사용자 검색')
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
             .leftJoinAndSelect('event.user', 'user')
