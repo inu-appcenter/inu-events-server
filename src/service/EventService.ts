@@ -275,8 +275,7 @@ class EventService {
 
     // 차단한 사용자의 이벤트들 제외하고 검색
     private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
-        const searchContent = '%' + content + '%';
-        const test = '간식|나눔|임베디드';
+        const keyword= content.replace(/\s{2,}/gi, '|' )
         log('로그인 한 사용자 검색')
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
@@ -287,8 +286,7 @@ class EventService {
 
             /** where 절을 위한 join(select는 안 함) */
             .leftJoin('event.user', 'event_composer')
-            .where(`event.title REGEXP :test`, {test})
-            //.where(`event.body LIKE :searchContent or event.title LIKE :searchContent `, { searchContent })
+            .where(`event.title REGEXP :keyword or event.body LIKE :keyword`, {keyword})
             .andWhere(`event_composer.id NOT IN (
         SELECT blocked_user_id 
         FROM block
