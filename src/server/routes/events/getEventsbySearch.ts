@@ -8,8 +8,11 @@ import { string } from 'zod';
 
 const schema = defineSchema({
     tags: ['Events'],
-    summary: '검색한 행사를 가지고 옵니다.)',
-    description: '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
+    summary: '키워드로 이벤트를 검색합니다.',
+    description: '- 공백으로 구분된 키워드를 기준으로 나눠서 검색합니다.\n' +
+        '- 키워드 중 적어도 하나가 포함된 이벤트를 전부 다 내려줍니다.(OR)\n' +
+        '- 이벤트의 제목(title) 과 상세내용(body)에서 검색합니다.\n' +
+        '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
         ' - pageNum은 0부터 시작입니다. \n' +
         '- query 하나라도 비어있으면 전체 결과를 출력합니다. (이전 버전 호환용) \n' +
         ' - pageSize= 0이면 전체 이벤트 내려줌',
