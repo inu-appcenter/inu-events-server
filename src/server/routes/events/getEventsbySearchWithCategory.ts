@@ -2,7 +2,7 @@ import {defineSchema} from '../../libs/schema';
 import {defineRoute} from '../../libs/route';
 import EventService from '../../../service/EventService';
 import {EventResponseScheme} from '../../../entity/schemes';
-import {stringAsInt} from "../../libs/zodTypes";
+import {stringAsInt,stringAsBoolean} from "../../libs/zodTypes";
 import {z} from 'zod';
 import { string } from 'zod';
 
@@ -18,6 +18,8 @@ const schema = defineSchema({
         ' - pageSize= 0이면 전체 이벤트 내려줌',
 
     query: {
+        categoryId: stringAsInt,
+        eventStatus: stringAsBoolean,
         content:z.string(),
         pageNum: stringAsInt.optional(),
         pageSize:stringAsInt.optional()
@@ -26,10 +28,10 @@ const schema = defineSchema({
     response: [EventResponseScheme]
 });
 
-export default defineRoute('get', '/events-by-search', schema, async (req, res) => {
+export default defineRoute('get', '/events-by-search-with-filtering', schema, async (req, res) => {
     const {userId} = req;
-    const {content,pageNum,pageSize} = req.query;
-    const eventInformation = await EventService.getEventsbySearch(userId, content,pageNum, pageSize); // 페이징 적용
+    const {categoryId , eventStatus,content,pageNum,pageSize} = req.query;
+    const eventInformation = await EventService.getEventsbySearchWithFiltering(userId,categoryId,eventStatus,content,pageNum, pageSize); // 페이징 적용
 
     return res.json(await Promise.all(eventInformation.map(e => e.toResponse(userId))));
 });
