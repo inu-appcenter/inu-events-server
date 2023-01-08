@@ -9,7 +9,7 @@ import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import { Infer } from '../common/utils/zod';
 import { EventRequestScheme } from '../entity/schemes';
-import { In, MoreThanOrEqual } from 'typeorm';
+import { In, Like, MoreThanOrEqual } from 'typeorm';
 
 
 class EventService {
@@ -131,6 +131,7 @@ class EventService {
         }
     }
 
+    // 검색 [이전 함수]
     async getEventsbySearch(userId?: number, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
             pageNum = 0;
@@ -143,6 +144,28 @@ class EventService {
             return await this.getEventsRegardlessBlockingsbySearch(content,pageNum, pageSize); // 비회원은 전부
         } else { // 로그인 한 사용자.
             return await this.getEventsWithoutBlockedUserbySearch(userId, content, pageNum, pageSize);
+        }
+    }
+
+    // 검색 & 카테고리
+    async getEventsbySearchWithFiltering(userId?: number,  categoryId?: number, ongoingEventsOnly?: boolean, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
+        if (ongoingEventsOnly == undefined) ongoingEventsOnly = false; // 비어있으면 전체 가져옴
+        if (categoryId == undefined) categoryId = 0; // 비어있으면 전체 가져옴
+
+        if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
+            pageNum = 0;
+            pageSize = 0; // 전체 가져오는걸로!
+        }
+
+        if (content == null) content = ' ';
+
+        // 검색 대상 카테고리는 여러 개를 or 조건으로 담을 수 있게 합니다!
+        const categories = this.specifyCategories(categoryId);
+
+        if (userId == null) { // 로그인 X.
+            return await this.getEventsRegardlessBlockingsbySearchWithFiltering(categories,ongoingEventsOnly,content,pageNum, pageSize); // 비회원은 전부
+        } else { // 로그인 한 사용자.
+            return await this.getEventsWithoutBlockedUserbySearchWithFiltering(userId,categories,ongoingEventsOnly,content, pageNum, pageSize);
         }
     }
 
@@ -172,7 +195,7 @@ class EventService {
             });
     }
 
-    // 로그인 안했을 때(검색)
+    // 로그인 안했을 때(검색) [이전 함수]
     private async getEventsRegardlessBlockingsbySearch(content:string,pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s+/gi, '|' )
         return await Event.createQueryBuilder('event')
@@ -191,8 +214,46 @@ class EventService {
             .getMany()
     }
 
+    // 로그인 안했을 때(검색 & 필터링)
+    private async getEventsRegardlessBlockingsbySearchWithFiltering(categories:string[], ongoingEventsOnly: boolean,content:string,pageNum: number, pageSize: number): Promise<Event[]> {
+        const keyword= content.replace(/\s+/gi, '|' )
+        if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
+            return await Event.createQueryBuilder('event')
+            /** relations 필드 가져오는 부분 */
+            .leftJoinAndSelect('event.user', 'user')
+            .leftJoinAndSelect('event.comments', 'comments')
+            .leftJoinAndSelect('event.likes', 'likes')
+            .leftJoinAndSelect('event.notifications', 'notifications')
 
+            /** where 절을 위한 join(select는 안 함) */
+            .leftJoin('event.user', 'event_composer')
+            .where(`event.category IN (:categories)`, { categories })
+            .andWhere(`event.end_at >= :date`, { date: new Date() })
+            .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
 
+            .take(pageSize)
+            .skip(pageSize * pageNum) // 페이징 적용
+            .orderBy('event.id', 'DESC')
+            .getMany()
+        } else {
+            return await Event.createQueryBuilder('event')
+            /** relations 필드 가져오는 부분 */
+            .leftJoinAndSelect('event.user', 'user')
+            .leftJoinAndSelect('event.comments', 'comments')
+            .leftJoinAndSelect('event.likes', 'likes')
+            .leftJoinAndSelect('event.notifications', 'notifications')
+
+            /** where 절을 위한 join(select는 안 함) */
+            .leftJoin('event.user', 'event_composer')         
+            .where(`event.category IN (:categories)`, { categories })
+            .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+            .take(pageSize)
+            .skip(pageSize * pageNum) // 페이징 적용
+            .orderBy('event.id', 'DESC')
+            .getMany()
+    }
+    }
+    
 
     // 됨 :)
     private async getEventsWithoutBlockedUser(requestorId: number): Promise<Event[]> {
@@ -282,7 +343,7 @@ class EventService {
         }
     }
 
-    // 차단한 사용자의 이벤트들 제외하고 검색
+    // 차단한 사용자의 이벤트들 제외하고 검색 [이전 함수]
     private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s+/gi, '|' )
         return await Event.createQueryBuilder('event')
@@ -306,6 +367,55 @@ class EventService {
             .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
 
     }
+
+    // 차단한 사용자의 이벤트들 제외하고 검색 & 필터링
+    private async getEventsWithoutBlockedUserbySearchWithFiltering(requestorId: number, categories:string[], ongoingEventsOnly: boolean,content: string, pageNum: number, pageSize: number): Promise<Event[]> {
+        const keyword= content.replace(/\s+/gi, '|' )
+        if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
+            return await Event.createQueryBuilder('event')
+                /** relations 필드 가져오는 부분 */
+                .leftJoinAndSelect('event.user', 'user')
+                .leftJoinAndSelect('event.comments', 'comments')
+                .leftJoinAndSelect('event.likes', 'likes')
+                .leftJoinAndSelect('event.notifications', 'notifications')
+
+                /** where 절을 위한 join(select는 안 함) */
+                .leftJoin('event.user', 'event_composer')
+                .where(`event.endAt >= :date`, { date: new Date() })
+                .andWhere(`event.category IN (:categories)`, { categories })
+                .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+                .andWhere(`event_composer.id NOT IN (
+            SELECT blocked_user_id 
+            FROM block
+            WHERE block.blocking_user_id = :requestorId
+            )`, { requestorId })
+                .take(pageSize)
+                .skip(pageSize * pageNum) // 페이징 적용
+                .orderBy('event.id', 'DESC')
+                .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
+        } else { // 모든 이벤트 가져옴
+            return await Event.createQueryBuilder('event')
+                /** relations 필드 가져오는 부분 */
+                .leftJoinAndSelect('event.user', 'user')
+                .leftJoinAndSelect('event.comments', 'comments')
+                .leftJoinAndSelect('event.likes', 'likes')
+                .leftJoinAndSelect('event.notifications', 'notifications')
+                /** where 절을 위한 join(select는 안 함) */
+                .leftJoin('event.user', 'event_composer')
+                .where(`event.category IN (:categories)`, { categories })
+                .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+                .andWhere(`event_composer.id NOT IN (
+            SELECT blocked_user_id 
+            FROM block
+            WHERE block.blocking_user_id = :requestorId
+            )`, { requestorId })
+                .take(pageSize)
+                .skip(pageSize * pageNum) // 페이징 적용
+                .orderBy('event.id', 'DESC')
+                .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
+        }
+    }
+    
 
     /**
      * 현재 진행 중인 행사만 가져옵니다. (페이징 적용)
