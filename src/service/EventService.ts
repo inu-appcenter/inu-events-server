@@ -150,6 +150,7 @@ class EventService {
     // 검색 & 카테고리
     async getEventsbySearchWithFiltering(userId?: number,  categoryId?: number, ongoingEventsOnly?: boolean, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (ongoingEventsOnly == undefined) ongoingEventsOnly = false; // 비어있으면 전체 가져옴
+        if (categoryId == undefined) categoryId = 0; // 비어있으면 전체 가져옴
 
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
             pageNum = 0;
@@ -216,15 +217,14 @@ class EventService {
     // 로그인 안했을 때(검색 & 필터링)
     private async getEventsRegardlessBlockingsbySearchWithFiltering(categories:string[], ongoingEventsOnly: boolean,content:string,pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s+/gi, '|' )
-        // console.log(new Date());
         if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
-            console.log("여기까진 왔냐?")
             return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
             .leftJoinAndSelect('event.user', 'user')
             .leftJoinAndSelect('event.comments', 'comments')
             .leftJoinAndSelect('event.likes', 'likes')
             .leftJoinAndSelect('event.notifications', 'notifications')
+
             /** where 절을 위한 join(select는 안 함) */
             .leftJoin('event.user', 'event_composer')
             .where(`event.category IN (:categories)`, { categories })

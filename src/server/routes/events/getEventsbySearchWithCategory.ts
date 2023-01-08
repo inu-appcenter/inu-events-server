@@ -16,11 +16,12 @@ const schema = defineSchema({
         ` - eventStatus : true 일 경우 해당 카테고리 중애서 진행 중인 이벤트만 가져옴, false 일 경우 진행 중인 이벤트와 상관없이 해당 카테고리 이벤트 다 가져옴\n`+
         '- pageNum 페이지 부터, 한 번에 pageSize 개씩, id 역순으로 ! \n' +
         '-  content는 빈 값으로 주면 400에러 납니다! 사용자에게 다시 입력하라고 알려주세여!\n' +
+        '-  categoryId는 빈 값으로 주면 전체 내려줍니다.\n' +
         ' - pageNum은 0부터 시작입니다. \n' +
         ' - pageSize= 0이면 전체 이벤트 내려줌',
 
     query: {
-        categoryId: stringAsInt,
+        categoryId: stringAsInt.optional(),
         eventStatus: stringAsBoolean,
         content:z.string(),
         pageNum: stringAsInt.optional(),
