@@ -371,7 +371,6 @@ class EventService {
     // 차단한 사용자의 이벤트들 제외하고 검색 & 필터링
     private async getEventsWithoutBlockedUserbySearchWithFiltering(requestorId: number, categories:string[], ongoingEventsOnly: boolean,content: string, pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s+/gi, '|' )
-        console.log(ongoingEventsOnly);
         if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
             return await Event.createQueryBuilder('event')
                 /** relations 필드 가져오는 부분 */
