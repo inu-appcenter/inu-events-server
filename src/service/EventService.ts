@@ -9,7 +9,7 @@ import UserService from './UserService';
 import SubscriptionService from './SubscriptionService';
 import { Infer } from '../common/utils/zod';
 import { EventRequestScheme } from '../entity/schemes';
-import { In, Like, MoreThanOrEqual } from 'typeorm';
+import {Brackets, In, Like, MoreThanOrEqual} from 'typeorm';
 
 
 class EventService {
@@ -229,7 +229,10 @@ class EventService {
             .leftJoin('event.user', 'event_composer')
             .where(`event.category IN (:categories)`, { categories })
             .andWhere(`event.end_at >= :date`, { date: new Date() })
-            .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+            .andWhere(new Brackets((key) => {
+                    key.where(`event.title REGEXP :keyword`,{keyword})
+                        .orWhere(`event.body REGEXP :keyword`,{keyword})
+                }))
 
             .take(pageSize)
             .skip(pageSize * pageNum) // 페이징 적용
@@ -383,7 +386,10 @@ class EventService {
                 .leftJoin('event.user', 'event_composer')
                 .where(`event.endAt >= :date`, { date: new Date() })
                 .andWhere(`event.category IN (:categories)`, { categories })
-                .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+                .andWhere(new Brackets((key) => {
+                    key.where(`event.title REGEXP :keyword`,{keyword})
+                        .orWhere(`event.body REGEXP :keyword`,{keyword})
+                }))
                 .andWhere(`event_composer.id NOT IN (
             SELECT blocked_user_id 
             FROM block
