@@ -249,7 +249,10 @@ class EventService {
             /** where 절을 위한 join(select는 안 함) */
             .leftJoin('event.user', 'event_composer')         
             .where(`event.category IN (:categories)`, { categories })
-            .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+            .andWhere(new Brackets((key) => {
+                    key.where(`event.title REGEXP :keyword`,{keyword})
+                        .orWhere(`event.body REGEXP :keyword`,{keyword})
+                }))
             .take(pageSize)
             .skip(pageSize * pageNum) // 페이징 적용
             .orderBy('event.id', 'DESC')
@@ -409,7 +412,10 @@ class EventService {
                 /** where 절을 위한 join(select는 안 함) */
                 .leftJoin('event.user', 'event_composer')
                 .where(`event.category IN (:categories)`, { categories })
-                .andWhere(`event.title REGEXP :keyword or event.body REGEXP :keyword`, {keyword})
+                .andWhere(new Brackets((key) => {
+                    key.where(`event.title REGEXP :keyword`,{keyword})
+                        .orWhere(`event.body REGEXP :keyword`,{keyword})
+                }))
                 .andWhere(`event_composer.id NOT IN (
             SELECT blocked_user_id 
             FROM block
