@@ -6,12 +6,13 @@ admin.initializeApp({
   credential: credential.applicationDefault(),
 })
 
-export async function sendFcm(registrationToken: string, title: string, body: string) {
+export async function sendFcm(registrationToken: string, title: string, body: string, eventId?:string|undefined) {
   try {
     await admin.messaging().sendToDevice(registrationToken, {
       notification: {
         title,
         body,
+        eventId,
       },
     });
   } catch (e) {
