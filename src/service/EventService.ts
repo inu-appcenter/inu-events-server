@@ -25,6 +25,12 @@ class EventService {
         '교육/강연'
     ];
 
+
+    /**
+     * 1. 카테고리 값 보정
+     * @param categoryId
+     * @private
+     */
     private specifyCategories(categoryId?: number): string[] {
         const id = categoryId ?? 0;
 
@@ -33,6 +39,12 @@ class EventService {
             : this.categoryList; // 아니면 전부 다 가능!
     }
 
+
+    /**
+     * 2. 이벤트 생성
+     * @param userId
+     * @param body
+     */
     async makeEvent(userId: number, body: Infer<typeof EventRequestScheme>): Promise<Event> {
         const user = await UserService.getUser(userId);
 
@@ -45,6 +57,11 @@ class EventService {
         return event;
     }
 
+
+    /**
+     * 3. 모든 이벤트 가져오기! (이전 버전용)
+     * @param eventId
+     */
     async getEvent(eventId: number): Promise<Event> {
         const event = await Event.findOneOrFail(eventId);
 
@@ -54,7 +71,13 @@ class EventService {
         return event;
     }
 
-    // 내가 쓴 이벤트 가져옵니다. (페이징 적용)
+
+    /**
+     * 4. 모든 이벤트 가져오기 + 페이징 적용
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     */
     async getMyEvents(userId: number, pageNum?: number, pageSize?: number): Promise<Event[]> {
         const user = await User.findOneOrFail(userId);
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
@@ -69,7 +92,11 @@ class EventService {
         });
     }
 
-    // 이벤트 전체 가져옴
+
+    /**
+     * 5. 전체 이벤트 가져오기 (로그인 여부에 따라 분기)
+     * @param userId
+     */
     async getEvents(userId?: number): Promise<Event[]> {
         if (userId == null) {
             return await this.getEventsRegardlessBlockings(); // 비회원은 전부
@@ -78,7 +105,13 @@ class EventService {
         }
     }
 
-    // 페이지 별로 이벤트 가져옴 NEW
+
+    /**
+     * 6. 전체 이벤트 가져오기 + 페이징 적용 (로그인 여부에 따라 분기)
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     */
     async getEventsbyPage(userId?: number, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
             pageNum = 0;
@@ -93,7 +126,15 @@ class EventService {
 
     }
 
-    //카테고리
+
+    /**
+     * 7. 카테고리, 진행중 여부 필터링 + 페이징 적용 (로그인 여부에 따라 분기)
+     * @param userId
+     * @param categoryId
+     * @param ongoingEventsOnly
+     * @param pageNum
+     * @param pageSize
+     */
     async getCategorybyFiltering(userId?: number, categoryId?: number, ongoingEventsOnly?: boolean, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (ongoingEventsOnly == undefined) ongoingEventsOnly = false; // 비어있으면 전체 가져옴
 
@@ -131,23 +172,15 @@ class EventService {
         }
     }
 
-    // 검색 [이전 함수]
-    async getEventsbySearch(userId?: number, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
-        if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
-            pageNum = 0;
-            pageSize = 0; // 전체 가져오는걸로!
-        }
-
-        if (content == null) content = ' ';
-
-        if (userId == null) { // 로그인 X.
-            return await this.getEventsRegardlessBlockingsbySearch(content,pageNum, pageSize); // 비회원은 전부
-        } else { // 로그인 한 사용자.
-            return await this.getEventsWithoutBlockedUserbySearch(userId, content, pageNum, pageSize);
-        }
-    }
-
-    // 검색 & 카테고리
+    /**
+     *  8. 키워드 검색 + 카테고리 + 진행중 필터 + 페이징 적용 (로그인 여부 분기) NEW
+     * @param userId
+     * @param categoryId
+     * @param ongoingEventsOnly
+     * @param content
+     * @param pageNum
+     * @param pageSize
+     */
     async getEventsbySearchWithFiltering(userId?: number,  categoryId?: number, ongoingEventsOnly?: boolean, content?: string, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (ongoingEventsOnly == undefined) ongoingEventsOnly = false; // 비어있으면 전체 가져옴
         if (categoryId == undefined) categoryId = 0; // 비어있으면 전체 가져옴
@@ -169,23 +202,37 @@ class EventService {
         }
     }
 
-    // 로그인 안했을 때 (비회원)
+
+    /**
+     * 9. 차단한 사용자가 작성한 글 제외하고 모든 이벤트 내려줌
+     * @private
+     */
     private async getEventsRegardlessBlockings(): Promise<Event[]> { // 기존
         return await Event.find({ order: { id: 'DESC' } });
     }
 
-    // 전체 이벤트 수 가져오기
+
+    /**
+     * 10. 전체 이벤트 갯수 가져오기 (안씀)
+     * @private
+     */
     private async getTotalEvent(): Promise<number> {
         return await Event.count();
     }
 
-
-    // 진행 중인 이벤트 수 가져오기
+    /**
+     *  11. 진행 중인 행사 전체 갯수 가져오기 (안씀)
+     */
     async getOngoingTotalEvent(): Promise<number> {
         return await Event.count({ where: { endAt: MoreThanOrEqual(new Date()) } });
     }
 
-
+    /**
+     * 12. (비회원용) 차단 생각하지 않고 모든 이벤트 페이징 적용해서 내려주기
+     * @param pageNum
+     * @param pageSize
+     * @private
+     */
     private async getEventsRegardlessBlockingsbyPage(pageNum: number, pageSize: number): Promise<Event[]> {
         return await Event.find(
             {
@@ -195,26 +242,16 @@ class EventService {
             });
     }
 
-    // 로그인 안했을 때(검색) [이전 함수]
-    private async getEventsRegardlessBlockingsbySearch(content:string,pageNum: number, pageSize: number): Promise<Event[]> {
-        const keyword= content.replace(/\s+/gi, '|' )
-        return await Event.createQueryBuilder('event')
-            /** relations 필드 가져오는 부분 */
-            .leftJoinAndSelect('event.user', 'user')
-            .leftJoinAndSelect('event.comments', 'comments')
-            .leftJoinAndSelect('event.likes', 'likes')
-            .leftJoinAndSelect('event.notifications', 'notifications')
 
-            /** where 절을 위한 join(select는 안 함) */
-            .leftJoin('event.user', 'event_composer')
-            .where(`event.title REGEXP :keyword or event.body LIKE :keyword`, {keyword})
-            .take(pageSize)
-            .skip(pageSize * pageNum) // 페이징 적용
-            .orderBy('event.id', 'DESC')
-            .getMany()
-    }
-
-    // 로그인 안했을 때(검색 & 필터링)
+    /**
+     * 13. (비회원용) 차단 생각하지 않고 키워드 검색 + 진행중 + 카테고리 + 페이징
+     * @param categories
+     * @param ongoingEventsOnly
+     * @param content
+     * @param pageNum
+     * @param pageSize
+     * @private
+     */
     private async getEventsRegardlessBlockingsbySearchWithFiltering(categories:string[], ongoingEventsOnly: boolean,content:string,pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s+/gi, '|' )
         if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
@@ -259,9 +296,12 @@ class EventService {
             .getMany()
     }
     }
-    
 
-    // 됨 :)
+    /**
+     * 14. (회원용) 차단한 사용자 이벤트 빼고 내려주기 (이전 버전용)
+     * @param requestorId
+     * @private
+     */
     private async getEventsWithoutBlockedUser(requestorId: number): Promise<Event[]> {
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
@@ -281,7 +321,13 @@ class EventService {
             .getMany()// group by 안해도 얘가 잘 처리해줌 ^~^
     }
 
-    // 차단된 사용자 제외하고 페이지 별로 내려주기 NEW
+    /**
+     * 15. (회원용) 차단한 사용자 이벤트 빼고 모든 이벤트 내려주기 + 페이징 적용
+     * @param requestorId
+     * @param pageNum
+     * @param pageSize
+     * @private
+     */
     private async getEventsWithoutBlockedUserbyPage(requestorId: number, pageNum: number, pageSize: number): Promise<Event[]> {
         return await Event.createQueryBuilder('event')
             /** relations 필드 가져오는 부분 */
@@ -303,7 +349,15 @@ class EventService {
             .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
     }
 
-    //차단한 사용자 제외하고 필터링
+    /**
+     * 16. (회원용) 차단한 사용자 제외한 이벤트 진행중 + 카테고리 필터링 + 페이징
+     * @param requestorId
+     * @param categories
+     * @param ongoingEventsOnly
+     * @param pageNum
+     * @param pageSize
+     * @private
+     */
     private async getEventsWithoutBlockedUserbyFiltering(requestorId: number, categories: string[], ongoingEventsOnly: boolean, pageNum: number, pageSize: number): Promise<Event[]> {
         if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
             return await Event.createQueryBuilder('event')
@@ -349,32 +403,18 @@ class EventService {
         }
     }
 
-    // 차단한 사용자의 이벤트들 제외하고 검색 [이전 함수]
-    private async getEventsWithoutBlockedUserbySearch(requestorId: number, content: string, pageNum: number, pageSize: number): Promise<Event[]> {
-        const keyword= content.replace(/\s+/gi, '|' )
-        return await Event.createQueryBuilder('event')
-            /** relations 필드 가져오는 부분 */
-            .leftJoinAndSelect('event.user', 'user')
-            .leftJoinAndSelect('event.comments', 'comments')
-            .leftJoinAndSelect('event.likes', 'likes')
-            .leftJoinAndSelect('event.notifications', 'notifications')
 
-            /** where 절을 위한 join(select는 안 함) */
-            .leftJoin('event.user', 'event_composer')
-            .where(`event.title REGEXP :keyword or event.body LIKE :keyword`, {keyword})
-            .andWhere(`event_composer.id NOT IN (
-        SELECT blocked_user_id 
-        FROM block
-        WHERE block.blocking_user_id = :requestorId
-        )`, { requestorId })
-            .take(pageSize)
-            .skip(pageSize * pageNum) // 페이징 적용
-            .orderBy('event.id', 'DESC')
-            .getMany() // group by 안해도 얘가 잘 처리해줌 ^~^
 
-    }
-
-    // 차단한 사용자의 이벤트들 제외하고 검색 & 필터링
+    /**
+     * 17. (회원용) 차단한 사용자 제외하고 키워드 검색 + 진행중 + 카테고리 + 페이징 NEW
+     * @param requestorId
+     * @param categories
+     * @param ongoingEventsOnly
+     * @param content
+     * @param pageNum
+     * @param pageSize
+     * @private
+     */
     private async getEventsWithoutBlockedUserbySearchWithFiltering(requestorId: number, categories:string[], ongoingEventsOnly: boolean,content: string, pageNum: number, pageSize: number): Promise<Event[]> {
         const keyword= content.replace(/\s+/gi, '|' )
         if (ongoingEventsOnly) { // 진행중인 이벤트만 가져옴
@@ -429,9 +469,12 @@ class EventService {
     }
     
 
+
     /**
-     * 현재 진행 중인 행사만 가져옵니다. (페이징 적용)
-     * @param userId 내 사용자 id. pageNum?:number, pageSize?:number
+     * 18. 진행 중인 행사 + 페이징 적용 (로그인 여부에 따라 분기)
+     * @param userId
+     * @param pageNum
+     * @param pageSize
      */
     async getEventsOnGoing(userId?: number, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
@@ -441,8 +484,12 @@ class EventService {
         return await this.getEventsOnGoingRegardlessBlockings(pageNum, pageSize);
     }
 
-
-    // 마감되지 않은(현재 진행중인) 행사 페이지 별로 가져오지
+    /**
+     * 19. (비회원용) 진행중인 행사 + 페이징 적용
+     * @param pageNum
+     * @param pageSize
+     * @private
+     */
     private async getEventsOnGoingRegardlessBlockings(pageNum: number, pageSize: number): Promise<Event[]> {
         const offset = pageSize * pageNum;
         return await Event.find(
@@ -456,8 +503,10 @@ class EventService {
 
 
     /**
-     * 내가 댓글을 단 Event를 모두 가져오기. (페이징 적용)
-     * @param userId 내 사용자 id.
+     * 20. (회원용) 내가 댓글을 단 이벤트 모두 가져오기 + 페이징 적용
+     * @param userId
+     * @param pageNum
+     * @param pageSize
      */
     async getEventsIveCommentedOn(userId: number, pageNum?: number, pageSize?: number): Promise<Event[]> {
         if (pageNum == undefined || pageSize == undefined) { // 하나라도 비어있으면
@@ -482,6 +531,11 @@ class EventService {
             .getMany(); // group by 안해도 얘가 잘 처리해줌 ^~^
     }
 
+    /**
+     *  21. 이벤트 업데이트 (수정)
+     * @param eventId
+     * @param body
+     */
     async patchEvent(eventId: number, body: Partial<Infer<typeof EventRequestScheme>>): Promise<string> {
         log(`이벤트 ${eventId}를 업데이트합니다: ${preview(body)}`);
 
@@ -493,6 +547,10 @@ class EventService {
         return patchevent.raw;
     }
 
+    /**
+     * 22. 이벤트 삭제
+     * @param eventId
+     */
     async deleteEvent(eventId: number): Promise<void> {
         const event = await Event.findOneOrFail(eventId);
 
